@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProyecteNadal</string>
+    <string name="emails">Correo</string>
+    <string name="welcome">Bienvenido!</string>
+    <string name="password">Contraseña</string>
+    <string name="repeatPassword">Repite Contraseña</string>
+    <string name="forgotPassword">Contraseña Olvidada?</string>
+    <string name="logIn">Iniciar Sesión</string>
+    <string name="signUp">Registrarse</string>
+    <string name="names">Nombre</string>
+    <string name="home">Inicio</string>
+    <string name="orders">Mis Pedidos</string>
+    <string name="buyAgain">Volver a comprar</string>
+    <string name="account">Mi Cuenta</string>
+    <string name="open">Abrir</string>
+    <string name="configuration">Configuración</string>
+    <string name="close">Cerrar</string>
+    <string name="back">Volver</string>
+    <string name="recoverPassword">Recuperar Contraseña</string>
+    <string name="textBelowRecover">Introduce tu correo asociado con tu cuenta y te enviaremos un correo para restaurar tu contraseña</string>
+    <string name="ourProducts">Nuestros Productos</string>
+    <string name="buy">Comprar</string>
+    <string name="recipientName">Nombre destinatario</string>
+    <string name="creditCard">Tarjeta de Credito</string>
+    <string name="shippingAddres">Dirección de Envio</string>
+    <string name="orderDate">Fecha</string>
+    <string name="logOut">Cerrar sesión</string>
+    <string name="lastShippingAddress">Última dirección envio</string>
+    <string name="orderInformation">Información Pedido</string>
+</resources>

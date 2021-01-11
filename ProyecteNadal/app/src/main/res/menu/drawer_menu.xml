@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="General">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:title="@string/home" android:id="@+id/homeItem"/>
+                <item android:title="@string/orders" android:id="@+id/orderItem"/>
+                <item android:title="@string/buyAgain" android:id="@+id/buyAgainItem" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="Settings">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:title="@string/account" android:id="@+id/accountItem"/>
+                <item android:title="@string/configuration" android:id="@+id/options"/>
+                <item android:title="@string/logOut" android:id="@+id/logOut"/>
+            </group>
+        </menu>
+    </item>
+
+
+</menu>

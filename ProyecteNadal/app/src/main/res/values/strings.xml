@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ProyecteNadal</string>
+    <string name="emails">Email</string>
+    <string name="welcome">Welcome!</string>
+    <string name="password">Password</string>
+    <string name="repeatPassword">Repeat Password</string>
+    <string name="forgotPassword">Forgot Password?</string>
+    <string name="logIn">Log In</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="home">Home</string>
+    <string name="orders">Orders</string>
+    <string name="buyAgain">Buy Again</string>
+    <string name="account">My Account</string>
+    <string name="signUp">Sign Up</string>
+    <string name="configuration">Configuration</string>
+    <string name="back">Back</string>
+    <string name="recoverPassword">Recover Password</string>
+    <string name="names">Name</string>
+    <string name="textBelowRecover">Introduce your email linked to your account and we will send you an email to restore your password</string>
+    <string name="ourProducts">Our products</string>
+    <string name="buy">Buy</string>
+    <string name="recipientName">Recipient Name</string>
+    <string name="creditCard">Credit Card</string>
+    <string name="shippingAddres">Shipping Adress</string>
+    <string name="orderDate">Date</string>
+    <string name="logOut">Log Out</string>
+    <string name="lastShippingAddress">Last Shipping Address</string>
+    <string name="orderInformation">Order Information</string>
+
+</resources>
