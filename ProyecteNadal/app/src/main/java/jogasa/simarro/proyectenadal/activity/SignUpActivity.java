@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -131,19 +132,31 @@ public class SignUpActivity extends AppCompatActivity {
         final String username=name.getText().toString();
         final String correo=email.getText().toString();
         final String passwd=firstPassword.getText().toString();
+        final String passwd2=secondPassword.getText().toString();
+
+
+        if(passwd.compareTo(passwd2)!=0){
+            Toast.makeText(SignUpActivity.this, "YOUR PASSWORD MUST BE THE SAME", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(passwd.length()<6){
+            Toast.makeText(this, "YOUR PASSWORD MUST HAVE 6 LETTERS", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth.createUserWithEmailAndPassword(correo,passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Toast.makeText(SignUpActivity.this, correo+""+passwd, Toast.LENGTH_SHORT).show();
                 if(!task.isSuccessful()){
                     Toast.makeText(SignUpActivity.this, "Usuario ya registrado", Toast.LENGTH_SHORT).show();
                 }else{
                     FirebaseUser user=mAuth.getCurrentUser();
                     user.sendEmailVerification();
+                    Toast.makeText(SignUpActivity.this, "Email de verificacion enviado", Toast.LENGTH_SHORT).show();
                     Usuario usuario=new Usuario(username,correo,passwd);
+                    Log.d("CURRENT","A:"+username+correo);
                     UsuariosBD.getUsuarios().add(usuario);
-                    Intent main=new Intent(SignUpActivity.this,MainActivity.class);
-                    main.putExtra("Usuario",usuario);
+                    Intent main=new Intent(SignUpActivity.this,LoginActivity.class);
                     startActivity(main);
                 }
             }

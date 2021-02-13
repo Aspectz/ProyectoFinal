@@ -2,29 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jogasa.simarro.proyectenadal">
 
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logoorange"
+        android:icon="@drawable/logonaranja"
         android:label="FruitApp"
         android:roundIcon="@drawable/logoorange"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ShippingCart" />
-
         <activity android:name=".activity.VolverAcomprarActivity" />
         <activity android:name=".activity.ListaPedidos" />
-
         <activity android:name=".activity.VisualizarProductoActivity" />
         <activity android:name=".activity.MiCuentaActivity" />
         <activity android:name=".activity.CrearPedido" />
-
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignUpActivity" />
-        <activity android:name=".activity.ForgotPasswordActivity" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.ForgotPasswordActivity"/>
+        <activity android:name=".activity.LoginActivity"  />
         <activity android:name=".activity.LoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

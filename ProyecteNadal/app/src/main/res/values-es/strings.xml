@@ -30,4 +30,5 @@
     <string name="orderInformation">Información Pedido</string>
     <string name="cantity">Elige una cantidad</string>
     <string name="details">Detalles</string>
+    <string name="languages">Idiomas</string>
 </resources>

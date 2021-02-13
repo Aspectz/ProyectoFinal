@@ -2,9 +2,17 @@ package jogasa.simarro.proyectenadal.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.widget.Toast;
+
+import java.util.Locale;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.pojo.Producto;
@@ -16,7 +24,12 @@ public class LoadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_load);
+
+
 
       /*  Producto p1=new Producto("Naranja","Clementina",3,R.drawable.narajna,10,true);
         Producto p2=new Producto("Limon","Limon",5,R.drawable.limon,4,false);
@@ -39,6 +52,8 @@ public class LoadActivity extends AppCompatActivity {
 
         delay();
     }
+
+
 
     @Override
     protected void onStart() {

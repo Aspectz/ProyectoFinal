@@ -29,5 +29,6 @@
     <string name="orderInformation">Order Information</string>
     <string name="cantity">Choose a cantity</string>
     <string name="details">Details</string>
+    <string name="languages">Languages</string>
 
 </resources>
