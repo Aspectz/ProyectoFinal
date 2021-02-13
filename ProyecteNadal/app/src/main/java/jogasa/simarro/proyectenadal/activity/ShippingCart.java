@@ -1,7 +1,6 @@
 package jogasa.simarro.proyectenadal.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,28 +9,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
-
-import jogasa.simarro.proyectenadal.pojo.Producto;
-import jogasa.simarro.proyectenadal.pojo.Tienda;
+import jogasa.simarro.proyectenadal.fragments.FragmentShippingCart;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
+public class ShippingCart extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
@@ -41,12 +33,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_shipping_cart);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,70 +56,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
-
-
 
         if(savedInstanceState==null){
 
 
-            getSupportActionBar().setTitle(R.string.home);
+            getSupportActionBar().setTitle("My Cart");
             fragmentManager=getSupportFragmentManager();
             fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new FragmentInicio());
+            fragmentTransaction.replace(R.id.container_fragment,new FragmentShippingCart());
             fragmentTransaction.commit();
         }
-
     }
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()){
+
+            case R.id.homeItem:
+                Intent home=new Intent(ShippingCart.this,MainActivity.class);
+                home.putExtra("Usuario",usuarioLogeado);
+                startActivity(home);
+                break;
+
             case R.id.orderItem:
-                Intent listaPedidos=new Intent(MainActivity.this, ListaPedidos.class);
+                Intent listaPedidos=new Intent(ShippingCart.this, ListaPedidos.class);
                 listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
 
                 break;
             case R.id.buyAgainItem:
-                Intent buyagain=new Intent(MainActivity.this,VolverAcomprarActivity.class);
+                Intent buyagain=new Intent(ShippingCart.this,VolverAcomprarActivity.class);
                 buyagain.putExtra("Usuario",usuarioLogeado);
                 startActivity(buyagain);
                 break;
             case R.id.accountItem:
-                Intent micuenta=new Intent(MainActivity.this,MiCuentaActivity.class);
+                Intent micuenta=new Intent(ShippingCart.this,MiCuentaActivity.class);
                 micuenta.putExtra("Usuario",usuarioLogeado);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
-                FirebaseAuth.getInstance().signOut();
-                Intent cerrarSession=new Intent(MainActivity.this,LoginActivity.class);
+                Intent cerrarSession=new Intent(ShippingCart.this,LoginActivity.class);
                 startActivity(cerrarSession);
             default:
                 return false;
         }
         drawerLayout.closeDrawers();
         return false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_main,menu);
-        return true;
-    }
-    //SOBRESCRIBO
-    @Override
-    //BOOLEAN PUBLICO ITEM PILLAO
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //SI LA ID ES ESTA POS HACES ESTO
-        if(item.getItemId()==R.id.shoppingCart){
-            Intent shipping=new Intent(MainActivity.this,ShippingCart.class);
-            shipping.putExtra("Usuario",usuarioLogeado);
-            startActivity(shipping);
-        }
-        //DEVUELVO TRUE
-        return true;
     }
 }

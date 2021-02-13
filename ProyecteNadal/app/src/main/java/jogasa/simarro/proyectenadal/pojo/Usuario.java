@@ -9,12 +9,14 @@ public class Usuario implements Serializable {
     private String contraseña;
 
     private ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
+    private ArrayList<PedidoSinCompletar> pedidosSinCompletar=new ArrayList<PedidoSinCompletar>();
 
     public Usuario(String nombre, String email, String contraseña) {
         this.nombre = nombre;
         this.email = email;
         this.contraseña = contraseña;
     }
+    public Usuario(){}
 
     public void anadirPedido(Pedido p){
         pedidos.add(p);
@@ -22,6 +24,14 @@ public class Usuario implements Serializable {
 
     public ArrayList<Pedido> getPedidos() {
         return pedidos;
+    }
+
+    public ArrayList<PedidoSinCompletar> getPedidosSinCompletar() {
+        return pedidosSinCompletar;
+    }
+
+    public void setPedidosSinCompletar(ArrayList<PedidoSinCompletar> pedidosSinCompletar) {
+        this.pedidosSinCompletar = pedidosSinCompletar;
     }
 
     public void setPedidos(ArrayList<Pedido> pedidos) {

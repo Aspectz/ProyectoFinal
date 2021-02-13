@@ -1,17 +1,98 @@
 package jogasa.simarro.proyectenadal.pojo;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class Producto implements Serializable {
+import java.io.Serializable;
+/*public class Producto {
+
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+}*/
+/*
+public class Producto {
+
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    public String getTitle() {
+        return name;
+    }
+
+    public void setTitle(String title) {
+        this.name = title;
+    }
+
+}*/
+
+public class Producto{
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("price")
+    @Expose
+    private Float price;
+    @SerializedName("photo_url")
+    @Expose
+    private String photoUrl;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+}
+
+/*public class Producto implements Serializable {
     private String nombre,descripcion;
     private int foto;
     private float precio;
+    private int limiteProducto;
+    private boolean isFav;
 
-    public Producto(String nombre, String descripcion, float precio,int foto) {
+    public Producto(String nombre, String descripcion, float precio,int foto,int limiteProducto,boolean isFav) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.foto=foto;
+        this.limiteProducto=limiteProducto;
+        this.isFav=isFav;
     }
 
     public String getNombre() {
@@ -45,4 +126,20 @@ public class Producto implements Serializable {
     public void setFoto(int foto) {
         this.foto = foto;
     }
-}
+
+    public int getLimiteProducto() {
+        return limiteProducto;
+    }
+
+    public void setLimiteProducto(int limiteProducto) {
+        this.limiteProducto = limiteProducto;
+    }
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
+}*/

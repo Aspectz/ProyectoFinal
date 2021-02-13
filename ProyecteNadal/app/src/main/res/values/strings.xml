@@ -19,7 +19,7 @@
     <string name="names">Name</string>
     <string name="textBelowRecover">Introduce your email linked to your account and we will send you an email to restore your password</string>
     <string name="ourProducts">Our products</string>
-    <string name="buy">Buy</string>
+    <string name="buy">Confirm Order</string>
     <string name="recipientName">Recipient Name</string>
     <string name="creditCard">Credit Card</string>
     <string name="shippingAddres">Shipping Adress</string>
@@ -27,5 +27,7 @@
     <string name="logOut">Log Out</string>
     <string name="lastShippingAddress">Last Shipping Address</string>
     <string name="orderInformation">Order Information</string>
+    <string name="cantity">Choose a cantity</string>
+    <string name="details">Details</string>
 
 </resources>

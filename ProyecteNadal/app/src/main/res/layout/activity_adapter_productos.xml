@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/products_style"
+
 
     tools:context=".adapters.AdapterProductos">
 
@@ -30,6 +31,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:text="TextView"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textFoto"
         android:layout_gravity="center"
+        android:textStyle="bold"
         android:layout_toStartOf="@+id/textFoto"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"

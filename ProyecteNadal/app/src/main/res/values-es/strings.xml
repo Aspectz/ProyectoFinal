@@ -28,4 +28,6 @@
     <string name="logOut">Cerrar sesión</string>
     <string name="lastShippingAddress">Última dirección envio</string>
     <string name="orderInformation">Información Pedido</string>
+    <string name="cantity">Elige una cantidad</string>
+    <string name="details">Detalles</string>
 </resources>

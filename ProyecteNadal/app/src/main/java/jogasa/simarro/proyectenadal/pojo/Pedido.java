@@ -1,21 +1,22 @@
 package jogasa.simarro.proyectenadal.pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Pedido implements Serializable {
     private String nombre,metodoFacturacion,direccionEnvio;
     private Calendar fechacreacionPedido;
     private float precio;
-    private Producto producto;
+    private ArrayList<Producto> productos;
 
-    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, Calendar fechacreacionPedido, float precio, Producto producto) {
+    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, Calendar fechacreacionPedido, float precio, ArrayList<Producto> productos) {
         this.nombre = nombre;
         this.metodoFacturacion = metodoFacturacion;
         this.direccionEnvio = direccionEnvio;
         this.fechacreacionPedido = fechacreacionPedido;
         this.precio = precio;
-        this.producto = producto;
+        this.productos = productos;
     }
 
     public String getNombre() {
@@ -58,11 +59,11 @@ public class Pedido implements Serializable {
         this.precio = precio;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public ArrayList<Producto> getProductos() {
+        return productos;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProductos(ArrayList<Producto> productos) {
+        this.productos = productos;
     }
 }

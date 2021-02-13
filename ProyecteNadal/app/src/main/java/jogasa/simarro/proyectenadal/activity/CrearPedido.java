@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +22,17 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import jogasa.simarro.proyectenadal.R;
+import jogasa.simarro.proyectenadal.adapters.AdaptadorListaShipping;
 import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
 import jogasa.simarro.proyectenadal.fragments.FragmentMiCuenta;
 import jogasa.simarro.proyectenadal.fragments.FragmentPedidos;
 import jogasa.simarro.proyectenadal.fragments.FragmentVolverComprar;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
+import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Tienda;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
@@ -39,8 +43,9 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     private Toolbar toolbar;
     private NavigationView navigationView;
     private Usuario usuarioLogeado;
-    private Producto productoSeleccionado;
-
+    private ArrayList<Producto> productosSeleccionado;
+    private int cantidad;
+    private ListView listadoCompra;
     private EditText nombreDestinatario, metodoFacturacion,direccionEnvio;
 
 
@@ -52,7 +57,8 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         setSupportActionBar(toolbar);
 
         usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
-        productoSeleccionado=(Producto)getIntent().getSerializableExtra("Producto");
+        productosSeleccionado=(ArrayList<Producto>)getIntent().getSerializableExtra("Productos");
+        cantidad=(Integer)getIntent().getSerializableExtra("Cantidad");
 
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
         navigationView=(NavigationView)findViewById(R.id.navigation_view);
@@ -72,13 +78,25 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
 
         //PEDIDOS
 
-        TextView nombreProducto=(TextView)findViewById(R.id.nombreProducto);
+        /*TextView nombreProducto=(TextView)findViewById(R.id.nombreProducto);
         TextView precio=(TextView)findViewById(R.id.precioProducto);
-        TextView descripcion=(TextView)findViewById(R.id.descripcionProducto);
+        TextView descripcion=(TextView)findViewById(R.id.descripcionProducto);*/
 
-        nombreProducto.setText(productoSeleccionado.getNombre());
+
+
+        listadoCompra=(ListView)findViewById(R.id.listadoCompra);
+        final ArrayList<PedidoSinCompletar> pedidosSinCompletar = ((Usuario)getIntent().getSerializableExtra("Usuario")).getPedidosSinCompletar();
+
+        /*float price=0;
+        for(int i=0;i<pedidosSinCompletar.size();i++){
+            price+=pedidosSinCompletar.get(i).getCantidad()*pedidosSinCompletar.get(i).getProducto().getPrecio();
+        }*/
+
+        listadoCompra.setAdapter(new AdaptadorListaShipping(this,pedidosSinCompletar));
+
+       /* nombreProducto.setText(productoSeleccionado.getNombre());
         precio.setText(String.valueOf(productoSeleccionado.getPrecio()));
-        descripcion.setText(productoSeleccionado.getDescripcion());
+        descripcion.setText(productoSeleccionado.getDescripcion());*/
 
         nombreDestinatario=(EditText)findViewById(R.id.nombreDestinatario);
         metodoFacturacion=(EditText)findViewById(R.id.metodoFacturacion);
@@ -90,8 +108,17 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             @Override
             public void onClick(View v) {
                 if(!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()){
-                    Pedido pedido=new Pedido(nombreDestinatario.getText().toString(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), Calendar.getInstance(),productoSeleccionado.getPrecio(),productoSeleccionado);
+                    float precioFinal=0;
+                    for(PedidoSinCompletar p : pedidosSinCompletar){
+                       // precioFinal+=p.getCantidad()*p.getProducto().getPrecio();
+                    }
+
+                    Pedido pedido=new Pedido(nombreDestinatario.getText().toString(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), Calendar.getInstance(),precioFinal,productosSeleccionado);
                     usuarioLogeado.anadirPedido(pedido);
+
+                    usuarioLogeado.getPedidosSinCompletar().clear();
+
+
                     Intent home=new Intent(CrearPedido.this,MainActivity.class);
                     home.putExtra("Usuario",usuarioLogeado);
                     startActivity(home);

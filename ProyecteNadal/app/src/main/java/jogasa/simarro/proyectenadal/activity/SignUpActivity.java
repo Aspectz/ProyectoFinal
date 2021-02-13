@@ -1,5 +1,6 @@
 package jogasa.simarro.proyectenadal.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,6 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.regex.Pattern;
 
 import jogasa.simarro.proyectenadal.R;
@@ -19,10 +26,16 @@ import jogasa.simarro.proyectenadal.pojo.Usuario;
 public class SignUpActivity extends AppCompatActivity {
     private EditText name,email,firstPassword,secondPassword;
     private Button signUpbutton;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        mAuth = FirebaseAuth.getInstance();
 
 
         name=(EditText)findViewById(R.id.nameEditText);
@@ -31,7 +44,24 @@ public class SignUpActivity extends AppCompatActivity {
         secondPassword=(EditText)findViewById(R.id.secondPasswordEditText);
         signUpbutton=(Button)findViewById(R.id.signUpEditText);
 
+        authStateListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user=firebaseAuth.getCurrentUser();
+            }
+        };
 
+
+        signUpbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signUp();
+            }
+        });
+
+
+
+        /*
         signUpbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
 
-
+*/
     }
 
     public boolean buscarCorreoRegistrado(String correo){
@@ -83,5 +113,40 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mAuth.addAuthStateListener(authStateListener);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(authStateListener!=null){
+            mAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+    private void signUp(){
+        final String username=name.getText().toString();
+        final String correo=email.getText().toString();
+        final String passwd=firstPassword.getText().toString();
+        mAuth.createUserWithEmailAndPassword(correo,passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Toast.makeText(SignUpActivity.this, correo+""+passwd, Toast.LENGTH_SHORT).show();
+                if(!task.isSuccessful()){
+                    Toast.makeText(SignUpActivity.this, "Usuario ya registrado", Toast.LENGTH_SHORT).show();
+                }else{
+                    FirebaseUser user=mAuth.getCurrentUser();
+                    user.sendEmailVerification();
+                    Usuario usuario=new Usuario(username,correo,passwd);
+                    UsuariosBD.getUsuarios().add(usuario);
+                    Intent main=new Intent(SignUpActivity.this,MainActivity.class);
+                    main.putExtra("Usuario",usuario);
+                    startActivity(main);
+                }
+            }
+        });
     }
 }

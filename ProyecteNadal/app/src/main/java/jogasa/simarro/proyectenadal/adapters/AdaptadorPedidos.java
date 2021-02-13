@@ -50,9 +50,9 @@ public class AdaptadorPedidos extends ArrayAdapter {
 
         String fecha=getContext().getString(R.string.orderDate);
 
-        nombreProducto.setText(pedidos.get(position).getProducto().getNombre());
+        /*nombreProducto.setText(pedidos.get(position).getProductos().getNombre());
         fechaPedido.setText(fecha+":"+formated);
-        imagen.setImageResource(pedidos.get(position).getProducto().getFoto());
+        imagen.setImageResource(pedidos.get(position).getProductos().getFoto());*/
 
         return item;
     }

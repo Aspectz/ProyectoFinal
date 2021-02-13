@@ -9,7 +9,8 @@
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
     <include
         android:id="@+id/include"
         layout="@layout/drawer_toolbar"
@@ -26,34 +27,20 @@
             android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ORDER INFORMATION"
+            android:text="ORDER SUMMARY"
             android:layout_gravity="center"
             android:id="@+id/orderInformation"
             android:textSize="25dp"></TextView>
-        <TextView
-            android:id="@+id/nombreProducto"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
+        <ListView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/names">
-        </TextView>
-        <TextView
-            android:id="@+id/precioProducto"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/names">
-        </TextView>
-        <TextView
-            android:id="@+id/descripcionProducto"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/orderInformation"/>
+            android:id="@+id/listadoCompra"
+            android:layout_weight="1"></ListView>
         <EditText
             android:id="@+id/nombreDestinatario"
             android:layout_marginTop="30dp"
             android:layout_width="300dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:hint="@string/recipientName">
         </EditText>
@@ -71,15 +58,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/shippingAddres">
         </EditText>
+
         <Button
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnComprar"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/btnComprar"
+            android:layout_marginTop="30dp"
             android:background="@drawable/custom_button"
-            android:text="@string/buy"
-            ></Button>
+            android:text="@string/buy"></Button>
     </LinearLayout>
 </LinearLayout>
     <com.google.android.material.navigation.NavigationView

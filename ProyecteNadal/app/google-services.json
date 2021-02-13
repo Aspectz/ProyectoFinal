@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "297655392598",
+    "project_id": "fruitapp-98cda",
+    "storage_bucket": "fruitapp-98cda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297655392598:android:53d1b47111a9d166355ef7",
+        "android_client_info": {
+          "package_name": "jogasa.simarro.proyectenadal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297655392598-3csqv2kt36i79bjmpr6besrq29nuijo4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jogasa.simarro.proyectenadal",
+            "certificate_hash": "751c12c9c613ea44869ce012c553a037c0f7392b"
+          }
+        },
+        {
+          "client_id": "297655392598-394c1i0gir3sm3ufp9uvnitdalbkj145.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx_2ODkZJ8uoGzTe6een62BDfDWDkMX8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297655392598-394c1i0gir3sm3ufp9uvnitdalbkj145.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

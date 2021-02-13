@@ -63,7 +63,7 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
 
         headerText.setText("Hello, " + usuarioLogeado.getNombre());
 
-        getSupportActionBar().setTitle(productoSeleccionado.getNombre());
+       // getSupportActionBar().setTitle(productoSeleccionado.getNombre());
 
         if (savedInstanceState == null) {
             fragmentManager=getSupportFragmentManager();

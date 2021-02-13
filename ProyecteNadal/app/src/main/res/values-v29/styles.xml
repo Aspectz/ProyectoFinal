@@ -1,17 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/defaultFontApp</item>
-
+        <item name="android:forceDarkAllowed">false</item>
     </style>
-    
-    <style name="defaultFontApp" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/rubik</item>
-        <item name="android:textSize">15dp</item>
-    </style>
-
 </resources>
