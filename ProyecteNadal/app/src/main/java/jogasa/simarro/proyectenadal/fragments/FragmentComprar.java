@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,11 @@ import java.util.ArrayList;
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.CrearPedido;
 import jogasa.simarro.proyectenadal.activity.MainActivity;
+import jogasa.simarro.proyectenadal.bd.MiBD;
+import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
+import jogasa.simarro.proyectenadal.dao.ProductDAO;
+import jogasa.simarro.proyectenadal.dao.UserDAO;
+import jogasa.simarro.proyectenadal.pojo.Pedido;
 import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
@@ -51,14 +57,16 @@ public class FragmentComprar extends Fragment {
         Spinner cantity=view.findViewById(R.id.cantitySpinner);
         favFoto=view.findViewById(R.id.isFavBtn);
 
-       // if(producto.isFav()) favFoto.setImageResource(R.drawable.estrellafav);
-        //else favFoto.setImageResource(R.drawable.estrella);
+        if(producto.isFav()) favFoto.setImageResource(R.drawable.estrellafav);
+        else favFoto.setImageResource(R.drawable.estrella);
+
+        foto.setImageResource(producto.getFoto());
 
         final ArrayList<String> productMaxCantity=new ArrayList<String>();
 
-        /*for(int i=1;i<=producto.getLimiteProducto();i++){
+        for(int i=1;i<=producto.getLimiteProducto();i++){
             productMaxCantity.add(String.valueOf(i));
-        }*/
+        }
 
 
         final ArrayAdapter<String>adapterCantity=new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,productMaxCantity);
@@ -78,10 +86,10 @@ public class FragmentComprar extends Fragment {
         });
 
 
-        /*nombre.setText(producto.getNombre());
+        nombre.setText(producto.getNombre());
         precio.setText(String.valueOf(producto.getPrecio())+"€/Kg");
         descripcion.setText(producto.getDescripcion());
-        foto.setImageResource(producto.getFoto());*/
+
 
         Button botonComprar=(Button)view.findViewById(R.id.comprarButton);
 
@@ -101,11 +109,18 @@ public class FragmentComprar extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent addtoshipping=new Intent(getActivity(), MainActivity.class);
-                //addtoshipping.putExtra("Producto",producto);
+                addtoshipping.putExtra("Producto",producto);
                 addtoshipping.putExtra("Usuario",comprador);
-               // comprador.getPedidosSinCompletar().add(new PedidoSinCompletar(producto.getNombre(),producto,cantidad));
-                removeDuplicates(comprador.getPedidosSinCompletar());
+                producto.setCantidad(cantidad);
+                Pedido sinCompletar=new Pedido(producto.getNombre(),producto);
+                sinCompletar.setFinished(false);
+                comprador.getPedidos().add(sinCompletar);
+                sinCompletar.setUsuarioCreador(comprador);
+                Log.d("PEDIDO",String.valueOf(MiBD.getInstance(getContext()).getOrderDAO().getPedidos(comprador).size()));
+                MiBD.getInstance(getContext()).getOrderDAO().add(sinCompletar);
+                removeDuplicates(comprador.getPedidos());
                 startActivity(addtoshipping);
+
             }
         });
 
@@ -113,7 +128,7 @@ public class FragmentComprar extends Fragment {
             @Override
             public void onClick(View v) {
 
-                /*if(producto.isFav()){
+                if(producto.isFav()){
                     favFoto.setImageResource(R.drawable.estrella);
                     producto.setFav(!producto.isFav());
 
@@ -122,21 +137,24 @@ public class FragmentComprar extends Fragment {
                     favFoto.setImageResource(R.drawable.estrellafav);
                     producto.setFav(!producto.isFav());
 
-                }*/
+                }
             }
         });
 
         return view;
     }
 
-    private void removeDuplicates(ArrayList<PedidoSinCompletar> pedidosSinCompletar){
+    private void removeDuplicates(ArrayList<Pedido> pedidos){
 
-        for(int i=0;i<pedidosSinCompletar.size();i++){
-            for(int j=i+1;j<pedidosSinCompletar.size();j++){
-                if(pedidosSinCompletar.get(i).getNombre().equals(pedidosSinCompletar.get(j).getNombre())){
-                    pedidosSinCompletar.get(i).setCantidad(pedidosSinCompletar.get(i).getCantidad()+pedidosSinCompletar.get(j).getCantidad());
-                    pedidosSinCompletar.remove(pedidosSinCompletar.get(j));
+        for(int i=0;i<pedidos.size();i++){
+            for(int j=i+1;j<pedidos.size();j++){
+                if(!pedidos.get(i).isFinished() && !pedidos.get(j).isFinished()){
+                    if(pedidos.get(i).getNombre().equals(pedidos.get(j).getNombre())){
+                        pedidos.get(i).getProductos().get(0).setCantidad(pedidos.get(i).getProductos().get(0).getCantidad()+pedidos.get(j).getProductos().get(0).getCantidad());
+                        pedidos.remove(pedidos.get(j));
+                    }
                 }
+
             }
         }
     }

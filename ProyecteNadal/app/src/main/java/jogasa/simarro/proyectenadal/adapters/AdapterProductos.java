@@ -50,15 +50,17 @@ public class AdapterProductos extends ArrayAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
         View item=inflater.inflate(R.layout.activity_adapter_productos,null);
-        Toast.makeText(context, "adap", Toast.LENGTH_SHORT).show();
          nombre=(TextView)item.findViewById(R.id.textNombre);
          precio=(TextView)item.findViewById(R.id.textPrecio);
          foto=(ImageView)item.findViewById(R.id.textFoto);
 
 
-       nombre.setText(productos.get(position).getName());
-       // precio.setText(String.valueOf(productos.get(position).getPrice())+"€/Kg");
-        //foto.setImageResource(productos.get(position).getFoto());
+       nombre.setText(productos.get(position).getNombre());
+        precio.setText(String.valueOf(productos.get(position).getPrecio())+"€/Kg");
+
+
+
+        foto.setImageResource(productos.get(position).getFoto());
 
         return item;
     }

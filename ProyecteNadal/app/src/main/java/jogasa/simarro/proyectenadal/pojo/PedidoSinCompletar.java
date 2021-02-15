@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PedidoSinCompletar implements Serializable {
 
-    private int id;
+   /* private int id;
     private String nombre;
     private Producto producto;
     private  int cantidad;
@@ -38,5 +38,5 @@ public class PedidoSinCompletar implements Serializable {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-    }
+    }*/
 }

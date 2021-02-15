@@ -85,7 +85,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
 
 
         listadoCompra=(ListView)findViewById(R.id.listadoCompra);
-        final ArrayList<PedidoSinCompletar> pedidosSinCompletar = ((Usuario)getIntent().getSerializableExtra("Usuario")).getPedidosSinCompletar();
+        final ArrayList<Pedido> pedidosSinCompletar = ((Usuario)getIntent().getSerializableExtra("Usuario")).getPedidos();
 
         /*float price=0;
         for(int i=0;i<pedidosSinCompletar.size();i++){
@@ -109,14 +109,18 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             public void onClick(View v) {
                 if(!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()){
                     float precioFinal=0;
-                    for(PedidoSinCompletar p : pedidosSinCompletar){
+                    for(Pedido p : pedidosSinCompletar){
                        // precioFinal+=p.getCantidad()*p.getProducto().getPrecio();
                     }
 
                     Pedido pedido=new Pedido(nombreDestinatario.getText().toString(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), Calendar.getInstance(),precioFinal,productosSeleccionado);
                     usuarioLogeado.anadirPedido(pedido);
 
-                    usuarioLogeado.getPedidosSinCompletar().clear();
+                    for(int i=0;i<usuarioLogeado.getPedidos().size();i++){
+                        if(!usuarioLogeado.getPedidos().get(i).isFinished())   {
+                            usuarioLogeado.getPedidos().remove(i);
+                        }
+                    }
 
 
                     Intent home=new Intent(CrearPedido.this,MainActivity.class);

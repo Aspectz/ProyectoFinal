@@ -45,16 +45,19 @@ public class FragmentShippingCart extends Fragment {
 
 
         TextView totalPrice=(TextView)getView().findViewById(R.id.totalPrice);
-        final ArrayList<PedidoSinCompletar> pedidosSinCompletar = ((Usuario)getActivity().getIntent().getSerializableExtra("Usuario")).getPedidosSinCompletar();
+        final ArrayList<Pedido> pedidosSinCompletar = ((Usuario)getActivity().getIntent().getSerializableExtra("Usuario")).getPedidos();
         final ArrayList<Producto> productos=new ArrayList<Producto>();
-        for(PedidoSinCompletar p : pedidosSinCompletar){
-            productos.add(p.getProducto());
-            cantidad+=p.getCantidad();
+        for(Pedido p : pedidosSinCompletar){
+            if(!p.isFinished()){
+                productos.add(p.getProductos().get(0));
+                cantidad+=p.getProductos().get(0).getCantidad();
+            }
+
         }
 
         float price=0;
         for(int i=0;i<pedidosSinCompletar.size();i++){
-//            price+=pedidosSinCompletar.get(i).getCantidad()*pedidosSinCompletar.get(i).getProducto().getPrecio();
+            price+=pedidosSinCompletar.get(i).getProductos().get(0).getCantidad()*pedidosSinCompletar.get(i).getProductos().get(0).getPrecio();
         }
         DecimalFormat df = new DecimalFormat("0.00");
 

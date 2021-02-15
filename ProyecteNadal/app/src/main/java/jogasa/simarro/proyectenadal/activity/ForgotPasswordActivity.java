@@ -10,15 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.bd.UsuariosBD;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
@@ -91,11 +87,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
     private boolean searchEmail(){
         String correo=emailText.getEditText().getText().toString();
-        for(Usuario u : UsuariosBD.getUsuarios()){
+        /*for(Usuario u : UsuariosBD.getUsuarios()){
             if(u.getEmail().compareTo(correo)==0){
                 return true;
             }
-        }
+        }*/
         return false;
     }
     @Override

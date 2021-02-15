@@ -1,7 +1,6 @@
 package jogasa.simarro.proyectenadal.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -24,7 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -33,12 +31,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.text.ParseException;
 import java.util.Locale;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.bd.UsuariosBD;
-import jogasa.simarro.proyectenadal.pojo.Producto;
-import jogasa.simarro.proyectenadal.pojo.Tienda;
+import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
@@ -49,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private SignInButton signInButton;
     public static final int RC_SIGN_IN = 123;
-
+    UsuariosOperacional usuariosOperacional;
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -58,6 +55,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        usuariosOperacional = UsuariosOperacional.getInstance(this);
+
+
 
 
         SharedPreferences pref =getSharedPreferences("preferencias", Context.MODE_PRIVATE);
@@ -103,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Usuario u=new Usuario("juan","juan","1234");
-        UsuariosBD.getUsuarios().add(u);
+        //UsuariosBD.getUsuarios().add(u);
         forgotPassword=(TextView)findViewById(R.id.forgotPassword);
         signUp=(Button)findViewById(R.id.registerButton);
         logInButton=(Button)findViewById(R.id.loginButton);
@@ -202,8 +203,15 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             Usuario u = new Usuario();
-                            u.setNombre(user.getDisplayName());
+
+
                             u.setEmail(user.getEmail());
+                            try {
+                                u=usuariosOperacional.login(u);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
                             intent.putExtra("Usuario", u);
                             Log.d("usuario", u.toString());
                             startActivity(intent);
@@ -236,14 +244,14 @@ public class LoginActivity extends AppCompatActivity {
                         if(currentuser.isEmailVerified()){
                             Usuario u = new Usuario();
                            Log.d("CURRENT", "C:"+currentuser.getEmail());
-                            for(Usuario p : UsuariosBD.getUsuarios()){
-                                Log.d("CURRENT", "P:"+p.getEmail()+p.getNombre());
-                                if(p.getEmail().compareTo(currentuser.getEmail())==0){
-                                    Toast.makeText(LoginActivity.this, "encontrao", Toast.LENGTH_SHORT).show();
-                                    u.setNombre(p.getNombre());
-                                }
-                            }
                             u.setEmail(currentuser.getEmail());
+                            u.setContraseña(passwd);
+
+                            try {
+                                usuariosOperacional.login(u);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             intent.putExtra("Usuario", u);
                             startActivity(intent);
                         }else{

@@ -21,12 +21,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.VisualizarProductoActivity;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
+import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.pojo.FruitShopAPIService;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Tienda;
@@ -96,15 +98,27 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
         grid.setAdapter(new AdapterProductos(this,productos));
 
     }
-    public void mostrarProductos(){
-       // ArrayList<Producto> productos= Tienda.getProductos();
+    public void mostrarProductos() throws ParseException {
+        ArrayList<Producto> productos= MiBD.getInstance(getContext()).getProductDAO().getAll();
+        for(Producto p : productos){
+            if(p.getNombre().equals("Fresa")) p.setFoto(R.drawable.fresa);
+            if(p.getNombre().equals("Banana")) p.setFoto(R.drawable.narajna);
+            if(p.getNombre().equals("Aguacate")) p.setFoto(R.drawable.aguacate);
+        }
+
+
+
         grid.setAdapter(new AdapterProductos(this,productos));
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mostrarProductos();
+        try {
+            mostrarProductos();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -113,7 +127,7 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
 
         Intent visualizar=new Intent(getActivity(), VisualizarProductoActivity.class);
 
-        //visualizar.putExtra("Producto",seleccionado);
+        visualizar.putExtra("Producto",seleccionado);
         visualizar.putExtra("Usuario",(Usuario)getActivity().getIntent().getSerializableExtra("Usuario"));
 
         startActivity(visualizar);

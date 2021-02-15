@@ -41,7 +41,7 @@ public class Producto {
 
 }*/
 
-public class Producto{
+/*public class Producto{
 
     @SerializedName("name")
     @Expose
@@ -77,15 +77,19 @@ public class Producto{
         this.photoUrl = photoUrl;
     }
 
-}
+}*/
 
-/*public class Producto implements Serializable {
+public class Producto implements Serializable {
     private String nombre,descripcion;
     private int foto;
+    private int id;
     private float precio;
     private int limiteProducto;
+    private int cantidad;
     private boolean isFav;
 
+
+    public Producto(){}
     public Producto(String nombre, String descripcion, float precio,int foto,int limiteProducto,boolean isFav) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -142,4 +146,20 @@ public class Producto{
     public void setFav(boolean fav) {
         isFav = fav;
     }
-}*/
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+}

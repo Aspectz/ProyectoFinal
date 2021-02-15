@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,10 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.regex.Pattern;
-
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.bd.UsuariosBD;
+import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -31,13 +28,13 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
-
+    UsuariosOperacional usuariosOperacional;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-
+        usuariosOperacional = UsuariosOperacional.getInstance(this);
 
         name=(EditText)findViewById(R.id.nameEditText);
         email=(EditText)findViewById(R.id.emailEditText);
@@ -108,11 +105,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public boolean buscarCorreoRegistrado(String correo){
-        for(Usuario u : UsuariosBD.getUsuarios()){
+       /* for(Usuario u : UsuariosBD.getUsuarios()){
             if(u.getEmail().compareTo(correo)==0){
                 return true;
             }
-        }
+        }*/
         return false;
     }
     @Override
@@ -155,7 +152,9 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Email de verificacion enviado", Toast.LENGTH_SHORT).show();
                     Usuario usuario=new Usuario(username,correo,passwd);
                     Log.d("CURRENT","A:"+username+correo);
-                    UsuariosBD.getUsuarios().add(usuario);
+
+                    usuariosOperacional.registrarUsuario(usuario);
+
                     Intent main=new Intent(SignUpActivity.this,LoginActivity.class);
                     startActivity(main);
                 }

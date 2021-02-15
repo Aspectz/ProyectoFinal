@@ -26,13 +26,13 @@ import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 public class AdaptadorListaShipping extends ArrayAdapter {
 
     Activity context;
-    ArrayList<PedidoSinCompletar> pedidos=new ArrayList<PedidoSinCompletar>();
-    public AdaptadorListaShipping(Fragment context, ArrayList<PedidoSinCompletar> pedidos){
+    ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
+    public AdaptadorListaShipping(Fragment context, ArrayList<Pedido> pedidos){
         super(context.getActivity(), R.layout.activity_adaptador_lista_shipping,pedidos);
         this.context=context.getActivity();
         this.pedidos=pedidos;
     }
-    public AdaptadorListaShipping(Activity context, ArrayList<PedidoSinCompletar> pedidos){
+    public AdaptadorListaShipping(Activity context, ArrayList<Pedido> pedidos){
         super(context, R.layout.activity_adaptador_lista_shipping,pedidos);
         this.context=context;
         this.pedidos=pedidos;
@@ -52,13 +52,16 @@ public class AdaptadorListaShipping extends ArrayAdapter {
 
          DecimalFormat df = new DecimalFormat("0.00");
 
-       /* nombreProducto.setText(pedidos.get(position).getProducto().getNombre());
-        imagen.setImageResource(pedidos.get(position).getProducto().getFoto());
-        cantidad.setText(String.valueOf(pedidos.get(position).getCantidad()));
+        nombreProducto.setText(pedidos.get(position).getProductos().get(0).getNombre());
+        imagen.setImageResource(pedidos.get(position).getProductos().get(0).getFoto());
+        cantidad.setText(String.valueOf(pedidos.get(position).getProductos().get(0).getCantidad()));
         float precioFinal;
-        precioFinal=pedidos.get(position).getCantidad()*pedidos.get(position).getProducto().getPrecio();
+
+
+
+        precioFinal=pedidos.get(position).getProductos().get(0).getPrecio()*pedidos.get(position).getProductos().get(0).getCantidad();
         finalPrice.setText(df.format(precioFinal));
-        precioUnico.setText(String.valueOf(pedidos.get(position).getProducto().getPrecio())+"/kg");*/
+        precioUnico.setText(String.valueOf(pedidos.get(position).getProductos().get(0).getPrecio())+"/kg");
 
 
         return item;

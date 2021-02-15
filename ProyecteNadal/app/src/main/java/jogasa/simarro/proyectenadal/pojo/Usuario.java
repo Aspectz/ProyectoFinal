@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Usuario implements Serializable {
+    private int id;
     private String nombre;
     private String email;
     private String contraseña;
 
     private ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
-    private ArrayList<PedidoSinCompletar> pedidosSinCompletar=new ArrayList<PedidoSinCompletar>();
 
     public Usuario(String nombre, String email, String contraseña) {
         this.nombre = nombre;
@@ -26,13 +26,6 @@ public class Usuario implements Serializable {
         return pedidos;
     }
 
-    public ArrayList<PedidoSinCompletar> getPedidosSinCompletar() {
-        return pedidosSinCompletar;
-    }
-
-    public void setPedidosSinCompletar(ArrayList<PedidoSinCompletar> pedidosSinCompletar) {
-        this.pedidosSinCompletar = pedidosSinCompletar;
-    }
 
     public void setPedidos(ArrayList<Pedido> pedidos) {
         this.pedidos = pedidos;
@@ -46,12 +39,18 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() {return email;}
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getContraseña() {
