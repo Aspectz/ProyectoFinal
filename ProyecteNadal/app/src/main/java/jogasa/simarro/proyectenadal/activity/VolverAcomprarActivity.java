@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentPedidos;
@@ -55,7 +57,7 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
 
 
@@ -85,6 +87,8 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(VolverAcomprarActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
@@ -93,7 +97,10 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
                 listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
                 break;
-
+            case R.id.options:
+                Intent options=new Intent(VolverAcomprarActivity.this,SettingsActivity.class);
+                startActivity(options);
+                 break;
             default:
                 return false;
         }

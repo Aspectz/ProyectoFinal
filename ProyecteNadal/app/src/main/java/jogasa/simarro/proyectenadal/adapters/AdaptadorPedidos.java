@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -20,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
@@ -44,15 +46,23 @@ public class AdaptadorPedidos extends ArrayAdapter {
         TextView nombreProducto=(TextView) item.findViewById(R.id.nombreProducto);
         TextView fechaPedido=(TextView) item.findViewById(R.id.fechaPedido);
         ImageView imagen=(ImageView) item.findViewById(R.id.pedidoFoto);
+        String nombre=pedidos.get(position).getNombre();
 
-        SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy");
-        String formated=format.format(pedidos.get(position).getFechacreacionPedido().getTime());
+
 
         String fecha=getContext().getString(R.string.orderDate);
-
-        /*nombreProducto.setText(pedidos.get(position).getProductos().getNombre());
-        fechaPedido.setText(fecha+":"+formated);
-        imagen.setImageResource(pedidos.get(position).getProductos().getFoto());*/
+        Toast.makeText(context, ""+pedidos.get(position).getFechacreacionPedido(), Toast.LENGTH_SHORT).show();
+        nombreProducto.setText(pedidos.get(position).getNombre());
+        fechaPedido.setText(fecha+":"+pedidos.get(position).getFechacreacionPedido());
+        if(nombre.equals("Banana")) imagen.setImageResource(R.drawable.banana);
+        if(nombre.equals("Aguacate"))imagen.setImageResource(R.drawable.aguacate);
+        if(nombre.equals("Limon"))imagen.setImageResource(R.drawable.limon);
+        if(nombre.equals("Cereza"))imagen.setImageResource(R.drawable.cereza);
+        if(nombre.equals("Fresa"))imagen.setImageResource(R.drawable.fresa);
+        if(nombre.equals("Naranja"))imagen.setImageResource(R.drawable.naranja);
+        if(nombre.equals("Manzana"))imagen.setImageResource(R.drawable.manzana);
+        if(nombre.equals("Arandano"))imagen.setImageResource(R.drawable.arandano);
+        if(nombre.equals("Pepino"))imagen.setImageResource(R.drawable.pepino);
 
         return item;
     }

@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentMiCuenta;
@@ -56,7 +58,7 @@ public class ListaPedidos extends AppCompatActivity implements NavigationView.On
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
 
 
@@ -91,8 +93,14 @@ public class ListaPedidos extends AppCompatActivity implements NavigationView.On
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(ListaPedidos.this,LoginActivity.class);
                 startActivity(cerrarSession);
+                break;
+            case R.id.options:
+                Intent options=new Intent(ListaPedidos.this,SettingsActivity.class);
+                startActivity(options);
                 break;
             default:
                 return false;

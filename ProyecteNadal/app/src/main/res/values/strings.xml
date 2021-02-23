@@ -30,5 +30,15 @@
     <string name="cantity">Choose a cantity</string>
     <string name="details">Details</string>
     <string name="languages">Languages</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="aboutUs">About Us</string>
+    <string name="ourShops">Our Shops</string>
+    <string name="copyright">© 2021 FruitApp All Rights Reserved</string>
+    <string name="news">News</string>
+    <string name="myCart">My Cart</string>
+    <string name="orderSummary">Order Summary</string>
+    <string name="emptyCart">Your Cart is Empty</string>
+    <string name="hello">Hello,</string>
+    <string name="notifications">Notifications</string>
 
 </resources>

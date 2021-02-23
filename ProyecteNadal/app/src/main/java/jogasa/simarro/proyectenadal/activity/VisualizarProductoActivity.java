@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import jogasa.simarro.proyectenadal.R;
 
@@ -61,7 +63,7 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
         View headerLayout = navigationView.getHeaderView(0);
         TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, " + usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
        // getSupportActionBar().setTitle(productoSeleccionado.getNombre());
 
@@ -101,6 +103,8 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(VisualizarProductoActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
                 break;

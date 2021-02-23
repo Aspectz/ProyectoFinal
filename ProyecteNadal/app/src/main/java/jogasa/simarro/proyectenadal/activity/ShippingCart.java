@@ -13,8 +13,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
@@ -43,6 +46,7 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
         usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
 
 
+
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
         navigationView=(NavigationView)findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -56,6 +60,8 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
+
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
         if(savedInstanceState==null){
 
@@ -95,8 +101,11 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(ShippingCart.this,LoginActivity.class);
                 startActivity(cerrarSession);
+                break;
             default:
                 return false;
         }

@@ -19,12 +19,13 @@ import java.util.List;
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.adapters.AdaptadorPedidos;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
+import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Tienda;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
-public class FragmentPedidos extends Fragment implements AdapterView.OnItemClickListener {
+public class FragmentPedidos extends Fragment {
     public ListView listaPedidos;
 
 
@@ -40,11 +41,20 @@ public class FragmentPedidos extends Fragment implements AdapterView.OnItemClick
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listaPedidos = (ListView) getView().findViewById(R.id.listaPedidos);
-        listaPedidos.setOnItemClickListener(this);
+
     }
 
     public void mostrarProductos() {
-        ArrayList<Pedido> pedidos = ((Usuario)getActivity().getIntent().getSerializableExtra("Usuario")).getPedidos();
+        Usuario comprador=(Usuario)getActivity().getIntent().getSerializableExtra("Usuario");
+
+
+        ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
+        ArrayList<Pedido> listaAux= MiBD.getInstance(getContext()).getOrderDAO().getPedidos(comprador);
+        for( Pedido p : listaAux){
+            if(p.isFinished()){
+                pedidos.add(p);
+            }
+        }
         listaPedidos.setAdapter(new AdaptadorPedidos(this, pedidos));
     }
 
@@ -54,17 +64,5 @@ public class FragmentPedidos extends Fragment implements AdapterView.OnItemClick
         mostrarProductos();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-       /* Producto seleccionado = (Producto) grid.getAdapter().getItem(position);
 
-        Intent visualizar = new Intent(getActivity(), VisualizarProductoActivity.class);
-
-        visualizar.putExtra("Producto", seleccionado);
-        visualizar.putExtra("Usuario", (Usuario) getActivity().getIntent().getSerializableExtra("Usuario"));
-
-        startActivity(visualizar);*/
-
-
-    }
 }

@@ -18,7 +18,6 @@ public class ProductDAO{
         contentValues.put("descripcion",e.getDescripcion());
         contentValues.put("price", e.getPrecio());
         contentValues.put("productLimit", e.getLimiteProducto());
-        contentValues.put("cantity", e.getCantidad());
         contentValues.put("isFav", e.isFav() ? 1 : 0);
 
 
@@ -33,10 +32,9 @@ public class ProductDAO{
         contentValues.put("descripcion",p.getDescripcion());
         contentValues.put("price", p.getPrecio());
         contentValues.put("productLimit", p.getLimiteProducto());
-        contentValues.put("cantity", p.getCantidad());
         contentValues.put("isFav", p.isFav() ? 1 : 0);
 
-        String condicion = "id=" + String.valueOf(p.getId());
+        String condicion = "_id=" + String.valueOf(p.getId());
 
         int resultado = MiBD.getDB().update("products", contentValues, condicion, null);
 
@@ -45,7 +43,7 @@ public class ProductDAO{
 
     public void delete(Object obj) {
         Producto p = (Producto) obj;
-        String condicion = "id=" + String.valueOf(p.getId());
+        String condicion = "_id=" + String.valueOf(p.getId());
 
         //Se borra el event indicado en el campo de texto
         MiBD.getDB().delete("products", condicion, null);
@@ -54,10 +52,10 @@ public class ProductDAO{
     public Object search(Object obj) throws ParseException {
         Producto p = (Producto) obj;
 
-        String condicion = "id=" + String.valueOf(p.getId());
+        String condicion = "_id=" + String.valueOf(p.getId());
 
         String[] columnas = {
-                "_id","nombre","descripcion","price","productLimit","cantity","isFav"
+                "_id","nombre","descripcion","price","productLimit","isFav"
         };
 
         Cursor cursor = MiBD.getDB().query("products", columnas, condicion, null, null, null, null);
@@ -69,8 +67,7 @@ public class ProductDAO{
             nuevoProducto.setDescripcion(cursor.getString(2));
             nuevoProducto.setPrecio(cursor.getFloat(3));
             nuevoProducto.setLimiteProducto(cursor.getInt(4));
-            nuevoProducto.setCantidad(cursor.getInt(5));
-            nuevoProducto.setFav(cursor.getInt(6)!=0);
+            nuevoProducto.setFav(cursor.getInt(5)!=0);
 
         }
         return nuevoProducto;
@@ -79,10 +76,10 @@ public class ProductDAO{
     public Object searchAlt(Object obj) throws ParseException {
         Producto p = (Producto) obj;
 
-        String condicion = "id=" + String.valueOf(p.getId());
+        String condicion = "_id=" + String.valueOf(p.getId());
 
         String[] columnas = {
-                "_id","nombre","descripcion","price","productLimit","cantity","isFav"
+                "_id","nombre","descripcion","price","productLimit","isFav"
         };
 
         Cursor cursor = MiBD.getDB().query("products", columnas, condicion, null, null, null, null);
@@ -94,8 +91,7 @@ public class ProductDAO{
             nuevoProducto.setDescripcion(cursor.getString(2));
             nuevoProducto.setPrecio(cursor.getFloat(3));
             nuevoProducto.setLimiteProducto(cursor.getInt(4));
-            nuevoProducto.setCantidad(cursor.getInt(5));
-            nuevoProducto.setFav(cursor.getInt(6)!=0);
+            nuevoProducto.setFav(cursor.getInt(5)!=0);
         }
         return nuevoProducto;
     }
@@ -103,7 +99,7 @@ public class ProductDAO{
     public ArrayList getAll() throws ParseException {
         ArrayList<Producto> listaProductos = new ArrayList<Producto>();
         String[] columnas = {
-                "_id","nombre","descripcion","price","productLimit","cantity","isFav"
+                "_id","nombre","descripcion","price","productLimit","isFav"
         };
         Cursor cursor = MiBD.getDB().query("products", columnas, null, null, null, null, null);
 
@@ -116,8 +112,7 @@ public class ProductDAO{
                 nuevoProducto.setDescripcion(cursor.getString(2));
                 nuevoProducto.setPrecio(cursor.getFloat(3));
                 nuevoProducto.setLimiteProducto(cursor.getInt(4));
-                nuevoProducto.setCantidad(cursor.getInt(5));
-                nuevoProducto.setFav(cursor.getInt(6)!=0);
+                nuevoProducto.setFav(cursor.getInt(5)!=0);
 
 
 

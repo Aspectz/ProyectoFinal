@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.media.Image;
+import android.media.MicrophoneDirection;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.R;
@@ -30,6 +33,7 @@ import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.dao.ProductDAO;
 import jogasa.simarro.proyectenadal.dao.UserDAO;
+import jogasa.simarro.proyectenadal.pojo.OrderProducto;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
 import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 import jogasa.simarro.proyectenadal.pojo.Producto;
@@ -39,7 +43,8 @@ public class FragmentComprar extends Fragment {
 
     private Producto producto;
     private Usuario comprador;
-    int cantidad;
+    int cantidad=1;
+    private MiBD miBD;
     ImageView favFoto;
     public FragmentComprar(Producto producto, Usuario usuario){
         this.producto=producto;
@@ -50,6 +55,8 @@ public class FragmentComprar extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=  inflater.inflate(R.layout.activity_fragment_comprar,container,false);
 
+
+        miBD=MiBD.getInstance(getContext());
         TextView nombre=view.findViewById(R.id.nombreProducto);
         TextView precio=view.findViewById(R.id.precioProducto);
         TextView descripcion=view.findViewById(R.id.descripcionProducto);
@@ -63,7 +70,7 @@ public class FragmentComprar extends Fragment {
         foto.setImageResource(producto.getFoto());
 
         final ArrayList<String> productMaxCantity=new ArrayList<String>();
-
+        //ADD MAX VALUES TO SPINNER
         for(int i=1;i<=producto.getLimiteProducto();i++){
             productMaxCantity.add(String.valueOf(i));
         }
@@ -97,8 +104,7 @@ public class FragmentComprar extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
-               // crearPedido.putExtra("Producto",producto);
-                crearPedido.putExtra("Cantidad",cantidad);
+                makeOrder();
                 crearPedido.putExtra("Usuario",comprador);
                 startActivity(crearPedido);
             }
@@ -109,16 +115,10 @@ public class FragmentComprar extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent addtoshipping=new Intent(getActivity(), MainActivity.class);
-                addtoshipping.putExtra("Producto",producto);
+
+                makeOrder();
+
                 addtoshipping.putExtra("Usuario",comprador);
-                producto.setCantidad(cantidad);
-                Pedido sinCompletar=new Pedido(producto.getNombre(),producto);
-                sinCompletar.setFinished(false);
-                comprador.getPedidos().add(sinCompletar);
-                sinCompletar.setUsuarioCreador(comprador);
-                Log.d("PEDIDO",String.valueOf(MiBD.getInstance(getContext()).getOrderDAO().getPedidos(comprador).size()));
-                MiBD.getInstance(getContext()).getOrderDAO().add(sinCompletar);
-                removeDuplicates(comprador.getPedidos());
                 startActivity(addtoshipping);
 
             }
@@ -143,19 +143,21 @@ public class FragmentComprar extends Fragment {
 
         return view;
     }
+    //ADD ORDER TO CLIENT, TO THE BD AND ADD ORDERPRODUCT TO THE MANY2MANY
+    private void makeOrder(){
+        Pedido sinCompletar=new Pedido(producto.getNombre());
+        sinCompletar.setCantidadPedido(cantidad);
 
-    private void removeDuplicates(ArrayList<Pedido> pedidos){
+        sinCompletar.getProductos().add(producto);
+        sinCompletar.setFinished(false);
+        sinCompletar.setUsuarioCreador(comprador);
+        comprador.getPedidos().add(sinCompletar);
 
-        for(int i=0;i<pedidos.size();i++){
-            for(int j=i+1;j<pedidos.size();j++){
-                if(!pedidos.get(i).isFinished() && !pedidos.get(j).isFinished()){
-                    if(pedidos.get(i).getNombre().equals(pedidos.get(j).getNombre())){
-                        pedidos.get(i).getProductos().get(0).setCantidad(pedidos.get(i).getProductos().get(0).getCantidad()+pedidos.get(j).getProductos().get(0).getCantidad());
-                        pedidos.remove(pedidos.get(j));
-                    }
-                }
+        miBD.getOrderDAO().insertOrderToClient(sinCompletar,comprador);
 
-            }
-        }
+        ArrayList<Pedido> pedidosUsuario=miBD.getOrderDAO().getPedidos(comprador);
+        sinCompletar.setId(pedidosUsuario.get(pedidosUsuario.size()-1).getId());
+        OrderProducto oe=new OrderProducto(sinCompletar.getId(),producto.getId());
+        miBD.getOrderProductsDAO().add(oe);
     }
 }

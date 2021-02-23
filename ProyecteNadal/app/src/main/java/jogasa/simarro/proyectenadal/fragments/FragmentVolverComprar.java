@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,15 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.R;
+import jogasa.simarro.proyectenadal.activity.VisualizarProductoActivity;
 import jogasa.simarro.proyectenadal.adapters.AdaptadorPedidos;
 import jogasa.simarro.proyectenadal.adapters.AdaptadorVolverComprar;
+import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
+import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
-public class FragmentVolverComprar extends Fragment {
+public class FragmentVolverComprar extends Fragment implements AdapterView.OnItemClickListener {
     public GridView listaPedidos;
 
 
@@ -37,11 +41,20 @@ public class FragmentVolverComprar extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listaPedidos = (GridView) getView().findViewById(R.id.gridProductos);
+        listaPedidos.setOnItemClickListener(this);
 
     }
 
     public void mostrarProductos() {
-        ArrayList<Pedido> pedidos = ((Usuario)getActivity().getIntent().getSerializableExtra("Usuario")).getPedidos();
+        Usuario comprador=(Usuario)getActivity().getIntent().getSerializableExtra("Usuario");
+        ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
+        ArrayList<Pedido> listaAux= MiBD.getInstance(getContext()).getOrderDAO().getPedidos(comprador);
+        for( Pedido p : listaAux){
+            if(p.isFinished()){
+                pedidos.add(p);
+
+            }
+        }
         listaPedidos.setAdapter(new AdaptadorVolverComprar(this, pedidos));
     }
 
@@ -49,5 +62,21 @@ public class FragmentVolverComprar extends Fragment {
     public void onStart() {
         super.onStart();
         mostrarProductos();
+    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+       /* Pedido seleccionado = (Pedido) listaPedidos.getAdapter().getItem(position);
+
+        Producto prod=(Producto)seleccionado.getProductos().get(0);
+
+
+        Intent visualizar = new Intent(getActivity(), VisualizarProductoActivity.class);
+
+        visualizar.putExtra("Producto", seleccionado);
+        visualizar.putExtra("Usuario", (Usuario) getActivity().getIntent().getSerializableExtra("Usuario"));
+
+        startActivity(visualizar);*/
+
+
     }
 }

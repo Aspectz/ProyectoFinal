@@ -1,6 +1,8 @@
 package jogasa.simarro.proyectenadal.bd;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -44,6 +46,28 @@ public class UsuariosOperacional implements Serializable {
             return null;
         }
     }
+
+    public Usuario loginGoogle(Usuario u) throws ParseException {
+        Usuario aux = (Usuario) miBD.getUserDAO().search(u);
+
+
+        if (aux == null) {
+
+            return null;
+        } else if (aux!=null) {
+            return aux;
+        }
+        return null;
+    }
+
+    public ArrayList getUserOrders(Usuario u , Pedido p){
+        ArrayList<Pedido> pedidosUsuario=miBD.getOrderDAO().getPedidos(u);
+        ArrayList<OrderProducto> pedidoProductoUsuario=miBD.getOrderProductsDAO().getOrderProductos_O(p);
+
+        return pedidoProductoUsuario;
+
+    }
+
 
     public Usuario comprobarRegistro(Usuario u) throws ParseException {
         Usuario aux = (Usuario) miBD.getUserDAO().search(u);

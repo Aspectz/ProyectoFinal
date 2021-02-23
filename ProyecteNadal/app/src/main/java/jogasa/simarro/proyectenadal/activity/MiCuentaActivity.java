@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import jogasa.simarro.proyectenadal.R;
 
@@ -57,7 +59,7 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
 
 
@@ -89,13 +91,20 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
 
                 break;
             case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(MiCuentaActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
+                break;
 
             case R.id.buyAgainItem:
                 Intent buyagain=new Intent(MiCuentaActivity.this,VolverAcomprarActivity.class);
                 buyagain.putExtra("Usuario",usuarioLogeado);
                 startActivity(buyagain);
+                break;
+            case R.id.options:
+                Intent options=new Intent(MiCuentaActivity.this,SettingsActivity.class);
+                startActivity(options);
                 break;
 
             default:

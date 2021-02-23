@@ -2,6 +2,7 @@ package jogasa.simarro.proyectenadal.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class OrderProductsDAO{
         ContentValues contentValues = new ContentValues();
         OrderProducto oe = (OrderProducto) obj;
         contentValues.put("idOrder" , oe.getIdOrder());
-        contentValues.put("idProducto",oe.getIdProducto());
+        contentValues.put("idProduct",oe.getIdProducto());
 
         return MiBD.getDB().insert("orderProducts", null, contentValues);
     }
@@ -29,7 +30,7 @@ public class OrderProductsDAO{
         ContentValues contentValues = new ContentValues();
         OrderProducto oe = (OrderProducto) obj;
         contentValues.put("idOrder" , oe.getIdOrder());
-        contentValues.put("idProducto",oe.getIdProducto());
+        contentValues.put("idProduct",oe.getIdProducto());
 
         String condicion = "idOrder=" + String.valueOf(oe.getIdOrder());
 
@@ -45,30 +46,35 @@ public class OrderProductsDAO{
         //Se borra el event indicado en el campo de texto
         MiBD.getDB().delete("orderProducts", condicion, null);
     }
-
+    //SEARCH ORDERPRODUCTS WITH THE ID FROM THE ORDER PASSED WITH ARGS
     public Object search(Object obj) throws ParseException {
         OrderProducto oe = (OrderProducto) obj;
 
         String condicion = "idOrder=" + String.valueOf(oe.getIdOrder());
 
         String[] columnas = {
-                "idOrder","idProducto"
+                "idOrder","idProduct"
         };
+
 
         Cursor cursor = MiBD.getDB().query("orderProducts", columnas, condicion, null, null, null, null);
         OrderProducto nuevoOrderProducto = null;
+
         if (cursor.moveToFirst()) {
+         //   Log.d("nuevo","cursor"+cursor.getInt(0)+"");
             nuevoOrderProducto = new OrderProducto();
             nuevoOrderProducto.setIdOrder(cursor.getInt(0));
             nuevoOrderProducto.setIdProducto(cursor.getInt(1));
+
         }
+        Log.d("nuevo","ud"+nuevoOrderProducto.getIdOrder()+"  "+nuevoOrderProducto.getIdProducto());
         return nuevoOrderProducto;
     }
-
+    //SEARCH ALL ORDERPRODUCTS
     public ArrayList getAll() throws ParseException {
         ArrayList<OrderProducto> listaOrderProductos = new ArrayList<OrderProducto>();
         String[] columnas = {
-                "idOrder","idProducto"
+                "idOrder","idProduct"
         };
         Cursor cursor = MiBD.getDB().query("orderProducts", columnas, null, null, null, null, null);
 
@@ -82,14 +88,15 @@ public class OrderProductsDAO{
                 listaOrderProductos.add(nuevoOrderProductos);
             } while(cursor.moveToNext());
         }
+      //  Log.d("User",listaOrderProductos.size()+"");
         return listaOrderProductos;
     }
-
+    //SEARCH ORDERPRODUCTS WITH THE ID FROM THE PRODUCT PASSED WITH ARGS
     public ArrayList getOrderProductos_P(Producto producto) {
         ArrayList<OrderProducto> listaOrderProducto = new ArrayList<OrderProducto>();
-        String condicion = "idProducto=" + String.valueOf(producto.getId());
+        String condicion = "idProduct=" + String.valueOf(producto.getId());
         String[] columnas = {
-                "idOrder","idProducto"
+                "idOrder","idProduct"
         };
         Cursor cursor = MiBD.getDB().query("orderProducts", columnas, condicion, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -105,12 +112,14 @@ public class OrderProductsDAO{
         }
         return listaOrderProducto;
     }
-
+    //SEARCH ORDERPRODUCTS WITH THE ID FROM THE ORDER PASSED WITH ARGS
     public ArrayList getOrderProductos_O(Pedido pedido) {
+
+
         ArrayList<OrderProducto> listaOrderProducto = new ArrayList<OrderProducto>();
         String condicion = "idOrder=" + String.valueOf(pedido.getId());
         String[] columnas = {
-                "idOrder","idProducto"
+                "idOrder","idProduct"
         };
         Cursor cursor = MiBD.getDB().query("orderProducts", columnas, condicion, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -119,13 +128,15 @@ public class OrderProductsDAO{
                 OrderProducto nuevoOrderProducto = new OrderProducto();
                 nuevoOrderProducto.setIdOrder(cursor.getInt(0));
                 nuevoOrderProducto.setIdProducto(cursor.getInt(1));
-
+               // Log.d("usuario",nuevoOrderProducto.getIdOrder()+"");
                 listaOrderProducto.add(nuevoOrderProducto);
 
             } while (cursor.moveToNext());
         }
         return listaOrderProducto;
     }
+
+
 
     public ArrayList getOrders(Producto producto) throws ParseException {
         ArrayList<OrderProducto> listaOrderProducto = getOrderProductos_P(producto);

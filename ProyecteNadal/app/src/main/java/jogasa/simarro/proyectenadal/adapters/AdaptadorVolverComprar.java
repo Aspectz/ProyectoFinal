@@ -36,18 +36,28 @@ public class AdaptadorVolverComprar extends ArrayAdapter {
         LayoutInflater inflater=context.getLayoutInflater();
         View item=inflater.inflate(R.layout.adaptador_volver_comprar,null);
 
+        String nombre=pedidos.get(position).getNombre();
+
+
         TextView nombreProducto=(TextView) item.findViewById(R.id.nombreProducto);
         TextView fechaPedido=(TextView) item.findViewById(R.id.fechaPedido);
         ImageView imagen=(ImageView) item.findViewById(R.id.pedidoFoto);
-
-        SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy");
-        String formated=format.format(pedidos.get(position).getFechacreacionPedido().getTime());
-
         String fecha=getContext().getString(R.string.orderDate);
 
-        /*nombreProducto.setText(pedidos.get(position).getProducto().getNombre());
-        fechaPedido.setText(fecha+":"+formated);
-        imagen.setImageResource(pedidos.get(position).getProducto().getFoto());*/
+        nombreProducto.setText(nombre);
+        fechaPedido.setText(fecha+":"+pedidos.get(position).getFechacreacionPedido());
+
+        if(nombre.equals("Banana")) imagen.setImageResource(R.drawable.banana);
+        if(nombre.equals("Aguacate"))imagen.setImageResource(R.drawable.aguacate);
+        if(nombre.equals("Limon"))imagen.setImageResource(R.drawable.limon);
+        if(nombre.equals("Cereza"))imagen.setImageResource(R.drawable.cereza);
+        if(nombre.equals("Fresa"))imagen.setImageResource(R.drawable.fresa);
+        if(nombre.equals("Naranja"))imagen.setImageResource(R.drawable.naranja);
+        if(nombre.equals("Manzana"))imagen.setImageResource(R.drawable.manzana);
+        if(nombre.equals("Arandano"))imagen.setImageResource(R.drawable.arandano);
+        if(nombre.equals("Pepino"))imagen.setImageResource(R.drawable.pepino);
+
+
 
         return item;
     }

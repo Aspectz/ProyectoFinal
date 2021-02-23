@@ -9,4 +9,12 @@
             android:entries="@array/pais"
             android:entryValues="@array/codigopais"/>
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/notifications">
+        <SwitchPreference
+            android:key="notifications"
+            android:title="@string/notifications"
+            android:summary="@string/notifications"
+            ></SwitchPreference>
+    </PreferenceCategory>
 </PreferenceScreen>

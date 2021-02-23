@@ -9,14 +9,15 @@ public class Pedido implements Serializable {
 
     private int id;
     private String nombre,metodoFacturacion,direccionEnvio;
-    private Calendar fechacreacionPedido;
+    private String fechacreacionPedido;
     private float precio;
-    private ArrayList<Producto> productos;
+    private ArrayList<Producto> productos=new ArrayList<Producto>();
+    private int cantidadPedido;
     private Usuario usuarioCreador;
     private boolean isFinished;
 
     public Pedido(){}
-    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, Calendar fechacreacionPedido, float precio, ArrayList<Producto> productos) {
+    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, String fechacreacionPedido, float precio, ArrayList<Producto> productos) {
         this.nombre = nombre;
         this.metodoFacturacion = metodoFacturacion;
         this.direccionEnvio = direccionEnvio;
@@ -25,10 +26,16 @@ public class Pedido implements Serializable {
         this.productos = productos;
     }
     //PEDIDO SIN ACABAR
-    public Pedido(String nombre,Producto producto){
+    public Pedido(String nombre){
         this.nombre=nombre;
-        this.productos=new ArrayList<Producto>();
-        productos.add(producto);
+    }
+
+    public int getCantidadPedido() {
+        return cantidadPedido;
+    }
+
+    public void setCantidadPedido(int cantidadPedido) {
+        this.cantidadPedido = cantidadPedido;
     }
 
     public int getId() {
@@ -63,11 +70,11 @@ public class Pedido implements Serializable {
         this.direccionEnvio = direccionEnvio;
     }
 
-    public Calendar getFechacreacionPedido() {
+    public String getFechacreacionPedido() {
         return fechacreacionPedido;
     }
 
-    public void setFechacreacionPedido(Calendar fechacreacionPedido) {
+    public void setFechacreacionPedido(String fechacreacionPedido) {
         this.fechacreacionPedido = fechacreacionPedido;
     }
 

@@ -32,9 +32,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import jogasa.simarro.proyectenadal.R;
+import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
@@ -103,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        Usuario u=new Usuario("juan","juan","1234");
+
         //UsuariosBD.getUsuarios().add(u);
         forgotPassword=(TextView)findViewById(R.id.forgotPassword);
         signUp=(Button)findViewById(R.id.registerButton);
@@ -179,19 +181,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        /*mAuth.addAuthStateListener(authStateListener);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-
-            FirebaseUser user = mAuth.getCurrentUser();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            Usuario u = new Usuario();
-            u.setNombre(user.getDisplayName());
-            u.setEmail(user.getEmail());
-            intent.putExtra("Usuario", u);
-            startActivity(intent);
-        }*/
     }
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
@@ -200,20 +190,33 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             Usuario u = new Usuario();
 
-
+                            Log.d("Usuario",user.getDisplayName());
+                            user.updatePassword("123123");
                             u.setEmail(user.getEmail());
+                            u.setNombre(user.getDisplayName());
+                            u.setContraseña("123123");
                             try {
-                                u=usuariosOperacional.login(u);
+
+                                    if(usuariosOperacional.loginGoogle(u)!=null){
+                                        Toast.makeText(LoginActivity.this, "Login con google", Toast.LENGTH_SHORT).show();
+                                        u=usuariosOperacional.loginGoogle(u);
+                                    }
+                                    else{
+                                        Toast.makeText(LoginActivity.this, "Email de verificacion Enviado", Toast.LENGTH_SHORT).show();
+                                        user.sendEmailVerification();
+
+                                        usuariosOperacional.registrarUsuario(u);
+                                    }
+
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
-                            intent.putExtra("Usuario", u);
-                            Log.d("usuario", u.toString());
+                            intent.putExtra("Usuario",u);
                             startActivity(intent);
                         } else {
                             Toast.makeText(LoginActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
@@ -237,23 +240,27 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(!task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }else{
                         Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                         FirebaseUser currentuser=mAuth.getCurrentUser();
                         if(currentuser.isEmailVerified()){
                             Usuario u = new Usuario();
-                           Log.d("CURRENT", "C:"+currentuser.getEmail());
-                            u.setEmail(currentuser.getEmail());
+                            u.setEmail(username);
                             u.setContraseña(passwd);
 
                             try {
-                                usuariosOperacional.login(u);
+                                if(usuariosOperacional.login(u)!=null){
+
+                                    u=usuariosOperacional.login(u);
+                                    intent.putExtra("Usuario", u);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(LoginActivity.this, "Usuario no esta en la bda", Toast.LENGTH_SHORT).show();
+                                }
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            intent.putExtra("Usuario", u);
-                            startActivity(intent);
                         }else{
                             Toast.makeText(LoginActivity.this, "Email no verificado", Toast.LENGTH_SHORT).show();
                         }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -16,18 +17,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -35,6 +40,7 @@ import java.util.Locale;
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
 
+import jogasa.simarro.proyectenadal.fragments.FragmentNoticias;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Tienda;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
@@ -54,6 +60,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences pref =getSharedPreferences("preferencias", Context.MODE_PRIVATE);
+        String language=pref.getString("idioma","esp");
+
+        if(language.compareTo("esp")==0)  setAppLocale("es");
+        if(language.compareTo("eng")==0)  setAppLocale("en");
+
+
         setContentView(R.layout.activity_main);
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
@@ -75,8 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
-
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
 
         if(savedInstanceState==null){
@@ -85,10 +98,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction=fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new FragmentInicio());
             fragmentTransaction.commit();
+
+            BottomNavigationView botom=(BottomNavigationView)findViewById(R.id.bottomBarMain);
+            botom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    fragmentTransaction=fragmentManager.beginTransaction();
+                    Fragment f=null;
+
+
+                    if(item.getItemId()==R.id.inicio){
+                        fragmentTransaction.replace(R.id.container_fragment,new FragmentInicio());
+                    }
+                    if(item.getItemId()==R.id.noticias){
+                        fragmentTransaction.replace(R.id.container_fragment,new FragmentNoticias());
+                    }
+                    fragmentTransaction.commit();
+                    return true;
+                }
+            });
+
         }
 
     }
 
+    private void setAppLocale(String locale) {
+        Resources res=getResources();
+        DisplayMetrics dm=res.getDisplayMetrics();
+        Configuration config=res.getConfiguration();
+
+        config.setLocale(new Locale(locale.toLowerCase()));
+        res.updateConfiguration(config,dm);
+    }
 
     @Override
     protected void onResume() {
@@ -133,6 +174,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.options:
                 Intent options=new Intent(MainActivity.this,SettingsActivity.class);
                 startActivity(options);
+                break;
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(MainActivity.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
+                break;
             default:
                 return false;
         }
@@ -145,17 +192,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.menu_toolbar_main,menu);
         return true;
     }
-    //SOBRESCRIBO
+
     @Override
-    //BOOLEAN PUBLICO ITEM PILLAO
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //SI LA ID ES ESTA POS HACES ESTO
+
         if(item.getItemId()==R.id.shoppingCart){
             Intent shipping=new Intent(MainActivity.this,ShippingCart.class);
             shipping.putExtra("Usuario",usuarioLogeado);
             startActivity(shipping);
         }
-        //DEVUELVO TRUE
+
         return true;
     }
 }

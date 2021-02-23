@@ -27,7 +27,7 @@
             android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ORDER SUMMARY"
+            android:text="@string/orderSummary"
             android:layout_gravity="center"
             android:id="@+id/orderInformation"
             android:textSize="25dp"></TextView>
@@ -48,6 +48,7 @@
             android:id="@+id/metodoFacturacion"
             android:layout_marginTop="30dp"
             android:layout_width="300dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:hint="@string/creditCard">
         </EditText>
@@ -55,20 +56,65 @@
             android:id="@+id/direccionEnvio"
             android:layout_marginTop="30dp"
             android:layout_width="300dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:hint="@string/shippingAddres">
         </EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnComprar"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/custom_button"
-            android:text="@string/buy"></Button>
     </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shippingCartListView"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:text="TOTAL:"
+                android:textAlignment="center"></TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalPriceSummary"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="price"></TextView>
+
+            <Button
+                android:layout_width="154dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/botonComprarSummary"
+                android:background="@drawable/custom_button"
+                android:text="@string/buy"></Button>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
+
+
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

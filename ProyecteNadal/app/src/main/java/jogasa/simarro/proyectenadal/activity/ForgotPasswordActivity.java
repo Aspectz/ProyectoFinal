@@ -50,13 +50,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             }
         };
-
-
-
-
-
-
-
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,29 +63,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 recoverPasswd();
-
-                /*if(searchEmail()){
-                    Toast.makeText(ForgotPasswordActivity.this, "EMAIL SENDED", Toast.LENGTH_SHORT).show();
-                    emailText.getEditText().setText("");
-                }else{
-                    Toast.makeText(ForgotPasswordActivity.this, "YOUR EMAIL IS NOT CORRECT", Toast.LENGTH_SHORT).show();
-                }*/
-
-
             }
         });
 
-    }
-    private boolean searchEmail(){
-        String correo=emailText.getEditText().getText().toString();
-        /*for(Usuario u : UsuariosBD.getUsuarios()){
-            if(u.getEmail().compareTo(correo)==0){
-                return true;
-            }
-        }*/
-        return false;
     }
     @Override
     protected void onStop() {

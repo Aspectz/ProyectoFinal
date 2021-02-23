@@ -2,33 +2,20 @@ package jogasa.simarro.proyectenadal.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.pojo.FruitShopAPIService;
 import jogasa.simarro.proyectenadal.pojo.Producto;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdapterProductos extends ArrayAdapter {
 
@@ -57,8 +44,6 @@ public class AdapterProductos extends ArrayAdapter {
 
        nombre.setText(productos.get(position).getNombre());
         precio.setText(String.valueOf(productos.get(position).getPrecio())+"€/Kg");
-
-
 
         foto.setImageResource(productos.get(position).getFoto());
 

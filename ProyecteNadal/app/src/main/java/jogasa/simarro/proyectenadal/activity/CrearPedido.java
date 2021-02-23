@@ -5,36 +5,38 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.adapters.AdaptadorListaShipping;
-import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
-import jogasa.simarro.proyectenadal.fragments.FragmentMiCuenta;
-import jogasa.simarro.proyectenadal.fragments.FragmentPedidos;
-import jogasa.simarro.proyectenadal.fragments.FragmentVolverComprar;
+import jogasa.simarro.proyectenadal.bd.MiBD;
+
+import jogasa.simarro.proyectenadal.pojo.OrderProducto;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
-import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 import jogasa.simarro.proyectenadal.pojo.Producto;
-import jogasa.simarro.proyectenadal.pojo.Tienda;
+
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class CrearPedido extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,10 +46,13 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     private NavigationView navigationView;
     private Usuario usuarioLogeado;
     private ArrayList<Producto> productosSeleccionado;
-    private int cantidad;
     private ListView listadoCompra;
+    private ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
+    private ArrayList<Pedido> pedidosAux;
+    private ArrayList<Producto> productos;
     private EditText nombreDestinatario, metodoFacturacion,direccionEnvio;
-
+    private MiBD miBD;
+    private float price=0;
 
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -56,9 +61,10 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        miBD=MiBD.getInstance(getApplicationContext());
         usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
         productosSeleccionado=(ArrayList<Producto>)getIntent().getSerializableExtra("Productos");
-        cantidad=(Integer)getIntent().getSerializableExtra("Cantidad");
 
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
         navigationView=(NavigationView)findViewById(R.id.navigation_view);
@@ -72,57 +78,42 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText("Hello, "+usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
         getSupportActionBar().setTitle("Order");
 
         //PEDIDOS
 
-        /*TextView nombreProducto=(TextView)findViewById(R.id.nombreProducto);
-        TextView precio=(TextView)findViewById(R.id.precioProducto);
-        TextView descripcion=(TextView)findViewById(R.id.descripcionProducto);*/
 
-
-
+        Usuario comprador=(Usuario)getIntent().getSerializableExtra("Usuario");
         listadoCompra=(ListView)findViewById(R.id.listadoCompra);
-        final ArrayList<Pedido> pedidosSinCompletar = ((Usuario)getIntent().getSerializableExtra("Usuario")).getPedidos();
-
-        /*float price=0;
-        for(int i=0;i<pedidosSinCompletar.size();i++){
-            price+=pedidosSinCompletar.get(i).getCantidad()*pedidosSinCompletar.get(i).getProducto().getPrecio();
-        }*/
-
-        listadoCompra.setAdapter(new AdaptadorListaShipping(this,pedidosSinCompletar));
-
-       /* nombreProducto.setText(productoSeleccionado.getNombre());
-        precio.setText(String.valueOf(productoSeleccionado.getPrecio()));
-        descripcion.setText(productoSeleccionado.getDescripcion());*/
 
         nombreDestinatario=(EditText)findViewById(R.id.nombreDestinatario);
         metodoFacturacion=(EditText)findViewById(R.id.metodoFacturacion);
         direccionEnvio=(EditText)findViewById(R.id.direccionEnvio);
+        pedidosAux= miBD.getOrderDAO().getPedidos(comprador);
+        productos=new ArrayList<Producto>();
 
+        makeOrder();
 
-        Button btnComprar=(Button)findViewById(R.id.btnComprar);
+        listadoCompra.setAdapter(new AdaptadorListaShipping(this,pedidos));
+
+        Button btnComprar=(Button)findViewById(R.id.botonComprarSummary);
         btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()){
-                    float precioFinal=0;
-                    for(Pedido p : pedidosSinCompletar){
-                       // precioFinal+=p.getCantidad()*p.getProducto().getPrecio();
-                    }
+                    Pedido pedido=new Pedido(productos.get(0).getNombre(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), formatDate(),price,productos);
+                    pedido.setFinished(true);
+                    miBD.getOrderDAO().insertOrderToClient(pedido,usuarioLogeado);
 
-                    Pedido pedido=new Pedido(nombreDestinatario.getText().toString(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), Calendar.getInstance(),precioFinal,productosSeleccionado);
-                    usuarioLogeado.anadirPedido(pedido);
+                    ArrayList<Pedido> pedABorrar=miBD.getOrderDAO().getPedidos(usuarioLogeado);
 
-                    for(int i=0;i<usuarioLogeado.getPedidos().size();i++){
-                        if(!usuarioLogeado.getPedidos().get(i).isFinished())   {
-                            usuarioLogeado.getPedidos().remove(i);
+                    for(Pedido p1 : pedABorrar){
+                        if(!p1.isFinished()){
+                            miBD.getOrderDAO().delete(p1);
                         }
                     }
-
-
                     Intent home=new Intent(CrearPedido.this,MainActivity.class);
                     home.putExtra("Usuario",usuarioLogeado);
                     startActivity(home);
@@ -134,6 +125,11 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        makeOrder();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -148,7 +144,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 Intent listaPedidos=new Intent(CrearPedido.this, ListaPedidos.class);
                 listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
-
                 break;
             case R.id.buyAgainItem:
                 Intent buyagain=new Intent(CrearPedido.this,VolverAcomprarActivity.class);
@@ -160,10 +155,57 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 micuenta.putExtra("Usuario",usuarioLogeado);
                 startActivity(micuenta);
                 break;
+            case R.id.logOut:
+                AuthUI.getInstance().signOut(this);
+                FirebaseAuth.getInstance().signOut();
+                Intent cerrarSession=new Intent(CrearPedido.this,LoginActivity.class);
+                startActivity(cerrarSession);
+                break;
+            case R.id.options:
+                Intent options=new Intent(CrearPedido.this,SettingsActivity.class);
+                startActivity(options);
+                break;
             default:
                 return false;
         }
         drawerLayout.closeDrawers();
         return false;
+    }
+    private String formatDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(cal.getTime());
+        String formatted = format1.format(cal.getTime());
+        return formatted;
+    }
+    private void makeOrder(){
+
+        for( Pedido p1 : pedidosAux){
+            if(!p1.isFinished()){
+                OrderProducto aux=new OrderProducto();
+                aux.setIdOrder(p1.getId());
+                try {
+                    aux=(OrderProducto) miBD.getOrderProductsDAO().search(aux);
+                    Producto prodAux=new Producto();
+                    prodAux.setId(aux.getIdProducto());
+                    p1.getProductos().add((Producto) miBD.getProductDAO().search(prodAux));
+                    pedidos.add(p1);
+                    productos.add((Producto)miBD.getProductDAO().search(prodAux));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for(int i=0;i<pedidos.size();i++)
+            price+=pedidos.get(i).getCantidadPedido()*pedidos.get(i).getProductos().get(0).getPrecio();
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        TextView priceTotal=(TextView)findViewById(R.id.totalPriceSummary);
+        priceTotal.setText(String.valueOf(df.format(price)));
+
+
     }
 }

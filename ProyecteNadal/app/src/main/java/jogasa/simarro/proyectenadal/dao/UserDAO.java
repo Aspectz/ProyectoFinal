@@ -7,10 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.service.autofill.UserData;
 import android.text.TextUtils;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.firebase.ui.auth.data.model.User;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.time.chrono.MinguoDate;
 import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.bd.MiBD;
@@ -30,8 +34,8 @@ public class UserDAO  {
         ContentValues contentValues = new ContentValues();
         Usuario c = (Usuario) obj;
         contentValues.put("nombre" , c.getNombre());
-        contentValues.put("contraseña", c.getContraseña());
-        contentValues.put("correo", c.getContraseña());
+        contentValues.put("passwd", c.getContraseña());
+        contentValues.put("correo", c.getEmail());
 
         return MiBD.getDB().insert("users",null,contentValues);
 
@@ -43,10 +47,10 @@ public class UserDAO  {
         ContentValues contentValues = new ContentValues();
         Usuario c = (Usuario) obj;
         contentValues.put("nombre" , c.getNombre());
-        contentValues.put("contraseña", c.getContraseña());
-        contentValues.put("correo", c.getContraseña());
+        contentValues.put("passwd", c.getContraseña());
+        contentValues.put("correo", c.getEmail());
 
-        String condicion = "id=" + String.valueOf(c.getId());
+        String condicion = "_id=" + String.valueOf(c.getId());
 
         int resultado = MiBD.getDB().update("users", contentValues, condicion, null);
 
@@ -55,29 +59,39 @@ public class UserDAO  {
 
     public void delete(Object obj) {
         Usuario c = (Usuario) obj;
-        String condicion = "id=" + String.valueOf(c.getId());
+        String condicion = "_id=" + String.valueOf(c.getId());
 
         //Se borra el user indicado en el campo de texto
        MiBD.getDB().delete("users", condicion, null);
     }
     public Object search(Object obj) throws ParseException {
+
+        ArrayList<Usuario> us=getAll();
+
         Usuario c = (Usuario) obj;
+
         String condicion;
+
         if(TextUtils.isEmpty(c.getEmail())){
-            condicion = "id=" + String.valueOf(c.getId());
+
+            condicion = "_id=" + String.valueOf(c.getId());
         }else{
+
+
             condicion = "correo=" + "'" + c.getEmail() + "'";
         }
 
-        ;
+
+
 
         String[] columnas = {
-                "_id","nombre","contraseña","correo"
+                "_id","nombre","passwd","correo"
         };
 
         Cursor cursor = MiBD.getDB().query("users", columnas, condicion, null, null, null, null);
-        Usuario nuevoUsuario = null;
+        Usuario nuevoUsuario=null;
         if (cursor.moveToFirst()) {
+
             nuevoUsuario = new Usuario();
             nuevoUsuario.setId(cursor.getInt(0));
             nuevoUsuario.setNombre(cursor.getString(1));
@@ -85,16 +99,19 @@ public class UserDAO  {
             nuevoUsuario.setEmail(cursor.getString(3));
 
 
+
             nuevoUsuario.setPedidos(MiBD.getInstance(null).getOrderDAO().getPedidos(nuevoUsuario));
 
 
         }
+
+
         return nuevoUsuario;
     }
     public ArrayList getAll() throws ParseException {
-        ArrayList<Usuario> listaStudios = new ArrayList<Usuario>();
+        ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
         String[] columnas = {
-                "_id","nombre","contraseña","correo"
+                "_id","nombre","passwd","correo"
         };
         Cursor cursor = MiBD.getDB().query("users", columnas, null, null, null, null, null);
 
@@ -111,11 +128,11 @@ public class UserDAO  {
 
                 u.setPedidos(MiBD.getInstance(null).getOrderDAO().getPedidos(u));
 
-                listaStudios.add(u);
+                usuarios.add(u);
 
             } while(cursor.moveToNext());
         }
-        return listaStudios;
+        return usuarios;
     }
 
 

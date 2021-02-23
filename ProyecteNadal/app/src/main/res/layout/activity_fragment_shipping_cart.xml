@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_alignTop="@id/shippingCartListView"
-        android:text="My Cart"
+        android:text="@string/myCart"
         android:textSize="25dp"
         android:layout_alignParentTop="true"/>
 
@@ -23,11 +23,28 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"></View>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/relativeCart"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/emptyCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/emptyCart"
+            android:textSize="30dp"></TextView>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/shippingCartListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/shippingCartListView"
+        android:layout_marginBottom="0dp"
         android:layout_weight="1"
         android:divider="@color/white"
         android:dividerHeight="0dp"></ListView>
@@ -36,7 +53,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="#F2FFFFFF"
+    android:background="@android:color/transparent"
     android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
@@ -74,4 +91,4 @@
 </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
