@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                             try {
 
                                     if(usuariosOperacional.loginGoogle(u)!=null){
-                                        Toast.makeText(LoginActivity.this, "Login con google", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(LoginActivity.this, "Login con google", Toast.LENGTH_SHORT).show();
                                         u=usuariosOperacional.loginGoogle(u);
                                     }
                                     else{

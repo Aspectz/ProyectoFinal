@@ -62,7 +62,7 @@ public class AboutUsActivity extends AppCompatActivity implements NavigationView
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText(String.valueOf(R.string.hello)+usuarioLogeado.getNombre());
+        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
 
 
         if(savedInstanceState==null){

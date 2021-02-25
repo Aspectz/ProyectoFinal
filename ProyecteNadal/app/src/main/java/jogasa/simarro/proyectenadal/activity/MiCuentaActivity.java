@@ -106,7 +106,11 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
                 Intent options=new Intent(MiCuentaActivity.this,SettingsActivity.class);
                 startActivity(options);
                 break;
-
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(MiCuentaActivity.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
+                break;
             default:
                 return false;
         }

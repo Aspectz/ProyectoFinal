@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.navigation.NavigationView;
@@ -105,6 +105,11 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
                 FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(ShippingCart.this,LoginActivity.class);
                 startActivity(cerrarSession);
+                break;
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(ShippingCart.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
                 break;
             default:
                 return false;

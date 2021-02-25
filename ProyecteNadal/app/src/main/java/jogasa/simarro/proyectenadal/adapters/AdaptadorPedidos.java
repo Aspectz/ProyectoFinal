@@ -51,7 +51,6 @@ public class AdaptadorPedidos extends ArrayAdapter {
 
 
         String fecha=getContext().getString(R.string.orderDate);
-        Toast.makeText(context, ""+pedidos.get(position).getFechacreacionPedido(), Toast.LENGTH_SHORT).show();
         nombreProducto.setText(pedidos.get(position).getNombre());
         fechaPedido.setText(fecha+":"+pedidos.get(position).getFechacreacionPedido());
         if(nombre.equals("Banana")) imagen.setImageResource(R.drawable.banana);

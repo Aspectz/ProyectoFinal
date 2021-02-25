@@ -22,7 +22,7 @@ import jogasa.simarro.proyectenadal.pojo.Producto;
 
 public class MiBD extends SQLiteOpenHelper {
 
-   private static int version=13;
+   private static int version=18;
     private static String nombreDB="usuarios";
     private static SQLiteDatabase.CursorFactory factory=null;
     private static SQLiteDatabase db;

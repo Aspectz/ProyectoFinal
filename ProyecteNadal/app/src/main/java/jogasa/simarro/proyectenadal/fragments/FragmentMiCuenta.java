@@ -16,8 +16,13 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 
+import java.util.ArrayList;
+
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.ListaPedidos;
+import jogasa.simarro.proyectenadal.activity.MiCuentaActivity;
+import jogasa.simarro.proyectenadal.bd.MiBD;
+import jogasa.simarro.proyectenadal.pojo.Pedido;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class FragmentMiCuenta extends Fragment {
@@ -39,10 +44,12 @@ public class FragmentMiCuenta extends Fragment {
         String emails=getString(R.string.emails);
         String address=getString(R.string.lastShippingAddress);
 
+        Pedido ultimoPedido=(Pedido)MiBD.getInstance(getContext()).getOrderDAO().getPedidos(user).get(MiBD.getInstance(getContext()).getOrderDAO().getPedidos(user).size()-1);
+
         nombre.setText(name+":"+user.getNombre());
         email.setText(emails+":"+user.getEmail());
         if(!user.getPedidos().isEmpty()){
-            lastAddress.setText(address+":"+user.getPedidos().get(user.getPedidos().size()-1).getDireccionEnvio());
+            lastAddress.setText(address+":"+ultimoPedido.getDireccionEnvio());
         }
 
 

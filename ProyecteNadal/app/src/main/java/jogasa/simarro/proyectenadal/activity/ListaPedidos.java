@@ -102,6 +102,11 @@ public class ListaPedidos extends AppCompatActivity implements NavigationView.On
                 Intent options=new Intent(ListaPedidos.this,SettingsActivity.class);
                 startActivity(options);
                 break;
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(ListaPedidos.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
+                break;
             default:
                 return false;
         }

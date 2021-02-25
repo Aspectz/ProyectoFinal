@@ -108,6 +108,11 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
                 Intent cerrarSession=new Intent(VisualizarProductoActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(VisualizarProductoActivity.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
+                break;
             default:
                 return false;
         }

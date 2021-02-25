@@ -36,6 +36,7 @@ public class OrderDAO {
         contentValues.put("isFinished", p.isFinished() ? 1 : 0);
         contentValues.put("idUser",u.getId());
         contentValues.put("cantity",p.getCantidadPedido());
+        contentValues.put("shipmentAddress",p.getDireccionEnvio());
         contentValues.put("date",p.getFechacreacionPedido());
         return MiBD.getDB().insert("orders", null, contentValues);
     }

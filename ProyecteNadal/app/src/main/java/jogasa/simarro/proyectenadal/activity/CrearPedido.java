@@ -94,7 +94,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         pedidosAux= miBD.getOrderDAO().getPedidos(comprador);
         productos=new ArrayList<Producto>();
 
-        makeOrder();
+
 
         listadoCompra.setAdapter(new AdaptadorListaShipping(this,pedidos));
 
@@ -103,6 +103,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             @Override
             public void onClick(View v) {
                 if(!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()){
+
                     Pedido pedido=new Pedido(productos.get(0).getNombre(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), formatDate(),price,productos);
                     pedido.setFinished(true);
                     miBD.getOrderDAO().insertOrderToClient(pedido,usuarioLogeado);
@@ -164,6 +165,11 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             case R.id.options:
                 Intent options=new Intent(CrearPedido.this,SettingsActivity.class);
                 startActivity(options);
+                break;
+            case R.id.aboutUs:
+                Intent aboutUs=new Intent(CrearPedido.this,AboutUsActivity.class);
+                aboutUs.putExtra("Usuario",usuarioLogeado);
+                startActivity(aboutUs);
                 break;
             default:
                 return false;
