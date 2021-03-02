@@ -15,7 +15,7 @@
             <group android:checkableBehavior="single">
                 <item android:title="@string/account" android:id="@+id/accountItem"/>
                 <item android:title="@string/configuration" android:id="@+id/options"/>
-                <item android:title="About Us" android:id="@+id/aboutUs"/>
+                <item android:title="@string/aboutUs" android:id="@+id/aboutUs"/>
                 <item android:title="@string/logOut" android:id="@+id/logOut"/>
             </group>
         </menu>
