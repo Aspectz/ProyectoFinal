@@ -85,7 +85,6 @@ public class FragmentShippingCart extends Fragment {
 
             totalPrice.setText(String.valueOf(df.format(price)));
         }else{
-            Toast.makeText(getContext(), "empty", Toast.LENGTH_SHORT).show();
             RelativeLayout rl=(RelativeLayout)getView().findViewById(R.id.relativeCart);
             rl.setVisibility(View.VISIBLE);
             emptyCart.setVisibility(View.VISIBLE);
