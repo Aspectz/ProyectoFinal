@@ -115,12 +115,12 @@ public class AdaptadorListaShipping extends ArrayAdapter {
                 TextView child = (TextView)vwParentRow.getChildAt(1);
 
 
-
+                //Get unit price
                 LinearLayout vwGrandParent=(LinearLayout)vwParentRow.getParent();
                 TextView unitPriceTxt=(TextView)vwGrandParent.getChildAt(2);
                 child.setText(String.valueOf(cantInicial));
 
-
+                //Get first layout to delete when cantity reach 0
                 LinearLayout vwFirstLayout=(LinearLayout)vwParentRow.getParent().getParent();
                 TextView finalPrice=context.findViewById(R.id.totalPrice);
 
