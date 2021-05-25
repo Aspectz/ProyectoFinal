@@ -7,12 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,20 +30,17 @@ import java.util.ArrayList;
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.VisualizarProductoActivity;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
-import jogasa.simarro.proyectenadal.bd.MiBD;
 import jogasa.simarro.proyectenadal.pojo.Producto;
-import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 
 public class FragmentInicio extends Fragment implements AdapterView.OnItemClickListener {
     public GridView grid;
-    ArrayList<Producto> productos=new ArrayList<Producto>();
-
+    private Spinner orderSpinner;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view=  inflater.inflate(R.layout.activity_fragment_inicio,container,false);
+        View view=  inflater.inflate(R.layout.fragment_inicio,container,false);
         return view;
     }
 
@@ -41,28 +48,59 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         grid=(GridView)getView().findViewById(R.id.gridProductos);
+        orderSpinner=(Spinner)getView().findViewById(R.id.orderBySpinner);
         grid.setOnItemClickListener(this);
 
-        grid.setAdapter(new AdapterProductos(this,productos));
-
+        
     }
     public void mostrarProductos() throws ParseException {
-        ArrayList<Producto> productos= MiBD.getInstance(getContext()).getProductDAO().getAll();
-        for(Producto p : productos){
-            if(p.getNombre().equals("Banana")) p.setFoto(R.drawable.banana);
-            if(p.getNombre().equals("Aguacate"))p.setFoto(R.drawable.aguacate);
-            if(p.getNombre().equals("Limon"))p.setFoto(R.drawable.limon);
-            if(p.getNombre().equals("Cereza"))p.setFoto(R.drawable.cereza);
-            if(p.getNombre().equals("Fresa"))p.setFoto(R.drawable.fresa);
-            if(p.getNombre().equals("Naranja"))p.setFoto(R.drawable.naranja);
-            if(p.getNombre().equals("Manzana"))p.setFoto(R.drawable.manzana);
-            if(p.getNombre().equals("Arandano"))p.setFoto(R.drawable.arandano);
-            if(p.getNombre().equals("Pepino"))p.setFoto(R.drawable.pepino);
-        }
 
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        ArrayList<Producto> productos=new ArrayList<Producto>();
+        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.orderByArray));
+        orderSpinner.setAdapter(spinnerAdapter);
+        orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(parent.getItemAtPosition(position).toString().equals(getText(R.string.ascending))){
+                    productos.clear();
+                    db.collection("Products").orderBy("precio", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for(QueryDocumentSnapshot q: task.getResult()){
+                                productos.add(q.toObject(Producto.class));
+                            }
+                            grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+                        }
+                    });
+                }
+                else{
+                    productos.clear();
+                    db.collection("Products").orderBy("precio", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for(QueryDocumentSnapshot q: task.getResult()){
+                                productos.add(q.toObject(Producto.class));
+                            }
+                            grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                db.collection("Products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for(QueryDocumentSnapshot q: task.getResult()){
+                            productos.add(q.toObject(Producto.class));
+                        }
+                        grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+                    }
+                });
+            }
+        });
 
-
-        grid.setAdapter(new AdapterProductos(this,productos));
     }
 
     @Override
@@ -78,15 +116,15 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Producto seleccionado=(Producto)grid.getAdapter().getItem(position);
-
+        //Recoge el producto incluso con firestore
         Intent visualizar=new Intent(getActivity(), VisualizarProductoActivity.class);
-
         visualizar.putExtra("Producto",seleccionado);
-        visualizar.putExtra("Usuario",(Usuario)getActivity().getIntent().getSerializableExtra("Usuario"));
 
         startActivity(visualizar);
-
-
-
+    }
+    private class AdapterProducts extends RecyclerView.ViewHolder  {
+        public AdapterProducts(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 }

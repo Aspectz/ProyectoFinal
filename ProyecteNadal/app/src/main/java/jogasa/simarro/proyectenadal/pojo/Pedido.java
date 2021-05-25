@@ -3,40 +3,40 @@ package jogasa.simarro.proyectenadal.pojo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Pedido implements Serializable {
 
-
+    private static final AtomicInteger count = new AtomicInteger(0);
     private int id;
     private String nombre,metodoFacturacion,direccionEnvio;
     private String fechacreacionPedido;
-    private float precio;
-    private ArrayList<Producto> productos=new ArrayList<Producto>();
-    private int cantidadPedido;
-    private Usuario usuarioCreador;
+   // private float precio;
+   // private ArrayList<Producto> productos=new ArrayList<Producto>();
+   // private int cantidadPedido;
+    private String idUser;
     private boolean isFinished;
+    private Estados estado;
 
-    public Pedido(){}
+
+    public Pedido(){
+        this.setId(count.incrementAndGet());
+    }
     public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, String fechacreacionPedido, float precio, ArrayList<Producto> productos) {
         this.nombre = nombre;
         this.metodoFacturacion = metodoFacturacion;
         this.direccionEnvio = direccionEnvio;
         this.fechacreacionPedido = fechacreacionPedido;
-        this.precio = precio;
-        this.productos = productos;
+        //this.precio = precio;
+        this.setId(count.incrementAndGet());
+        //this.productos = productos;
     }
     //PEDIDO SIN ACABAR
     public Pedido(String nombre){
         this.nombre=nombre;
+        this.setId(count.incrementAndGet());
     }
 
-    public int getCantidadPedido() {
-        return cantidadPedido;
-    }
-
-    public void setCantidadPedido(int cantidadPedido) {
-        this.cantidadPedido = cantidadPedido;
-    }
 
     public int getId() {
         return id;
@@ -78,25 +78,15 @@ public class Pedido implements Serializable {
         this.fechacreacionPedido = fechacreacionPedido;
     }
 
-    public Usuario getUsuarioCreador() {
-        return usuarioCreador;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setUsuarioCreador(Usuario usuarioCreador) {
-        this.usuarioCreador = usuarioCreador;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
-    public float getPrecio() {
-        return precio;
-    }
 
-    public void setPrecio(float precio) {
-        this.precio = precio;
-    }
-
-    public ArrayList<Producto> getProductos() {
-        return productos;
-    }
 
     public boolean isFinished() {
         return isFinished;
@@ -106,7 +96,13 @@ public class Pedido implements Serializable {
         isFinished = finished;
     }
 
-    public void setProductos(ArrayList<Producto> productos) {
-        this.productos = productos;
+
+
+    public Estados getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estados estado) {
+        this.estado = estado;
     }
 }

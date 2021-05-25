@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,14 +29,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.bd.MiBD;
-import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
@@ -48,17 +45,15 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private SignInButton signInButton;
     public static final int RC_SIGN_IN = 123;
-    UsuariosOperacional usuariosOperacional;
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-
+    private FirebaseFirestore fb=FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        usuariosOperacional = UsuariosOperacional.getInstance(this);
 
 
 
@@ -78,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user=firebaseAuth.getCurrentUser();
-
                 if(user!=null){
                     if(!user.isEmailVerified()){
                         Toast.makeText(LoginActivity.this, "Correo no verificado", Toast.LENGTH_SHORT).show();
@@ -87,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-
         //GOOGLE
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -104,8 +97,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
         //UsuariosBD.getUsuarios().add(u);
         forgotPassword=(TextView)findViewById(R.id.forgotPassword);
         signUp=(Button)findViewById(R.id.registerButton);
@@ -120,17 +111,13 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUp=new Intent(LoginActivity.this,SignUpActivity.class);
+                Intent signUp=new Intent(LoginActivity.this,SeleccionarRegistro.class);
                 startActivity(signUp);
-
             }
         });
-
-
         forgotPassword.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -153,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
         Resources res=getResources();
         DisplayMetrics dm=res.getDisplayMetrics();
         Configuration config=res.getConfiguration();
-
         config.setLocale(new Locale(locale.toLowerCase()));
         res.updateConfiguration(config,dm);
     }
@@ -168,11 +154,11 @@ public class LoginActivity extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
             try{
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             }catch(ApiException e){
+
             }
         }
 
@@ -180,7 +166,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
 
     }
     private void firebaseAuthWithGoogle(String idToken) {
@@ -190,36 +175,21 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            Usuario u = new Usuario();
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            Usuario u = new Usuario(user.getUid(),user.getDisplayName(),user.getEmail());
+                            fb.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(!task.getResult().exists()){
+                                                fb.collection("Users").document(user.getUid()).set(u);
+                                            }
+                                        }
+                                    });
 
-                            Log.d("Usuario",user.getDisplayName());
-                            user.updatePassword("123123");
-                            u.setEmail(user.getEmail());
-                            u.setNombre(user.getDisplayName());
-                            u.setContraseña("123123");
-                            try {
-
-                                    if(usuariosOperacional.loginGoogle(u)!=null){
-                                        //Toast.makeText(LoginActivity.this, "Login con google", Toast.LENGTH_SHORT).show();
-                                        u=usuariosOperacional.loginGoogle(u);
-                                    }
-                                    else{
-                                        Toast.makeText(LoginActivity.this, "Email de verificacion Enviado", Toast.LENGTH_SHORT).show();
-                                        user.sendEmailVerification();
-
-                                        usuariosOperacional.registrarUsuario(u);
-                                    }
-
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            intent.putExtra("Usuario",u);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(LoginActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -233,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void login(){
+
         String username=email.getText().toString();
         String passwd=password.getText().toString();
         if(!username.isEmpty() && !passwd.isEmpty()){
@@ -242,25 +213,10 @@ public class LoginActivity extends AppCompatActivity {
                     if(!task.isSuccessful()){
                         Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }else{
-                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
                         FirebaseUser currentuser=mAuth.getCurrentUser();
                         if(currentuser.isEmailVerified()){
-                            Usuario u = new Usuario();
-                            u.setEmail(username);
-                            u.setContraseña(passwd);
-
-                            try {
-                                if(usuariosOperacional.login(u)!=null){
-
-                                    u=usuariosOperacional.login(u);
-                                    intent.putExtra("Usuario", u);
-                                    startActivity(intent);
-                                }else{
-                                    Toast.makeText(LoginActivity.this, "Usuario no esta en la bda", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            startActivity(intent);
                         }else{
                             Toast.makeText(LoginActivity.this, "Email no verificado", Toast.LENGTH_SHORT).show();
                         }
@@ -269,6 +225,5 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 }

@@ -47,15 +47,7 @@ public class AdaptadorVolverComprar extends ArrayAdapter {
         nombreProducto.setText(nombre);
         fechaPedido.setText(fecha+":"+pedidos.get(position).getFechacreacionPedido());
 
-        if(nombre.equals("Banana")) imagen.setImageResource(R.drawable.banana);
-        if(nombre.equals("Aguacate"))imagen.setImageResource(R.drawable.aguacate);
-        if(nombre.equals("Limon"))imagen.setImageResource(R.drawable.limon);
-        if(nombre.equals("Cereza"))imagen.setImageResource(R.drawable.cereza);
-        if(nombre.equals("Fresa"))imagen.setImageResource(R.drawable.fresa);
-        if(nombre.equals("Naranja"))imagen.setImageResource(R.drawable.naranja);
-        if(nombre.equals("Manzana"))imagen.setImageResource(R.drawable.manzana);
-        if(nombre.equals("Arandano"))imagen.setImageResource(R.drawable.arandano);
-        if(nombre.equals("Pepino"))imagen.setImageResource(R.drawable.pepino);
+
 
 
 

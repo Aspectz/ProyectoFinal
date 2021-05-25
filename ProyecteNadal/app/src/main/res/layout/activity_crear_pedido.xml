@@ -2,128 +2,133 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer"
-    tools:context=".activity.MainActivity">
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white">
-    <include
-        android:id="@+id/include"
-        layout="@layout/drawer_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></include>
+    tools:context=".activity.HomeActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/orderSummary"
-            android:layout_gravity="center"
-            android:id="@+id/orderInformation"
-            android:textSize="25dp"></TextView>
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listadoCompra"
-            android:layout_weight="1"></ListView>
-        <EditText
-            android:id="@+id/nombreDestinatario"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:hint="@string/recipientName">
-        </EditText>
-        <EditText
-            android:id="@+id/metodoFacturacion"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:hint="@string/creditCard">
-        </EditText>
-        <EditText
-            android:id="@+id/direccionEnvio"
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:hint="@string/shippingAddres">
-        </EditText>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-    </LinearLayout>
+        <include
+            android:id="@+id/include"
+            layout="@layout/drawer_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
 
         <LinearLayout
-
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/orderInformation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/shippingCartListView"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:textColor="@color/black"
-                android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
-                android:text="TOTAL:"
-                android:textAlignment="center"></TextView>
-            <TextView
+                android:layout_marginTop="30dp"
+                android:text="@string/orderSummary"
+                android:textSize="25dp"></TextView>
+
+            <ListView
+                android:id="@+id/listadoCompra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/totalPriceSummary"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:text="price"></TextView>
+                android:layout_weight="1"
+                android:divider="@null"></ListView>
 
-            <Button
-                android:layout_width="154dp"
+            <EditText
+                android:id="@+id/nombreDestinatario"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/botonComprarSummary"
-                android:background="@drawable/custom_button"
-                android:text="@string/buy"></Button>
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:hint="@string/recipientName"></EditText>
 
+            <EditText
+                android:id="@+id/metodoFacturacion"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:hint="@string/creditCard"></EditText>
+
+            <EditText
+                android:id="@+id/direccionEnvio"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:hint="@string/shippingAddres"></EditText>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shippingCartListView"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="TOTAL:"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"></TextView>
+
+                <TextView
+                    android:id="@+id/totalPriceSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="price"
+                    android:textColor="@color/black"></TextView>
+
+                <Button
+                    android:id="@+id/botonComprarSummary"
+                    android:layout_width="154dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/custom_button"
+                    android:text="@string/buy"></Button>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
-
-
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/navigation_view"
-        app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/drawer_header"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-    </com.google.android.material.navigation.NavigationView>
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer_menu"></com.google.android.material.navigation.NavigationView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

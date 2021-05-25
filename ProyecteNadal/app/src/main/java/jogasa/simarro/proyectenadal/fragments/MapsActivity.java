@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+
+import java.util.Locale;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
@@ -27,6 +31,11 @@ import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
 public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+
+    Address address;
+
+
     private LatLng madrid=new LatLng(40.416775, -3.703790);
     private LatLng barcelona=new LatLng(41.38879,2.15899);
     private LatLng valencia=new LatLng(39.46975, -0.37739);
@@ -45,10 +54,10 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
         // Create a LatLngBounds that includes the city of Adelaide in Australia.
         LatLngBounds spainBounds = new LatLngBounds(

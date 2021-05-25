@@ -46,8 +46,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         return;
                     }
                 }
-
-
             }
         };
         logIn.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +55,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 startActivity(logInActivity);
             }
         });
-
         recoverButton=(Button)findViewById(R.id.recoverButton);
 
         recoverButton.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +76,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         mAuth.addAuthStateListener(authStateListener);
     }
     private void recoverPasswd(){

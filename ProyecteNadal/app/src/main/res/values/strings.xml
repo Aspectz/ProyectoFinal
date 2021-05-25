@@ -40,5 +40,8 @@
     <string name="emptyCart">Your Cart is Empty</string>
     <string name="hello">Hello,</string>
     <string name="notifications">Notifications</string>
+    <string name="ascending">Low to high</string>
+    <string name="descending">High to low</string>
+    <string name="YourProducts">Tus Productos</string>
 
 </resources>

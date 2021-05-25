@@ -12,6 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.R;
@@ -20,32 +23,36 @@ import jogasa.simarro.proyectenadal.pojo.Producto;
 public class AdapterProductos extends ArrayAdapter {
 
     Activity context;
-    TextView nombre,precio;
+    TextView nombre, precio;
     ImageView foto;
     ArrayList<Producto> productos;
+    FirebaseFirestore fb=FirebaseFirestore.getInstance();
+    public AdapterProductos(Fragment context, ArrayList<Producto> productos) {
 
-    public AdapterProductos(Fragment context, ArrayList<Producto> productos){
-        super(context.getActivity(), R.layout.activity_adapter_productos,productos);
-        this.context=context.getActivity();
-        this.productos=productos;
+        super(context.getActivity(), R.layout.adapter_productos, productos);
+        this.context = context.getActivity();
+        this.productos = productos;
     }
+
 
 
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater inflater=context.getLayoutInflater();
-        View item=inflater.inflate(R.layout.activity_adapter_productos,null);
-         nombre=(TextView)item.findViewById(R.id.textNombre);
-         precio=(TextView)item.findViewById(R.id.textPrecio);
-         foto=(ImageView)item.findViewById(R.id.textFoto);
+        LayoutInflater inflater = context.getLayoutInflater();
+        View item = inflater.inflate(R.layout.adapter_productos, null);
+        nombre = (TextView) item.findViewById(R.id.textNombre);
+        precio = (TextView) item.findViewById(R.id.textPrecio);
+        foto = (ImageView) item.findViewById(R.id.textFoto);
+
+        nombre.setText(productos.get(position).getNombre());
+        precio.setText(String.valueOf(productos.get(position).getPrecio()) + "€/Kg");
+
+        Glide.with(getContext()).load(productos.get(position).getFotos().get(0)).into(foto);
 
 
-       nombre.setText(productos.get(position).getNombre());
-        precio.setText(String.valueOf(productos.get(position).getPrecio())+"€/Kg");
-
-        foto.setImageResource(productos.get(position).getFoto());
+        //foto.setImageResource(productos.get(position).getFoto());
 
         return item;
     }

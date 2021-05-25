@@ -8,15 +8,19 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/logonaranja"
         android:label="FruitApp"
-        android:roundIcon="@drawable/logoorange"
+        android:roundIcon="@drawable/logoiconaranja"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AboutUsActivity"></activity>
+        <activity android:name=".activity.SeleccionarRegistro"></activity>
+        <activity android:name=".activity.PaymentDetails" />
+        <activity android:name=".activity.RegistrarVendedor" />
+        <activity android:name=".activity.AboutUsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -31,22 +35,53 @@
 
         <activity
             android:name=".fragments.MapsActivity"
-            android:label="@string/title_activity_maps"  android:screenOrientation="portrait" />
-        <activity android:name=".adapters.AdapterOrderSummary" android:screenOrientation="portrait" />
-        <activity android:name=".fragments.FragmentNoticias"  android:screenOrientation="portrait" />
-        <activity android:name=".adapters.ApiAdapter" android:screenOrientation="portrait"  />
-        <activity android:name=".activity.SettingsActivity" android:screenOrientation="portrait"  />
-        <activity android:name=".activity.ShippingCart"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.VolverAcomprarActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.ListaPedidos" android:screenOrientation="portrait" />
-        <activity android:name=".activity.VisualizarProductoActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.MiCuentaActivity" android:screenOrientation="portrait"  />
-        <activity android:name=".activity.CrearPedido"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.MainActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.SignUpActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.ForgotPasswordActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.LoginActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".activity.LoadActivity"  android:screenOrientation="portrait" >
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".adapters.AdapterOrderSummary"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragments.FragmentNoticias"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".adapters.ApiAdapter"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShippingCart"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.VolverAcomprarActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListaPedidos"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.VisualizarProductoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MiCuentaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CrearPedido"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoadActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

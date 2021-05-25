@@ -2,13 +2,11 @@ package jogasa.simarro.proyectenadal.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.media.Image;
-import android.media.MicrophoneDirection;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,23 +17,32 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.bumptech.glide.Glide;
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.CrearPedido;
-import jogasa.simarro.proyectenadal.activity.MainActivity;
-import jogasa.simarro.proyectenadal.bd.MiBD;
-import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
-import jogasa.simarro.proyectenadal.dao.ProductDAO;
-import jogasa.simarro.proyectenadal.dao.UserDAO;
-import jogasa.simarro.proyectenadal.pojo.OrderProducto;
+import jogasa.simarro.proyectenadal.activity.HomeActivity;
+import jogasa.simarro.proyectenadal.pojo.Estados;
+import jogasa.simarro.proyectenadal.pojo.OrderDetails;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
-import jogasa.simarro.proyectenadal.pojo.PedidoSinCompletar;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
@@ -44,30 +51,43 @@ public class FragmentComprar extends Fragment {
     private Producto producto;
     private Usuario comprador;
     int cantidad=1;
-    private MiBD miBD;
+
     ImageView favFoto;
-    public FragmentComprar(Producto producto, Usuario usuario){
+    FirebaseFirestore fb=FirebaseFirestore.getInstance();
+    FirebaseAuth  firebaseAuth=FirebaseAuth.getInstance();
+    String randomKey= UUID.randomUUID().toString();
+
+
+    public FragmentComprar(Producto producto){
         this.producto=producto;
-        this.comprador=usuario;
     }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=  inflater.inflate(R.layout.activity_fragment_comprar,container,false);
+        View view=  inflater.inflate(R.layout.fragment_comprar,container,false);
 
 
-        miBD=MiBD.getInstance(getContext());
+
         TextView nombre=view.findViewById(R.id.nombreProducto);
         TextView precio=view.findViewById(R.id.precioProducto);
         TextView descripcion=view.findViewById(R.id.descripcionProducto);
-        ImageView foto=view.findViewById(R.id.imagenProducto);
+        ImageSlider carousel=view.findViewById(R.id.imagenProducto);
+
+        List<SlideModel> foto=new ArrayList<SlideModel>();
+        for(int i=0;i<producto.getFotos().size();i++){
+            foto.add(new SlideModel(producto.getFotos().get(i), ScaleTypes.CENTER_INSIDE));
+        }
+        carousel.setImageList(foto);
+
+
+
+
+
         Spinner cantity=view.findViewById(R.id.cantitySpinner);
         favFoto=view.findViewById(R.id.isFavBtn);
 
         if(producto.isFav()) favFoto.setImageResource(R.drawable.estrellafav);
         else favFoto.setImageResource(R.drawable.estrella);
-
-        foto.setImageResource(producto.getFoto());
 
         final ArrayList<String> productMaxCantity=new ArrayList<String>();
         //ADD MAX VALUES TO SPINNER
@@ -96,6 +116,7 @@ public class FragmentComprar extends Fragment {
         nombre.setText(producto.getNombre());
         precio.setText(String.valueOf(producto.getPrecio())+"€/Kg");
         descripcion.setText(producto.getDescripcion());
+        //Glide.with(getContext()).load(producto.getFotos().get(0)).into(foto);
 
 
         Button botonComprar=(Button)view.findViewById(R.id.comprarButton);
@@ -104,8 +125,10 @@ public class FragmentComprar extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
-                makeOrder();
-                crearPedido.putExtra("Usuario",comprador);
+                OrderDetails createdOrder=addOrder(Estados.PROCESANDO);
+                crearPedido.putExtra("Option","Buy");
+                crearPedido.putExtra("OrderDetail",createdOrder);
+
                 startActivity(crearPedido);
             }
         });
@@ -114,11 +137,8 @@ public class FragmentComprar extends Fragment {
         btnAddtoShipping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addtoshipping=new Intent(getActivity(), MainActivity.class);
-
-                makeOrder();
-
-                addtoshipping.putExtra("Usuario",comprador);
+                Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
+                addToShippingCart();
                 startActivity(addtoshipping);
 
             }
@@ -127,37 +147,72 @@ public class FragmentComprar extends Fragment {
         favFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(producto.isFav()){
                     favFoto.setImageResource(R.drawable.estrella);
                     producto.setFav(!producto.isFav());
-
                 }
                 else{
                     favFoto.setImageResource(R.drawable.estrellafav);
                     producto.setFav(!producto.isFav());
+                }
+            }
+        });
+        return view;
+    }
+
+    private void addToShippingCart(){
+        String randomKey= UUID.randomUUID().toString();
+        fb.collection("Orders").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot p : task.getResult()){
+                        if(p.toObject(Pedido.class).getEstado()==Estados.CARRITO){
+                            fb.collection("OrderDetails").whereEqualTo("idOrder",p.toObject(Pedido.class).getId()).whereEqualTo("idProducto",producto.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        for(QueryDocumentSnapshot query : task.getResult()){
+                                            OrderDetails od=query.toObject(OrderDetails.class);
+                                            od.setQuantity(od.getQuantity() + cantidad);
+                                            od.setTotalPrice(od.getTotalPrice() + cantidad * producto.getPrecio());
+                                            fb.collection("OrderDetails").document(od.getIdOrderDetails()).set(od);
+                                            return;
+                                        }
+                                        OrderDetails newOD=new OrderDetails();
+                                        newOD.setIdOrder(p.toObject(Pedido.class).getId());
+                                        newOD.setTotalPrice(cantidad*producto.getPrecio());
+                                        newOD.setQuantity(cantidad);
+                                        newOD.setIdOrderDetails(randomKey);
+                                        newOD.setIdProducto(producto.getId());
+                                        fb.collection("OrderDetails").document(newOD.getIdOrderDetails()).set(newOD);
+                                        return;
+                                    }
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    addOrder(Estados.CARRITO);
 
                 }
             }
         });
 
-        return view;
     }
-    //ADD ORDER TO CLIENT, TO THE BD AND ADD ORDERPRODUCT TO THE MANY2MANY
-    private void makeOrder(){
-        Pedido sinCompletar=new Pedido(producto.getNombre());
-        sinCompletar.setCantidadPedido(cantidad);
+    private OrderDetails addOrder(Estados estado){
+        Pedido toCart=new Pedido(randomKey);
+        toCart.setIdUser(firebaseAuth.getCurrentUser().getUid());
+        toCart.setEstado(estado);
+        OrderDetails orderDetails=new OrderDetails();
+        orderDetails.setIdOrder(toCart.getId());
+        orderDetails.setIdProducto(producto.getId());
+        orderDetails.setQuantity(cantidad);
+        orderDetails.setTotalPrice(cantidad*producto.getPrecio());
+        orderDetails.setIdOrderDetails(randomKey);
+        fb.collection("Orders").document(String.valueOf(toCart.getId())).set(toCart);
+        fb.collection("OrderDetails").document(orderDetails.getIdOrderDetails()).set(orderDetails);
 
-        sinCompletar.getProductos().add(producto);
-        sinCompletar.setFinished(false);
-        sinCompletar.setUsuarioCreador(comprador);
-        comprador.getPedidos().add(sinCompletar);
-
-        miBD.getOrderDAO().insertOrderToClient(sinCompletar,comprador);
-
-        ArrayList<Pedido> pedidosUsuario=miBD.getOrderDAO().getPedidos(comprador);
-        sinCompletar.setId(pedidosUsuario.get(pedidosUsuario.size()-1).getId());
-        OrderProducto oe=new OrderProducto(sinCompletar.getId(),producto.getId());
-        miBD.getOrderProductsDAO().add(oe);
+        return orderDetails;
     }
 }

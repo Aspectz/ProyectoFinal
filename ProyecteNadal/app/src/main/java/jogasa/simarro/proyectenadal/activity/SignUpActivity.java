@@ -16,25 +16,31 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.bd.UsuariosOperacional;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
+import jogasa.simarro.proyectenadal.pojo.Vendedor;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText name,email,firstPassword,secondPassword;
     private Button signUpbutton;
-
+    private String option;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
-    UsuariosOperacional usuariosOperacional;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-        usuariosOperacional = UsuariosOperacional.getInstance(this);
+
+        option=getIntent().getStringExtra("Option");
+
+
+
+
 
         name = (EditText) findViewById(R.id.nameEditText);
         email = (EditText) findViewById(R.id.emailEditText);
@@ -42,14 +48,15 @@ public class SignUpActivity extends AppCompatActivity {
         secondPassword = (EditText) findViewById(R.id.secondPasswordEditText);
         signUpbutton = (Button) findViewById(R.id.signUpEditText);
 
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+
+        if(option.equalsIgnoreCase("seller")) name.setHint("Company's name");
+
+            authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
             }
         };
-
-
         signUpbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,10 +78,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
     private void signUp(){
-        final String username=name.getText().toString();
-        final String correo=email.getText().toString();
-        final String passwd=firstPassword.getText().toString();
-        final String passwd2=secondPassword.getText().toString();
+        String username=name.getText().toString();
+        String correo=email.getText().toString();
+        String passwd=firstPassword.getText().toString();
+        String passwd2=secondPassword.getText().toString();
 
 
         if(passwd.compareTo(passwd2)!=0){
@@ -90,16 +97,20 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this, "Usuario ya registrado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }else{
                     FirebaseUser user=mAuth.getCurrentUser();
+                    FirebaseFirestore db=FirebaseFirestore.getInstance();
+
                     user.sendEmailVerification();
                     Toast.makeText(SignUpActivity.this, "Email de verificacion enviado", Toast.LENGTH_SHORT).show();
-                    Usuario usuario=new Usuario(username,correo,passwd);
-                    Log.d("CURRENT","A:"+username+correo);
-
-                    usuariosOperacional.registrarUsuario(usuario);
-
+                    if(option.equalsIgnoreCase("seller")){
+                        Vendedor vendedor=new Vendedor(user.getUid(),username,correo);
+                        db.collection("Suppliers").document(user.getUid()).set(vendedor);
+                    }else{
+                        Usuario usuario=new Usuario(user.getUid(), username, correo);
+                        db.collection("Users").document(user.getUid()).set(usuario);
+                    }
                     Intent main=new Intent(SignUpActivity.this,LoginActivity.class);
                     startActivity(main);
                 }

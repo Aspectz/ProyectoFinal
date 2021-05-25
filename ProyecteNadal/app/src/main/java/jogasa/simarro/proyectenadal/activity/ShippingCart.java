@@ -16,11 +16,14 @@ import android.widget.TextView;
 
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
 import jogasa.simarro.proyectenadal.fragments.FragmentShippingCart;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
@@ -31,7 +34,6 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Usuario usuarioLogeado;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -42,8 +44,6 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_shipping_cart);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
 
 
 
@@ -58,14 +58,21 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         //Recoger headerLayout
         View headerLayout=navigationView.getHeaderView(0);
-        TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
-
-
-        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
+        TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Usuario usuarioLogeado = doc.toObject(Usuario.class);
+                        headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                    }
+                }
+            }
+        });
 
         if(savedInstanceState==null){
-
-
             getSupportActionBar().setTitle("My Cart");
             fragmentManager=getSupportFragmentManager();
             fragmentTransaction=fragmentManager.beginTransaction();
@@ -73,31 +80,31 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
     }
+
+
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()){
 
             case R.id.homeItem:
-                Intent home=new Intent(ShippingCart.this,MainActivity.class);
-                home.putExtra("Usuario",usuarioLogeado);
+                Intent home=new Intent(ShippingCart.this, HomeActivity.class);
                 startActivity(home);
                 break;
 
             case R.id.orderItem:
                 Intent listaPedidos=new Intent(ShippingCart.this, ListaPedidos.class);
-                listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
 
                 break;
             case R.id.buyAgainItem:
                 Intent buyagain=new Intent(ShippingCart.this,VolverAcomprarActivity.class);
-                buyagain.putExtra("Usuario",usuarioLogeado);
                 startActivity(buyagain);
                 break;
             case R.id.accountItem:
                 Intent micuenta=new Intent(ShippingCart.this,MiCuentaActivity.class);
-                micuenta.putExtra("Usuario",usuarioLogeado);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
@@ -108,8 +115,11 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.aboutUs:
                 Intent aboutUs=new Intent(ShippingCart.this,AboutUsActivity.class);
-                aboutUs.putExtra("Usuario",usuarioLogeado);
                 startActivity(aboutUs);
+                break;
+            case R.id.anadirProducto:
+                //Intent anadirProducto = new Intent(ShippingCart.this, AnadirProducto.class);
+                //startActivity(anadirProducto);
                 break;
             default:
                 return false;

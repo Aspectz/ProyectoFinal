@@ -8,4 +8,9 @@
         <item>ESP</item>
         <item>ENG</item>
     </string-array>
+    <string-array name="orderByArray">
+        <item>@string/descending</item>
+        <item>@string/ascending</item>
+    </string-array>
+
 </resources>

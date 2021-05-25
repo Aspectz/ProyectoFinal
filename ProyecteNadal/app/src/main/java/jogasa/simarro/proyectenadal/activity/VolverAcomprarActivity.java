@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import jogasa.simarro.proyectenadal.R;
-import jogasa.simarro.proyectenadal.fragments.FragmentPedidos;
 import jogasa.simarro.proyectenadal.fragments.FragmentVolverComprar;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
@@ -28,7 +31,6 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Usuario usuarioLogeado;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
@@ -40,8 +42,6 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
 
 
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
@@ -56,11 +56,18 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
         //Recoger headerLayout
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
-
-        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
-
-
-
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Usuario usuarioLogeado = doc.toObject(Usuario.class);
+                        headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                    }
+                }
+            }
+        });
         if(savedInstanceState==null){
             getSupportActionBar().setTitle(R.string.buyAgain);
             fragmentManager=getSupportFragmentManager();
@@ -68,22 +75,18 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
             fragmentTransaction.replace(R.id.container_fragment,new FragmentVolverComprar());
             fragmentTransaction.commit();
         }
-
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()){
             case R.id.homeItem:
-                Intent home=new Intent(VolverAcomprarActivity.this,MainActivity.class);
-                home.putExtra("Usuario",usuarioLogeado);
+                Intent home=new Intent(VolverAcomprarActivity.this, HomeActivity.class);
                 startActivity(home);
                 break;
             case R.id.accountItem:
                 Intent micuenta=new Intent(VolverAcomprarActivity.this,MiCuentaActivity.class);
-                micuenta.putExtra("Usuario",usuarioLogeado);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
@@ -94,13 +97,16 @@ public class VolverAcomprarActivity extends AppCompatActivity implements Navigat
                 break;
             case R.id.orderItem:
                 Intent listaPedidos=new Intent(VolverAcomprarActivity.this, ListaPedidos.class);
-                listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
                 break;
             case R.id.options:
                 Intent options=new Intent(VolverAcomprarActivity.this,SettingsActivity.class);
                 startActivity(options);
                  break;
+            case R.id.anadirProducto:
+                //Intent anadirProducto = new Intent(VolverAcomprarActivity.this, AnadirProducto.class);
+                //startActivity(anadirProducto);
+                break;
             default:
                 return false;
         }

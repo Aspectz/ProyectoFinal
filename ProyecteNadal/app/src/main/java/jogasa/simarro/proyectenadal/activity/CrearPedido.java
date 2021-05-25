@@ -1,17 +1,17 @@
 package jogasa.simarro.proyectenadal.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,24 +19,41 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalPaymentDetails;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 
+import org.json.JSONException;
+
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import jogasa.simarro.proyectenadal.R;
+
+
 import jogasa.simarro.proyectenadal.adapters.AdaptadorListaShipping;
-import jogasa.simarro.proyectenadal.bd.MiBD;
-
-import jogasa.simarro.proyectenadal.pojo.OrderProducto;
+import jogasa.simarro.proyectenadal.api.Config;
+import jogasa.simarro.proyectenadal.pojo.Estados;
+import jogasa.simarro.proyectenadal.pojo.OrderDetails;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
-import jogasa.simarro.proyectenadal.pojo.Producto;
-
 import jogasa.simarro.proyectenadal.pojo.Usuario;
 
 public class CrearPedido extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,131 +61,256 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Usuario usuarioLogeado;
-    private ArrayList<Producto> productosSeleccionado;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private ListView listadoCompra;
-    private ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
-    private ArrayList<Pedido> pedidosAux;
-    private ArrayList<Producto> productos;
-    private EditText nombreDestinatario, metodoFacturacion,direccionEnvio;
-    private MiBD miBD;
-    private float price=0;
+    private EditText nombreDestinatario, metodoFacturacion, direccionEnvio;
+    private FirebaseFirestore fb = FirebaseFirestore.getInstance();
+    private float price = 0;
+    private TextView priceTotal;
 
-    protected void onCreate(Bundle savedInstanceState)  {
+    private static final int  PAYPAL_REQUEST_CODE=7171;
+    private static PayPalConfiguration config=new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(Config.PAYPAL_CLIENT_ID);
+
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_pedido);
 
-        toolbar=(Toolbar)findViewById(R.id.toolbar);
+
+        Intent intent=new Intent(this,PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
+        startService(intent);
+
+
+        priceTotal=(TextView) findViewById(R.id.totalPriceSummary);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        miBD=MiBD.getInstance(getApplicationContext());
-        usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
-        productosSeleccionado=(ArrayList<Producto>)getIntent().getSerializableExtra("Productos");
-
-        drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
-        navigationView=(NavigationView)findViewById(R.id.navigation_view);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
-
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
+        String option = getIntent().getExtras().getSerializable("Option").toString();
         //Recoger headerLayout
-        View headerLayout=navigationView.getHeaderView(0);
-        TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
-
+        fb.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Usuario usuarioLogeado = doc.toObject(Usuario.class);
+                        headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                    }
+                }
+            }
+        });
         getSupportActionBar().setTitle("Order");
 
+
         //PEDIDOS
+        listadoCompra = (ListView) findViewById(R.id.listadoCompra);
+        nombreDestinatario = (EditText) findViewById(R.id.nombreDestinatario);
+        metodoFacturacion = (EditText) findViewById(R.id.metodoFacturacion);
+        direccionEnvio = (EditText) findViewById(R.id.direccionEnvio);
 
 
-        Usuario comprador=(Usuario)getIntent().getSerializableExtra("Usuario");
-        listadoCompra=(ListView)findViewById(R.id.listadoCompra);
-
-        nombreDestinatario=(EditText)findViewById(R.id.nombreDestinatario);
-        metodoFacturacion=(EditText)findViewById(R.id.metodoFacturacion);
-        direccionEnvio=(EditText)findViewById(R.id.direccionEnvio);
-        pedidosAux= miBD.getOrderDAO().getPedidos(comprador);
-        productos=new ArrayList<Producto>();
-
-
-
-        listadoCompra.setAdapter(new AdaptadorListaShipping(this,pedidos));
-
-        Button btnComprar=(Button)findViewById(R.id.botonComprarSummary);
+        Button btnComprar = (Button) findViewById(R.id.botonComprarSummary);
         btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()){
-
-                    Pedido pedido=new Pedido(productos.get(0).getNombre(),metodoFacturacion.getText().toString(),direccionEnvio.getText().toString(), formatDate(),price,productos);
-                    pedido.setFinished(true);
-                    miBD.getOrderDAO().insertOrderToClient(pedido,usuarioLogeado);
-
-                    ArrayList<Pedido> pedABorrar=miBD.getOrderDAO().getPedidos(usuarioLogeado);
-
-                    for(Pedido p1 : pedABorrar){
-                        if(!p1.isFinished()){
-                            miBD.getOrderDAO().delete(p1);
-                        }
+                if (!nombreDestinatario.getText().toString().isEmpty() && !metodoFacturacion.getText().toString().isEmpty() && !direccionEnvio.getText().toString().isEmpty()) {
+                    if (option.equals("Buy")) {
+                        OrderDetails orderDetails = (OrderDetails) getIntent().getSerializableExtra("OrderDetail");
+                        buy(orderDetails);
+                        //processPayment();
+                        Intent home = new Intent(CrearPedido.this, HomeActivity.class);
+                        startActivity(home);
                     }
-                    Intent home=new Intent(CrearPedido.this,MainActivity.class);
-                    home.putExtra("Usuario",usuarioLogeado);
-                    startActivity(home);
-                }else{
+                    if (option.equals("Cart")) {
+                        buyFromCart();
+                       // processPayment();
+                       Intent home = new Intent(CrearPedido.this, HomeActivity.class);
+                        startActivity(home);
+                    }
+                } else {
                     Toast.makeText(CrearPedido.this, "Los campos son obligatorios", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
 
+    private void buyFromCart() {
+        fb.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser", firebaseAuth.getCurrentUser().getUid()).limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot pedido : task.getResult()) {
+
+                        Map<String,Object> pd=new HashMap<>();
+                        Pedido pedido1=pedido.toObject(Pedido.class);
+                        pd.put("direccionEnvio",direccionEnvio.getText().toString());
+                        pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
+                        pd.put("estado",Estados.CARRITO);
+                        pd.put("fecha",FieldValue.serverTimestamp());
+                        pd.put("id",pedido1.getId());
+                        pd.put("idUser",pedido1.getIdUser());
+                        pd.put("nombre",pedido1.getNombre());
+
+                       /* pedido1.setEstado(Estados.ESPERANDO);
+                        pedido1.setDireccionEnvio(direccionEnvio.getText().toString());
+                        pedido1.setMetodoFacturacion(metodoFacturacion.getText().toString());
+                        pedido1.setFechacreacionPedido(FieldValue.serverTimestamp());*/
+                        fb.collection("Orders").document(String.valueOf(pedido1.getId())).set(pd);
+                    }
+                }
+            }
+        });
+    }
+
+    private void buy(OrderDetails orderDetails) {
+        fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Pedido pedido = task.getResult().toObject(Pedido.class);
+
+                Map<String,Object> pd=new HashMap<>();
+                Pedido pedido1=task.getResult().toObject(Pedido.class);
+                pd.put("direccionEnvio",direccionEnvio.getText().toString());
+                pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
+                pd.put("estado",Estados.ESPERANDO);
+                pd.put("fecha",FieldValue.serverTimestamp());
+                pd.put("id",pedido1.getId());
+                pd.put("idUser",pedido1.getIdUser());
+                pd.put("nombre",pedido1.getNombre());
+
+
+               /* pedido.setEstado(Estados.ESPERANDO);
+                pedido.setDireccionEnvio(direccionEnvio.getText().toString());
+                pedido.setMetodoFacturacion(metodoFacturacion.getText().toString());
+                pedido.setFechacreacionPedido(FieldValue.serverTimestamp().toString());*/
+                fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pedido);
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        makeOrder();
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        ArrayList<OrderDetails> orderDetailsList=new ArrayList<OrderDetails>();
+        Activity activity=this;
+        String option = getIntent().getExtras().getSerializable("Option").toString();
+        if (option.equals("Buy")) {
+            OrderDetails orderDetails = (OrderDetails) getIntent().getSerializableExtra("OrderDetail");
+            fb.collection("OrderDetails").document(orderDetails.getIdOrderDetails()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        priceTotal.setText(String.valueOf(df.format(task.getResult().toObject(OrderDetails.class).getTotalPrice())));
+                        orderDetailsList.add(task.getResult().toObject(OrderDetails.class));
+                        listadoCompra.setAdapter(new AdaptadorListaShipping(activity,orderDetailsList));
+                    }
+                }
+            });
+        }
+        if (option.equals("Cart")) {
+            fb.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser", firebaseAuth.getCurrentUser().getUid()).limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for(QueryDocumentSnapshot pedido : task.getResult()){
+                            fb.collection("OrderDetails").whereEqualTo("idOrder",pedido.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        for(QueryDocumentSnapshot od : task.getResult()){
+                                            price+=od.toObject(OrderDetails.class).getTotalPrice();
+                                            orderDetailsList.add(od.toObject(OrderDetails.class));
+                                        }
+                                        listadoCompra.setAdapter(new AdaptadorListaShipping(activity,orderDetailsList));
+                                        priceTotal.setText(String.valueOf(df.format(price)));
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this,PayPalService.class));
+        super.onDestroy();
+
+
+
+        //OrderDetails orderDetails = (OrderDetails) getIntent().getSerializableExtra("OrderDetail");
+        //fb.collection("OrderDetails").document(orderDetails.getIdOrder()+orderDetails.getIdProducto()).delete();
+        //fb.collection("Pedidos").document(String.valueOf(orderDetails.getIdOrder())).delete();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null) {
+                    try {
+                        String paymentDetails = confirmation.toJSONObject().toString(4);
+                        startActivity(new Intent(this, PaymentDetails.class).putExtra("PaymentDetails", paymentDetails).putExtra("PaymentAmount", price));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else if (resultCode == PaymentActivity.RESULT_CANCELED) {
+            Toast.makeText(this, "invalid", Toast.LENGTH_SHORT).show();
+        }else if(resultCode==PaymentActivity.RESULT_EXTRAS_INVALID){
+            Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.homeItem:
-                Intent home=new Intent(CrearPedido.this,MainActivity.class);
-                home.putExtra("Usuario",usuarioLogeado);
+                Intent home = new Intent(CrearPedido.this, HomeActivity.class);
                 startActivity(home);
                 break;
             case R.id.orderItem:
-                Intent listaPedidos=new Intent(CrearPedido.this, ListaPedidos.class);
-                listaPedidos.putExtra("Usuario",usuarioLogeado);
+                Intent listaPedidos = new Intent(CrearPedido.this, ListaPedidos.class);
                 startActivity(listaPedidos);
                 break;
             case R.id.buyAgainItem:
-                Intent buyagain=new Intent(CrearPedido.this,VolverAcomprarActivity.class);
-                buyagain.putExtra("Usuario",usuarioLogeado);
+                Intent buyagain = new Intent(CrearPedido.this, VolverAcomprarActivity.class);
                 startActivity(buyagain);
                 break;
             case R.id.accountItem:
-                Intent micuenta=new Intent(CrearPedido.this,MiCuentaActivity.class);
-                micuenta.putExtra("Usuario",usuarioLogeado);
+                Intent micuenta = new Intent(CrearPedido.this, MiCuentaActivity.class);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
                 AuthUI.getInstance().signOut(this);
                 FirebaseAuth.getInstance().signOut();
-                Intent cerrarSession=new Intent(CrearPedido.this,LoginActivity.class);
+                Intent cerrarSession = new Intent(CrearPedido.this, LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
             case R.id.options:
-                Intent options=new Intent(CrearPedido.this,SettingsActivity.class);
+                Intent options = new Intent(CrearPedido.this, SettingsActivity.class);
                 startActivity(options);
                 break;
             case R.id.aboutUs:
-                Intent aboutUs=new Intent(CrearPedido.this,AboutUsActivity.class);
-                aboutUs.putExtra("Usuario",usuarioLogeado);
+                Intent aboutUs = new Intent(CrearPedido.this, AboutUsActivity.class);
                 startActivity(aboutUs);
                 break;
             default:
@@ -177,7 +319,8 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         drawerLayout.closeDrawers();
         return false;
     }
-    private String formatDate(){
+
+    private String formatDate() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -185,33 +328,13 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         String formatted = format1.format(cal.getTime());
         return formatted;
     }
-    private void makeOrder(){
 
-        for( Pedido p1 : pedidosAux){
-            if(!p1.isFinished()){
-                OrderProducto aux=new OrderProducto();
-                aux.setIdOrder(p1.getId());
-                try {
-                    aux=(OrderProducto) miBD.getOrderProductsDAO().search(aux);
-                    Producto prodAux=new Producto();
-                    prodAux.setId(aux.getIdProducto());
-                    p1.getProductos().add((Producto) miBD.getProductDAO().search(prodAux));
-                    pedidos.add(p1);
-                    productos.add((Producto)miBD.getProductDAO().search(prodAux));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for(int i=0;i<pedidos.size();i++)
-            price+=pedidos.get(i).getCantidadPedido()*pedidos.get(i).getProductos().get(0).getPrecio();
-
-        DecimalFormat df = new DecimalFormat("0.00");
-
-        TextView priceTotal=(TextView)findViewById(R.id.totalPriceSummary);
-        priceTotal.setText(String.valueOf(df.format(price)));
-
-
+    private void processPayment(){
+        price= Float.parseFloat(priceTotal.getText().toString());
+        PayPalPayment payPalPayment=new PayPalPayment(new BigDecimal(price),"EUR","Payment",PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent=new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
+        startActivityForResult(intent,PAYPAL_REQUEST_CODE);
     }
 }

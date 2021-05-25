@@ -41,4 +41,7 @@
     <string name="emptyCart">Tu Carrito Esta Vacio</string>
     <string name="hello">Hola,</string>
     <string name="notifications">Notificationes</string>
+    <string name="ascending">Menor a mayor</string>
+    <string name="descending">Mayor a menor</string>
+    <string name="YourProducts">Tus Productos</string>
 </resources>

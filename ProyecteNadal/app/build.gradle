@@ -17,6 +17,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -36,7 +37,32 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth:9.8.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+    implementation 'com.google.firebase:firebase-firestore:22.1.1'
+    implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
 
+    //playservices
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+
+    //carousel
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
+
+    //paypal
+
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+
+    //places
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+
+
+    //GLIDE
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+
+    //Circular imageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -44,6 +70,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
+    implementation 'com.google.firebase:firebase-storage:19.2.2'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
@@ -63,7 +91,6 @@ dependencies {
 
 //Times Formater
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-
 
 
 }

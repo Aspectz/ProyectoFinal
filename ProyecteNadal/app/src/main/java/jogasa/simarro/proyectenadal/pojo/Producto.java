@@ -4,23 +4,34 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 public class Producto implements Serializable {
     private String nombre,descripcion;
-    private int foto;
-    private int id;
+    private ArrayList<String> fotos;
+    private String id;
+    private String idSupplier;
     private float precio;
     private int limiteProducto;
     private boolean isFav;
 
 
-    public Producto(){}
-    public Producto(String nombre, String descripcion, float precio,int foto,int limiteProducto,boolean isFav) {
+    public Producto(){
+        this.fotos=new ArrayList<>();
+    }
+    public Producto(String nombre, String descripcion, float precio,ArrayList<String> foto,int limiteProducto,boolean isFav) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.foto=foto;
+        this.fotos=foto;
         this.limiteProducto=limiteProducto;
         this.isFav=isFav;
+    }
+    public Producto(String nombre, String descripcion, float precio,int limiteProducto) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.limiteProducto=limiteProducto;
     }
 
     public String getNombre() {
@@ -47,12 +58,12 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
 
-    public int getFoto() {
-        return foto;
+    public ArrayList<String> getFotos() {
+        return fotos;
     }
 
-    public void setFoto(int foto) {
-        this.foto = foto;
+    public void setFotos(ArrayList<String> fotos) {
+        this.fotos = fotos;
     }
 
     public int getLimiteProducto() {
@@ -71,12 +82,20 @@ public class Producto implements Serializable {
         isFav = fav;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
+
+    public String getIdSupplier() {
+        return idSupplier;
+    }
+
+    public void setIdSupplier(String idSupplier) {
+        this.idSupplier = idSupplier;
+    }
 }

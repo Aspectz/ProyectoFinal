@@ -12,12 +12,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import jogasa.simarro.proyectenadal.R;
 
@@ -30,7 +33,6 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private Usuario usuarioLogeado;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
@@ -42,9 +44,6 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        usuarioLogeado=(Usuario)getIntent().getSerializableExtra("Usuario");
-
 
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
         navigationView=(NavigationView)findViewById(R.id.navigation_view);
@@ -59,7 +58,18 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
         View headerLayout=navigationView.getHeaderView(0);
         TextView headerText=(TextView)headerLayout.findViewById(R.id.textHeader);
 
-        headerText.setText(getResources().getString(R.string.hello)+usuarioLogeado.getNombre());
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Usuario usuarioLogeado = doc.toObject(Usuario.class);
+                        headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                    }
+                }
+            }
+        });
 
 
 
@@ -80,13 +90,11 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
 
         switch(item.getItemId()){
             case R.id.homeItem:
-                Intent home=new Intent(MiCuentaActivity.this,MainActivity.class);
-                home.putExtra("Usuario",usuarioLogeado);
+                Intent home=new Intent(MiCuentaActivity.this, HomeActivity.class);
                 startActivity(home);
                 break;
             case R.id.orderItem:
                 Intent listaPedidos=new Intent(MiCuentaActivity.this, ListaPedidos.class);
-                listaPedidos.putExtra("Usuario",usuarioLogeado);
                 startActivity(listaPedidos);
 
                 break;
@@ -99,7 +107,6 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
 
             case R.id.buyAgainItem:
                 Intent buyagain=new Intent(MiCuentaActivity.this,VolverAcomprarActivity.class);
-                buyagain.putExtra("Usuario",usuarioLogeado);
                 startActivity(buyagain);
                 break;
             case R.id.options:
@@ -108,8 +115,11 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
                 break;
             case R.id.aboutUs:
                 Intent aboutUs=new Intent(MiCuentaActivity.this,AboutUsActivity.class);
-                aboutUs.putExtra("Usuario",usuarioLogeado);
                 startActivity(aboutUs);
+                break;
+            case R.id.anadirProducto:
+                //Intent anadirProducto = new Intent(MiCuentaActivity.this, AnadirProducto.class);
+                //startActivity(anadirProducto);
                 break;
             default:
                 return false;
