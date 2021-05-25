@@ -17,7 +17,8 @@
         android:roundIcon="@drawable/logoiconaranja"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SeleccionarRegistro"></activity>
+        <activity android:name=".activity.EditarProducto"></activity>
+        <activity android:name=".activity.SeleccionarRegistro" />
         <activity android:name=".activity.PaymentDetails" />
         <activity android:name=".activity.RegistrarVendedor" />
         <activity android:name=".activity.AboutUsActivity" />

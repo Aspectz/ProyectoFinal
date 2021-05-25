@@ -31,7 +31,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="#3D348B"
                 android:visibility="invisible"
-                app:menu="@menu/menu_main" />
+                app:menu="@menu/menu_vendedor" />
         </RelativeLayout>
 
     </LinearLayout>

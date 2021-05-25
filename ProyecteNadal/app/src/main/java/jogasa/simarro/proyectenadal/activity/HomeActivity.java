@@ -133,7 +133,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-
                         if (task.getResult().exists()) {
                             fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
@@ -155,6 +154,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
                         } else {
+                            BottomNavigationView botom = (BottomNavigationView) findViewById(R.id.bottomBarMain);
+                            botom.getMenu().clear();
+                            botom.inflateMenu(R.menu.menu_cliente);
+                            botom.setVisibility(View.VISIBLE);
+                            botom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                                @Override
+                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                    fragmentTransaction = fragmentManager.beginTransaction();
+                                    Fragment f = null;
+                                    if (item.getItemId() == R.id.inicio)
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
+                                    if (item.getItemId() == R.id.anadirProducto)
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentAnadirProducto());
+                                    fragmentTransaction.commit();
+                                    return true;
+                                }
+                            });
+
                             fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.container_fragment, new FragmentInicio());
                             fragmentTransaction.commit();

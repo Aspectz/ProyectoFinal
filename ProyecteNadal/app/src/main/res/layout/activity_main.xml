@@ -33,7 +33,7 @@
             app:itemIconTint="@drawable/bottom_navigation_selector"
             app:itemTextColor="@drawable/bottom_navigation_selector"
             android:visibility="invisible"
-            app:menu="@menu/menu_main" />
+            app:menu="@menu/menu_vendedor" />
     </RelativeLayout>
 
 </LinearLayout>
