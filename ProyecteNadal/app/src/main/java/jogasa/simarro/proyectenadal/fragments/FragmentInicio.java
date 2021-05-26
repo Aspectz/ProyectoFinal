@@ -3,6 +3,7 @@ package jogasa.simarro.proyectenadal.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,12 +34,25 @@ import java.util.ArrayList;
 import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.activity.VisualizarProductoActivity;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
+import jogasa.simarro.proyectenadal.pojo.Favorites;
 import jogasa.simarro.proyectenadal.pojo.Producto;
 
 
 public class FragmentInicio extends Fragment implements AdapterView.OnItemClickListener {
     public GridView grid;
     private Spinner orderSpinner;
+    private FirebaseAuth fAuth= FirebaseAuth.getInstance();
+
+    private String fav=null;
+
+
+    public FragmentInicio(String fav){
+        this.fav=fav;
+    }
+    public FragmentInicio(){
+        this.fav=null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,10 +124,36 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
     public void onStart() {
         super.onStart();
         try {
-            mostrarProductos();
+            if(fav!=null)mostrarFavoritos();
+            else mostrarProductos();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+    private void mostrarFavoritos() {
+
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        ArrayList<Producto> productos=new ArrayList<Producto>();
+        db.collection("Favorites").whereEqualTo("idUser",fAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot fv : task.getResult()){
+                        if(fv.exists()){
+                            db.collection("Products").document(fv.toObject(Favorites.class).getIdProduct()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        productos.add(task.getResult().toObject(Producto.class));
+                                    }
+                                    grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override

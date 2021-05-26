@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import jogasa.simarro.proyectenadal.R;
+import jogasa.simarro.proyectenadal.activity.EditarProducto;
 import jogasa.simarro.proyectenadal.activity.VisualizarProductoActivity;
 import jogasa.simarro.proyectenadal.adapters.AdapterProductos;
 import jogasa.simarro.proyectenadal.pojo.Favorites;
@@ -41,14 +42,7 @@ public class FragmentTusProductos extends Fragment implements AdapterView.OnItem
     public GridView grid;
     private Spinner orderSpinner;
     private FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
-    private String fav=null;
 
-
-    public FragmentTusProductos(String fav){
-        this.fav=fav;
-    }
-    public FragmentTusProductos(){
-    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,7 +63,6 @@ public class FragmentTusProductos extends Fragment implements AdapterView.OnItem
         
     }
     public void mostrarProductos() throws ParseException {
-
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         ArrayList<Producto> productos=new ArrayList<Producto>();
         ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.orderByArray));
@@ -79,13 +72,17 @@ public class FragmentTusProductos extends Fragment implements AdapterView.OnItem
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(parent.getItemAtPosition(position).toString().equals(getText(R.string.ascending))){
                     productos.clear();
+
                     db.collection("Products").whereEqualTo("idSupplier",firebaseAuth.getCurrentUser().getUid()).orderBy("precio", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            for(QueryDocumentSnapshot q: task.getResult()){
-                                productos.add(q.toObject(Producto.class));
+                            if(task.isSuccessful()){
+                                for(QueryDocumentSnapshot q: task.getResult()){
+                                    productos.add(q.toObject(Producto.class));
+                                }
+                                grid.setAdapter(new AdapterProductos(FragmentTusProductos.this,productos));
                             }
-                           grid.setAdapter(new AdapterProductos(FragmentTusProductos.this,productos));
+
                         }
                     });
                 }
@@ -94,10 +91,12 @@ public class FragmentTusProductos extends Fragment implements AdapterView.OnItem
                     db.collection("Products").whereEqualTo("idSupplier",firebaseAuth.getCurrentUser().getUid()).orderBy("precio", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            for(QueryDocumentSnapshot q: task.getResult()){
-                                productos.add(q.toObject(Producto.class));
+                            if(task.isSuccessful()){
+                                for(QueryDocumentSnapshot q: task.getResult()){
+                                    productos.add(q.toObject(Producto.class));
+                                }
+                                grid.setAdapter(new AdapterProductos(FragmentTusProductos.this,productos));
                             }
-                            grid.setAdapter(new AdapterProductos(FragmentTusProductos.this,productos));
                         }
                     });
                 }
@@ -122,42 +121,19 @@ public class FragmentTusProductos extends Fragment implements AdapterView.OnItem
     public void onStart() {
         super.onStart();
         try {
-            if(fav==null) mostrarProductos();
-            else if (fav!=null) mostrarFavoritos();
+             mostrarProductos();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void mostrarFavoritos() {
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        ArrayList<Producto> productos=new ArrayList<Producto>();
-        db.collection("Favorites").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot fv : task.getResult()){
-                        if(fv.exists()){
-                            db.collection("Products").document(fv.toObject(Favorites.class).getIdProduct()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        productos.add(task.getResult().toObject(Producto.class));
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });
-    }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Producto seleccionado=(Producto)grid.getAdapter().getItem(position);
         //Recoge el producto incluso con firestore
-        Intent visualizar=new Intent(getActivity(), VisualizarProductoActivity.class);
+        Intent visualizar=new Intent(getActivity(), EditarProducto.class);
         visualizar.putExtra("Producto",seleccionado);
 
         startActivity(visualizar);

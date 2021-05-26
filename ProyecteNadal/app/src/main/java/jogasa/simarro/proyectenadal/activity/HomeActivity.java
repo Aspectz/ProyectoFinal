@@ -149,8 +149,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
                                     if (item.getItemId() == R.id.anadirProducto)
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentAnadirProducto());
-                                    if(item.getItemId() == R.id.favoritos)
-                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos("Favoritos"));
+
                                     fragmentTransaction.commit();
                                     return true;
                                 }
@@ -165,10 +164,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                                     fragmentTransaction = fragmentManager.beginTransaction();
                                     Fragment f = null;
-                                    if (item.getItemId() == R.id.inicio)
-                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
-                                    if (item.getItemId() == R.id.anadirProducto)
+                                    if (item.getItemId() == R.id.inicio){
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentInicio());
+                                    }
+                                    if (item.getItemId() == R.id.misPedidos){
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentAnadirProducto());
+                                    }
+                                    if(item.getItemId() == R.id.favoritos){
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentInicio("Favoritos"));
+                                    }
                                     fragmentTransaction.commit();
                                     return true;
                                 }
@@ -251,7 +255,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("pepe","oncreate");
         getMenuInflater().inflate(R.menu.menu_toolbar_main, menu);
         MenuItem item = menu.findItem(R.id.action_search);
 

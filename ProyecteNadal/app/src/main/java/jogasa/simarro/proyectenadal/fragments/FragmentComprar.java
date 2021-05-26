@@ -155,14 +155,14 @@ public class FragmentComprar extends Fragment {
                 if(producto.isFav()){
                     favFoto.setImageResource(R.drawable.estrella);
                     producto.setFav(!producto.isFav());
-                    Map<String,Object> mapa=new HashMap<>();
-                    mapa.put("idUser",firebaseAuth.getCurrentUser().getUid());
-                    mapa.put("idProduct",producto.getId());
-                    fb.collection("Favorites").document(producto.getId()).set(mapa);
                 }
                 else{
                     favFoto.setImageResource(R.drawable.estrellafav);
                     producto.setFav(!producto.isFav());
+                    Map<String,Object> mapa=new HashMap<>();
+                    mapa.put("idUser",firebaseAuth.getCurrentUser().getUid());
+                    mapa.put("idProduct",producto.getId());
+                    fb.collection("Favorites").document(producto.getId()).set(mapa);
                 }
             }
         });

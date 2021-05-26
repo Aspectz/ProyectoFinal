@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,13 +22,16 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import jogasa.simarro.proyectenadal.R;
@@ -61,10 +65,15 @@ public class FragmentEditarProducto extends Fragment {
 
 
 
-        TextView nombre=view.findViewById(R.id.nombreProducto);
-        TextView precio=view.findViewById(R.id.precioProducto);
-        TextView descripcion=view.findViewById(R.id.descripcionProducto);
+        TextView nombre=view.findViewById(R.id.editName);
+        TextView precio=view.findViewById(R.id.editPrice);
+        TextView descripcion=view.findViewById(R.id.editDesc);
+        TextView limite=view.findViewById(R.id.editQuantity);
+
         ImageSlider carousel=view.findViewById(R.id.imagenProducto);
+        ImageButton updateProduct=view.findViewById(R.id.updateProduct);
+        ImageButton cancelProduct=view.findViewById(R.id.cancelUpdate);
+        ImageButton deleteProduct=view.findViewById(R.id.deleteProduct);
 
         List<SlideModel> foto=new ArrayList<SlideModel>();
         for(int i=0;i<producto.getFotos().size();i++){
@@ -74,82 +83,66 @@ public class FragmentEditarProducto extends Fragment {
 
 
 
-
-
-        Spinner cantity=view.findViewById(R.id.cantitySpinner);
-        favFoto=view.findViewById(R.id.isFavBtn);
-
-        if(producto.isFav()) favFoto.setImageResource(R.drawable.estrellafav);
-        else favFoto.setImageResource(R.drawable.estrella);
-
-        final ArrayList<String> productMaxCantity=new ArrayList<String>();
-        //ADD MAX VALUES TO SPINNER
-        for(int i=1;i<=producto.getLimiteProducto();i++){
-            productMaxCantity.add(String.valueOf(i));
-        }
-
-
-        final ArrayAdapter<String>adapterCantity=new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,productMaxCantity);
-
-        cantity.setAdapter(adapterCantity);
-
-        cantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                cantidad=Integer.parseInt(parent.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
         nombre.setText(producto.getNombre());
-        precio.setText(String.valueOf(producto.getPrecio())+"€/Kg");
+        precio.setText(String.valueOf(producto.getPrecio()));
         descripcion.setText(producto.getDescripcion());
+        limite.setText(String.valueOf(producto.getLimiteProducto()));
         //Glide.with(getContext()).load(producto.getFotos().get(0)).into(foto);
 
 
-        Button botonComprar=(Button)view.findViewById(R.id.comprarButton);
-
-        botonComprar.setOnClickListener(new View.OnClickListener() {
+        updateProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
-                OrderDetails createdOrder=addOrder(Estados.PROCESANDO);
-                crearPedido.putExtra("Option","Buy");
-                crearPedido.putExtra("OrderDetail",createdOrder);
+                Map<String,Object> newProduct=new HashMap<>();
+                newProduct.put("nombre",nombre.getText().toString());
+                newProduct.put("limiteProducto",Integer.parseInt(limite.getText().toString()));
+                newProduct.put("precio",Float.parseFloat(precio.getText().toString()));
+                newProduct.put("descripcion",nombre.getText().toString());
 
-                startActivity(crearPedido);
+                fb.collection("Products").document(producto.getId()).update(newProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Intent intent=new Intent(getActivity(),HomeActivity.class);
+                            startActivity(intent);
+                            Snackbar.make(getActivity().findViewById(android.R.id.content),"Product updated successfully",Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
             }
         });
 
-        Button btnAddtoShipping=(Button)view.findViewById(R.id.addToShoppingCartBtn);
-        btnAddtoShipping.setOnClickListener(new View.OnClickListener() {
+        cancelProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
-                addToShippingCart();
-                startActivity(addtoshipping);
-
+                Intent intent=new Intent(getActivity(),HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+        deleteProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fb.collection("Products").document(producto.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Intent intent=new Intent(getActivity(),HomeActivity.class);
+                            startActivity(intent);
+                            Snackbar.make(getActivity().findViewById(android.R.id.content),"Product deleted successfully",Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 
-        favFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(producto.isFav()){
-                    favFoto.setImageResource(R.drawable.estrella);
-                    producto.setFav(!producto.isFav());
-                }
-                else{
-                    favFoto.setImageResource(R.drawable.estrellafav);
-                    producto.setFav(!producto.isFav());
-                }
-            }
-        });
+
+
+
+
+
+
+
         return view;
     }
 
