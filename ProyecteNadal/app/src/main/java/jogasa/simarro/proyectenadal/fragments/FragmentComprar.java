@@ -34,7 +34,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import jogasa.simarro.proyectenadal.R;
@@ -144,12 +146,19 @@ public class FragmentComprar extends Fragment {
             }
         });
 
+
+
+
         favFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(producto.isFav()){
                     favFoto.setImageResource(R.drawable.estrella);
                     producto.setFav(!producto.isFav());
+                    Map<String,Object> mapa=new HashMap<>();
+                    mapa.put("idUser",firebaseAuth.getCurrentUser().getUid());
+                    mapa.put("idProduct",producto.getId());
+                    fb.collection("Favorites").document(producto.getId()).set(mapa);
                 }
                 else{
                     favFoto.setImageResource(R.drawable.estrellafav);

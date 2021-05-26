@@ -57,6 +57,7 @@ public class AdaptadorPedidos extends ArrayAdapter {
 
         TextView nombreProducto=(TextView) item.findViewById(R.id.nombreProducto);
         TextView fechaPedido=(TextView) item.findViewById(R.id.fechaPedido);
+        TextView idPedido=(TextView) item.findViewById(R.id.idPedido);
         ImageView imagen=(ImageView) item.findViewById(R.id.pedidoFoto);
         String fecha=getContext().getString(R.string.orderDate);
 
@@ -74,7 +75,8 @@ public class AdaptadorPedidos extends ArrayAdapter {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    fechaPedido.setText(fecha+":"+task.getResult().toObject(Pedido.class).getFechacreacionPedido());
+                    fechaPedido.setText(fecha+":"+task.getResult().toObject(Pedido.class).getFecha());
+                    idPedido.setText(String.valueOf(task.getResult().toObject(Pedido.class).getId()));
                 }
             }
         });

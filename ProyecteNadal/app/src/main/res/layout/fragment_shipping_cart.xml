@@ -73,7 +73,7 @@
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
         android:textColor="@color/black"
-        android:text="price"></TextView>
+        android:text="0"></TextView>
 
     <Button
         android:layout_width="154dp"

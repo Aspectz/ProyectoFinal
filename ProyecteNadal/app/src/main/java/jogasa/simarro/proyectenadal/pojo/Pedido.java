@@ -1,8 +1,12 @@
 package jogasa.simarro.proyectenadal.pojo;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Pedido implements Serializable {
@@ -10,23 +14,24 @@ public class Pedido implements Serializable {
     private static final AtomicInteger count = new AtomicInteger(0);
     private int id;
     private String nombre,metodoFacturacion,direccionEnvio;
-    private String fechacreacionPedido;
+
    // private float precio;
    // private ArrayList<Producto> productos=new ArrayList<Producto>();
    // private int cantidadPedido;
     private String idUser;
-    private boolean isFinished;
     private Estados estado;
 
+
+    private String fecha;
 
     public Pedido(){
         this.setId(count.incrementAndGet());
     }
-    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, String fechacreacionPedido, float precio, ArrayList<Producto> productos) {
+    public Pedido(String nombre, String metodoFacturacion, String direccionEnvio, String fecha, float precio, ArrayList<Producto> productos) {
         this.nombre = nombre;
         this.metodoFacturacion = metodoFacturacion;
         this.direccionEnvio = direccionEnvio;
-        this.fechacreacionPedido = fechacreacionPedido;
+        this.fecha = fecha;
         //this.precio = precio;
         this.setId(count.incrementAndGet());
         //this.productos = productos;
@@ -70,12 +75,12 @@ public class Pedido implements Serializable {
         this.direccionEnvio = direccionEnvio;
     }
 
-    public String getFechacreacionPedido() {
-        return fechacreacionPedido;
+    public String getFecha() {
+        return fecha;
     }
 
-    public void setFechacreacionPedido(String fechacreacionPedido) {
-        this.fechacreacionPedido = fechacreacionPedido;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public String getIdUser() {
@@ -88,14 +93,6 @@ public class Pedido implements Serializable {
 
 
 
-    public boolean isFinished() {
-        return isFinished;
-    }
-
-    public void setFinished(boolean finished) {
-        isFinished = finished;
-    }
-
 
 
     public Estados getEstado() {
@@ -104,5 +101,19 @@ public class Pedido implements Serializable {
 
     public void setEstado(Estados estado) {
         this.estado = estado;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", metodoFacturacion='" + metodoFacturacion + '\'' +
+                ", direccionEnvio='" + direccionEnvio + '\'' +
+                ", fechacreacionPedido='" + fecha + '\'' +
+                ", idUser='" + idUser + '\'' +
+                ", estado=" + estado +
+                '}';
     }
 }

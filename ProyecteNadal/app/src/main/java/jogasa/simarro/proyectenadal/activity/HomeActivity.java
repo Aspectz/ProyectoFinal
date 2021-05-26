@@ -149,6 +149,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
                                     if (item.getItemId() == R.id.anadirProducto)
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentAnadirProducto());
+                                    if(item.getItemId() == R.id.favoritos)
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos("Favoritos"));
                                     fragmentTransaction.commit();
                                     return true;
                                 }

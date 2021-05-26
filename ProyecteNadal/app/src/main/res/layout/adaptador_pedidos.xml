@@ -32,6 +32,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/fechaPedido"
             android:text="fechaPedido"></TextView>
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/idPedido"
+            android:text="idPedido"></TextView>
     </LinearLayout>
 
     <TextView

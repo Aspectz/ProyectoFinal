@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -81,7 +83,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         startService(intent);
 
 
-        priceTotal=(TextView) findViewById(R.id.totalPriceSummary);
+        priceTotal=(TextView) findViewById(R.id.totalPrice);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -150,15 +152,18 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot pedido : task.getResult()) {
 
+                        Log.d("Pepe","compraCarrito");
+
+
                         Map<String,Object> pd=new HashMap<>();
                         Pedido pedido1=pedido.toObject(Pedido.class);
                         pd.put("direccionEnvio",direccionEnvio.getText().toString());
                         pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
-                        pd.put("estado",Estados.CARRITO);
-                        pd.put("fecha",FieldValue.serverTimestamp());
+                        pd.put("estado",Estados.ESPERANDO);
+                        pd.put("fecha", LocalDate.now().toString());
                         pd.put("id",pedido1.getId());
                         pd.put("idUser",pedido1.getIdUser());
-                        pd.put("nombre",pedido1.getNombre());
+                        pd.put("nombre",nombreDestinatario.getText().toString());
 
                        /* pedido1.setEstado(Estados.ESPERANDO);
                         pedido1.setDireccionEnvio(direccionEnvio.getText().toString());
@@ -177,12 +182,14 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Pedido pedido = task.getResult().toObject(Pedido.class);
 
+                Log.d("Pepe","compraDirecta");
+
                 Map<String,Object> pd=new HashMap<>();
                 Pedido pedido1=task.getResult().toObject(Pedido.class);
                 pd.put("direccionEnvio",direccionEnvio.getText().toString());
                 pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
                 pd.put("estado",Estados.ESPERANDO);
-                pd.put("fecha",FieldValue.serverTimestamp());
+                pd.put("fecha",LocalDate.now().toString());
                 pd.put("id",pedido1.getId());
                 pd.put("idUser",pedido1.getIdUser());
                 pd.put("nombre",pedido1.getNombre());
@@ -192,7 +199,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 pedido.setDireccionEnvio(direccionEnvio.getText().toString());
                 pedido.setMetodoFacturacion(metodoFacturacion.getText().toString());
                 pedido.setFechacreacionPedido(FieldValue.serverTimestamp().toString());*/
-                fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pedido);
+                fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pd);
             }
         });
     }

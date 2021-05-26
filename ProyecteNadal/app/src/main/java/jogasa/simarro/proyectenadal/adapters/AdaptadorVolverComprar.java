@@ -45,7 +45,7 @@ public class AdaptadorVolverComprar extends ArrayAdapter {
         String fecha=getContext().getString(R.string.orderDate);
 
         nombreProducto.setText(nombre);
-        fechaPedido.setText(fecha+":"+pedidos.get(position).getFechacreacionPedido());
+        fechaPedido.setText(fecha+":"+pedidos.get(position).getFecha());
 
 
 

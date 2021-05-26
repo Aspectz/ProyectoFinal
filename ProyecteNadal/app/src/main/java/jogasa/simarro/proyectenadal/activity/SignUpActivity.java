@@ -23,7 +23,7 @@ import jogasa.simarro.proyectenadal.pojo.Usuario;
 import jogasa.simarro.proyectenadal.pojo.Vendedor;
 
 public class SignUpActivity extends AppCompatActivity {
-    private EditText name,email,firstPassword,secondPassword;
+    private EditText name, email, firstPassword, secondPassword;
     private Button signUpbutton;
     private String option;
     private FirebaseAuth mAuth;
@@ -36,10 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
 
-        option=getIntent().getStringExtra("Option");
-
-
-
+        option = getIntent().getStringExtra("Option");
 
 
         name = (EditText) findViewById(R.id.nameEditText);
@@ -49,9 +46,9 @@ public class SignUpActivity extends AppCompatActivity {
         signUpbutton = (Button) findViewById(R.id.signUpEditText);
 
 
-        if(option.equalsIgnoreCase("seller")) name.setHint("Company's name");
+        if (option.equalsIgnoreCase("seller")) name.setHint("Company's name");
 
-            authStateListener = new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -64,54 +61,57 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         mAuth.addAuthStateListener(authStateListener);
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-        if(authStateListener!=null){
+        if (authStateListener != null) {
             mAuth.removeAuthStateListener(authStateListener);
         }
     }
-    private void signUp(){
-        String username=name.getText().toString();
-        String correo=email.getText().toString();
-        String passwd=firstPassword.getText().toString();
-        String passwd2=secondPassword.getText().toString();
+
+    private void signUp() {
+        String username = name.getText().toString();
+        String correo = email.getText().toString();
+        String passwd = firstPassword.getText().toString();
+        String passwd2 = secondPassword.getText().toString();
 
 
-        if(passwd.compareTo(passwd2)!=0){
+        if (passwd.compareTo(passwd2) != 0) {
             Toast.makeText(SignUpActivity.this, "YOUR PASSWORD MUST BE THE SAME", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(passwd.length()<6){
+        if (passwd.length() < 6) {
             Toast.makeText(this, "YOUR PASSWORD MUST HAVE 6 LETTERS", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(correo,passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(correo, passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }else{
-                    FirebaseUser user=mAuth.getCurrentUser();
-                    FirebaseFirestore db=FirebaseFirestore.getInstance();
+                } else {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                     user.sendEmailVerification();
                     Toast.makeText(SignUpActivity.this, "Email de verificacion enviado", Toast.LENGTH_SHORT).show();
-                    if(option.equalsIgnoreCase("seller")){
-                        Vendedor vendedor=new Vendedor(user.getUid(),username,correo);
+                    if (option.equalsIgnoreCase("seller")) {
+                        Vendedor vendedor = new Vendedor(user.getUid(), username, correo);
                         db.collection("Suppliers").document(user.getUid()).set(vendedor);
-                    }else{
-                        Usuario usuario=new Usuario(user.getUid(), username, correo);
+                    } else {
+                        Usuario usuario = new Usuario(user.getUid(), username, correo);
                         db.collection("Users").document(user.getUid()).set(usuario);
                     }
-                    Intent main=new Intent(SignUpActivity.this,LoginActivity.class);
+                    Intent main = new Intent(SignUpActivity.this, LoginActivity.class);
                     startActivity(main);
                 }
             }
