@@ -100,10 +100,6 @@ public class EditarProducto extends AppCompatActivity implements NavigationView.
                 startActivity(listaPedidos);
 
                 break;
-            case R.id.buyAgainItem:
-                Intent buyagain=new Intent(EditarProducto.this,VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.accountItem:
                 Intent micuenta=new Intent(EditarProducto.this,MiCuentaActivity.class);
                 startActivity(micuenta);
@@ -113,14 +109,6 @@ public class EditarProducto extends AppCompatActivity implements NavigationView.
                 FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(EditarProducto.this,LoginActivity.class);
                 startActivity(cerrarSession);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs=new Intent(EditarProducto.this,AboutUsActivity.class);
-                startActivity(aboutUs);
-                break;
-            case R.id.anadirProducto:
-                //Intent anadirProducto = new Intent(VisualizarProductoActivity.this, AnadirProducto.class);
-                //startActivity(anadirProducto);
                 break;
             default:
                 return false;

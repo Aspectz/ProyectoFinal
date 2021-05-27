@@ -19,9 +19,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.EditarProducto"></activity>
         <activity android:name=".activity.SeleccionarRegistro" />
-        <activity android:name=".activity.PaymentDetails" />
         <activity android:name=".activity.RegistrarVendedor" />
-        <activity android:name=".activity.AboutUsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -52,9 +50,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ShippingCart"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.VolverAcomprarActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ListaPedidos"

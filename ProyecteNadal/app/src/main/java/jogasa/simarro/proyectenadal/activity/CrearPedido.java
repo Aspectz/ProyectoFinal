@@ -25,21 +25,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalPaymentDetails;
+
 import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
+
 
 
 import org.json.JSONException;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -52,7 +49,6 @@ import jogasa.simarro.proyectenadal.R;
 
 
 import jogasa.simarro.proyectenadal.adapters.AdaptadorListaShipping;
-import jogasa.simarro.proyectenadal.api.Config;
 import jogasa.simarro.proyectenadal.pojo.Estados;
 import jogasa.simarro.proyectenadal.pojo.OrderDetails;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
@@ -70,21 +66,13 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     private float price = 0;
     private TextView priceTotal;
 
-    private static final int  PAYPAL_REQUEST_CODE=7171;
-    private static PayPalConfiguration config=new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(Config.PAYPAL_CLIENT_ID);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_pedido);
 
-
-        Intent intent=new Intent(this,PayPalService.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
-        startService(intent);
-
-
         priceTotal=(TextView) findViewById(R.id.totalPrice);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+       /* toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -93,10 +81,11 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
-        String option = getIntent().getExtras().getSerializable("Option").toString();
+
         //Recoger headerLayout
         View headerLayout = navigationView.getHeaderView(0);
-        TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);
+        TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);*/
+        String option = getIntent().getExtras().getSerializable("Option").toString();
 
         fb.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -105,12 +94,12 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         Usuario usuarioLogeado = doc.toObject(Usuario.class);
-                        headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                        //headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
                     }
                 }
             }
         });
-        getSupportActionBar().setTitle("Order");
+//        getSupportActionBar().setTitle("Order");
 
 
         //PEDIDOS
@@ -152,23 +141,16 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot pedido : task.getResult()) {
 
-                        Log.d("Pepe","compraCarrito");
-
-
                         Map<String,Object> pd=new HashMap<>();
                         Pedido pedido1=pedido.toObject(Pedido.class);
                         pd.put("direccionEnvio",direccionEnvio.getText().toString());
                         pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
                         pd.put("estado",Estados.ESPERANDO);
-                        pd.put("fecha", LocalDate.now().toString());
+                        pd.put("fecha", new Date(System.currentTimeMillis()).toString());
                         pd.put("id",pedido1.getId());
                         pd.put("idUser",pedido1.getIdUser());
                         pd.put("nombre",nombreDestinatario.getText().toString());
 
-                       /* pedido1.setEstado(Estados.ESPERANDO);
-                        pedido1.setDireccionEnvio(direccionEnvio.getText().toString());
-                        pedido1.setMetodoFacturacion(metodoFacturacion.getText().toString());
-                        pedido1.setFechacreacionPedido(FieldValue.serverTimestamp());*/
                         fb.collection("Orders").document(String.valueOf(pedido1.getId())).set(pd);
                     }
                 }
@@ -189,16 +171,12 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 pd.put("direccionEnvio",direccionEnvio.getText().toString());
                 pd.put("metodoFacturacion",metodoFacturacion.getText().toString());
                 pd.put("estado",Estados.ESPERANDO);
-                pd.put("fecha",LocalDate.now().toString());
+                pd.put("fecha",new Date(System.currentTimeMillis()).toString());
                 pd.put("id",pedido1.getId());
                 pd.put("idUser",pedido1.getIdUser());
                 pd.put("nombre",pedido1.getNombre());
 
 
-               /* pedido.setEstado(Estados.ESPERANDO);
-                pedido.setDireccionEnvio(direccionEnvio.getText().toString());
-                pedido.setMetodoFacturacion(metodoFacturacion.getText().toString());
-                pedido.setFechacreacionPedido(FieldValue.serverTimestamp().toString());*/
                 fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pd);
             }
         });
@@ -254,7 +232,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
 
     @Override
     protected void onDestroy() {
-        stopService(new Intent(this,PayPalService.class));
         super.onDestroy();
 
 
@@ -267,23 +244,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PAYPAL_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if (confirmation != null) {
-                    try {
-                        String paymentDetails = confirmation.toJSONObject().toString(4);
-                        startActivity(new Intent(this, PaymentDetails.class).putExtra("PaymentDetails", paymentDetails).putExtra("PaymentAmount", price));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else if (resultCode == PaymentActivity.RESULT_CANCELED) {
-            Toast.makeText(this, "invalid", Toast.LENGTH_SHORT).show();
-        }else if(resultCode==PaymentActivity.RESULT_EXTRAS_INVALID){
-            Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -298,10 +258,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 Intent listaPedidos = new Intent(CrearPedido.this, ListaPedidos.class);
                 startActivity(listaPedidos);
                 break;
-            case R.id.buyAgainItem:
-                Intent buyagain = new Intent(CrearPedido.this, VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.accountItem:
                 Intent micuenta = new Intent(CrearPedido.this, MiCuentaActivity.class);
                 startActivity(micuenta);
@@ -315,10 +271,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             case R.id.options:
                 Intent options = new Intent(CrearPedido.this, SettingsActivity.class);
                 startActivity(options);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs = new Intent(CrearPedido.this, AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             default:
                 return false;
@@ -336,12 +288,4 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         return formatted;
     }
 
-    private void processPayment(){
-        price= Float.parseFloat(priceTotal.getText().toString());
-        PayPalPayment payPalPayment=new PayPalPayment(new BigDecimal(price),"EUR","Payment",PayPalPayment.PAYMENT_INTENT_SALE);
-        Intent intent=new Intent(this, PaymentActivity.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
-        startActivityForResult(intent,PAYPAL_REQUEST_CODE);
-    }
 }

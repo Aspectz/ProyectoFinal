@@ -104,18 +104,9 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
                 Intent cerrarSession=new Intent(MiCuentaActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
-
-            case R.id.buyAgainItem:
-                Intent buyagain=new Intent(MiCuentaActivity.this,VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.options:
                 Intent options=new Intent(MiCuentaActivity.this,SettingsActivity.class);
                 startActivity(options);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs=new Intent(MiCuentaActivity.this,AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             case R.id.anadirProducto:
                 //Intent anadirProducto = new Intent(MiCuentaActivity.this, AnadirProducto.class);

@@ -87,9 +87,20 @@ public class FragmentComprar extends Fragment {
 
         Spinner cantity=view.findViewById(R.id.cantitySpinner);
         favFoto=view.findViewById(R.id.isFavBtn);
-
-        if(producto.isFav()) favFoto.setImageResource(R.drawable.estrellafav);
-        else favFoto.setImageResource(R.drawable.estrella);
+        fb.collection("Favorites").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).whereEqualTo("idProduct",producto.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        if(doc.exists()){
+                            favFoto.setImageResource(R.drawable.estrellafav);
+                        }else{
+                            favFoto.setImageResource(R.drawable.estrella);
+                        }
+                    }
+                }
+            }
+        });
 
         final ArrayList<String> productMaxCantity=new ArrayList<String>();
         //ADD MAX VALUES TO SPINNER
@@ -148,22 +159,29 @@ public class FragmentComprar extends Fragment {
 
 
 
-
         favFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(producto.isFav()){
-                    favFoto.setImageResource(R.drawable.estrella);
-                    producto.setFav(!producto.isFav());
-                }
-                else{
-                    favFoto.setImageResource(R.drawable.estrellafav);
-                    producto.setFav(!producto.isFav());
-                    Map<String,Object> mapa=new HashMap<>();
-                    mapa.put("idUser",firebaseAuth.getCurrentUser().getUid());
-                    mapa.put("idProduct",producto.getId());
-                    fb.collection("Favorites").document(producto.getId()).set(mapa);
-                }
+
+                fb.collection("Favorites").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).whereEqualTo("idProduct",producto.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot doc : task.getResult()){
+                                if(doc.exists()){
+                                    favFoto.setImageResource(R.drawable.estrella);
+                                    fb.collection("Favorites").document(producto.getId()).delete();
+                                }else{
+                                    favFoto.setImageResource(R.drawable.estrellafav);
+                                    Map<String,Object> mapa=new HashMap<>();
+                                    mapa.put("idUser",firebaseAuth.getCurrentUser().getUid());
+                                    mapa.put("idProduct",producto.getId());
+                                    fb.collection("Favorites").document(producto.getId()).set(mapa);
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
         return view;

@@ -41,7 +41,6 @@ public class FragmentPedidos extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().getActionBar().setTitle(R.string.orders);
         listaPedidos = (ListView) getView().findViewById(R.id.listaPedidos);
 
     }

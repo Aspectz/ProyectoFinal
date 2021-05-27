@@ -126,10 +126,6 @@ public class RegistrarVendedor extends AppCompatActivity implements NavigationVi
                 Intent listaPedidos = new Intent(RegistrarVendedor.this, ListaPedidos.class);
                 startActivity(listaPedidos);
                 break;
-            case R.id.buyAgainItem:
-                Intent buyagain = new Intent(RegistrarVendedor.this, VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.accountItem:
                 Intent micuenta = new Intent(RegistrarVendedor.this, MiCuentaActivity.class);
                 startActivity(micuenta);
@@ -143,10 +139,6 @@ public class RegistrarVendedor extends AppCompatActivity implements NavigationVi
             case R.id.options:
                 Intent options = new Intent(RegistrarVendedor.this, SettingsActivity.class);
                 startActivity(options);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs = new Intent(RegistrarVendedor.this, AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             default:
                 return false;

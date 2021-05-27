@@ -45,7 +45,7 @@ public class FragmentSettings extends PreferenceFragment {
 
 
         ListPreference idioma = (ListPreference) findPreference("idioma");
-        SwitchPreference notification=(SwitchPreference)findPreference("notifications");
+        /*SwitchPreference notification=(SwitchPreference)findPreference("notifications");
 
         notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -67,7 +67,7 @@ public class FragmentSettings extends PreferenceFragment {
                 editor.commit();
                 return true;
             }
-        });
+        });*/
 
 
         idioma.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

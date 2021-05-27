@@ -234,11 +234,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.orderItem:
                 Intent listaPedidos = new Intent(HomeActivity.this, ListaPedidos.class);
                 startActivity(listaPedidos);
-
-                break;
-            case R.id.buyAgainItem:
-                Intent buyagain = new Intent(HomeActivity.this, VolverAcomprarActivity.class);
-                startActivity(buyagain);
                 break;
             case R.id.accountItem:
                 Intent micuenta = new Intent(HomeActivity.this, MiCuentaActivity.class);
@@ -253,10 +248,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.options:
                 Intent options = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(options);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs = new Intent(HomeActivity.this, AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             default:
                 return false;

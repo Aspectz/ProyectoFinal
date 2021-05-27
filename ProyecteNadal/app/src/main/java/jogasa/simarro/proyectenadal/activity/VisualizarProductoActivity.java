@@ -100,11 +100,6 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
             case R.id.orderItem:
                 Intent listaPedidos=new Intent(VisualizarProductoActivity.this, ListaPedidos.class);
                 startActivity(listaPedidos);
-
-                break;
-            case R.id.buyAgainItem:
-                Intent buyagain=new Intent(VisualizarProductoActivity.this,VolverAcomprarActivity.class);
-                startActivity(buyagain);
                 break;
             case R.id.accountItem:
                 Intent micuenta=new Intent(VisualizarProductoActivity.this,MiCuentaActivity.class);
@@ -115,10 +110,6 @@ public class VisualizarProductoActivity extends AppCompatActivity implements Nav
                 FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(VisualizarProductoActivity.this,LoginActivity.class);
                 startActivity(cerrarSession);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs=new Intent(VisualizarProductoActivity.this,AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             case R.id.anadirProducto:
                 //Intent anadirProducto = new Intent(VisualizarProductoActivity.this, AnadirProducto.class);

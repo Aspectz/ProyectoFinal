@@ -88,10 +88,6 @@ public class ListaPedidos extends AppCompatActivity implements NavigationView.On
                 Intent home = new Intent(ListaPedidos.this, HomeActivity.class);
                 startActivity(home);
                 break;
-            case R.id.buyAgainItem:
-                Intent buyagain = new Intent(ListaPedidos.this, VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.accountItem:
                 Intent micuenta = new Intent(ListaPedidos.this, MiCuentaActivity.class);
                 startActivity(micuenta);
@@ -105,14 +101,6 @@ public class ListaPedidos extends AppCompatActivity implements NavigationView.On
             case R.id.options:
                 Intent options = new Intent(ListaPedidos.this, SettingsActivity.class);
                 startActivity(options);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs = new Intent(ListaPedidos.this, AboutUsActivity.class);
-                startActivity(aboutUs);
-                break;
-            case R.id.anadirProducto:
-                //Intent anadirProducto = new Intent(ListaPedidos.this, AnadirProducto.class);
-                //startActivity(anadirProducto);
                 break;
             default:
                 return false;

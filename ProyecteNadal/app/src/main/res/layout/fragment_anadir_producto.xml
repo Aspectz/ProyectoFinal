@@ -122,6 +122,7 @@
             android:drawablePadding="12dp"
             android:ems="10"
             android:hint="Limite"
+            android:inputType="number"
             android:paddingEnd="12dp"
             android:textColor="@color/black"
             android:textSize="18sp" />

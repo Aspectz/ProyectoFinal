@@ -99,10 +99,6 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
                 startActivity(listaPedidos);
 
                 break;
-            case R.id.buyAgainItem:
-                Intent buyagain=new Intent(ShippingCart.this,VolverAcomprarActivity.class);
-                startActivity(buyagain);
-                break;
             case R.id.accountItem:
                 Intent micuenta=new Intent(ShippingCart.this,MiCuentaActivity.class);
                 startActivity(micuenta);
@@ -112,10 +108,6 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
                 FirebaseAuth.getInstance().signOut();
                 Intent cerrarSession=new Intent(ShippingCart.this,LoginActivity.class);
                 startActivity(cerrarSession);
-                break;
-            case R.id.aboutUs:
-                Intent aboutUs=new Intent(ShippingCart.this,AboutUsActivity.class);
-                startActivity(aboutUs);
                 break;
             case R.id.anadirProducto:
                 //Intent anadirProducto = new Intent(ShippingCart.this, AnadirProducto.class);
