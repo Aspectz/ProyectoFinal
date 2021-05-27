@@ -5,35 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
+
+    android:orientation="horizontal"
     tools:context=".activity.SeleccionarRegistro">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
         android:gravity="center">
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sube tus Productos"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Administración de pedidos"/>
         <Button
             android:id="@+id/registrarVendedor"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_orange"
             android:text="Soy Vendedor" />
     </LinearLayout>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@color/black"></View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
         android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compra a cualquier vendedor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Historial de pedidos"/>
 
         <Button
             android:id="@+id/registrarCliente"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_orange"
             android:text="Soy Cliente" />
