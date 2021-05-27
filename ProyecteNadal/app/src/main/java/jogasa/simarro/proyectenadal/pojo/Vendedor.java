@@ -8,6 +8,9 @@ public class Vendedor implements Serializable {
     private String email;
 
 
+    public Vendedor(){}
+    
+    
     public Vendedor(String id, String companyName, String email) {
         this.id = id;
         this.companyName = companyName;

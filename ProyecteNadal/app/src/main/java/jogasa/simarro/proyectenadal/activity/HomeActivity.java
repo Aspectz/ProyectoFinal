@@ -51,11 +51,13 @@ import jogasa.simarro.proyectenadal.R;
 import jogasa.simarro.proyectenadal.fragments.FragmentAnadirProducto;
 import jogasa.simarro.proyectenadal.fragments.FragmentInicio;
 
+import jogasa.simarro.proyectenadal.fragments.FragmentPedidos;
 import jogasa.simarro.proyectenadal.fragments.FragmentTusProductos;
 import jogasa.simarro.proyectenadal.pojo.Estados;
 import jogasa.simarro.proyectenadal.pojo.OrderDetails;
 import jogasa.simarro.proyectenadal.pojo.Pedido;
 import jogasa.simarro.proyectenadal.pojo.Usuario;
+import jogasa.simarro.proyectenadal.pojo.Vendedor;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -134,9 +136,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         if (task.getResult().exists()) {
+
+
+                            Vendedor vendedorLogeado = task.getResult().toObject(Vendedor.class);
+                            headerText.setText(getResources().getString(R.string.hello) + vendedorLogeado.getCompanyName());
+                            
+
+                            toolbar.getMenu().findItem(R.id.shoppingCart).setVisible(false);
                             fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.container_fragment, new FragmentTusProductos());
                             fragmentTransaction.commit();
+
+
+
+
 
                             BottomNavigationView botom = (BottomNavigationView) findViewById(R.id.bottomBarMain);
                             botom.setVisibility(View.VISIBLE);
@@ -155,6 +168,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
                         } else {
+
                             BottomNavigationView botom = (BottomNavigationView) findViewById(R.id.bottomBarMain);
                             botom.getMenu().clear();
                             botom.inflateMenu(R.menu.menu_cliente);
@@ -168,7 +182,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentInicio());
                                     }
                                     if (item.getItemId() == R.id.misPedidos){
-                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentAnadirProducto());
+                                        fragmentTransaction.replace(R.id.container_fragment, new FragmentPedidos());
                                     }
                                     if(item.getItemId() == R.id.favoritos){
                                         fragmentTransaction.replace(R.id.container_fragment, new FragmentInicio("Favoritos"));
@@ -185,8 +199,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-
-
         }
 
     }
@@ -203,7 +215,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("pepe","onresume");
         updateCartCount();
 
     }

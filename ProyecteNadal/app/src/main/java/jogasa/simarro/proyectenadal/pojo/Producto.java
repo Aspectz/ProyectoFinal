@@ -13,19 +13,17 @@ public class Producto implements Serializable {
     private String idSupplier;
     private float precio;
     private int limiteProducto;
-    private boolean isFav;
 
 
     public Producto(){
         this.fotos=new ArrayList<>();
     }
-    public Producto(String nombre, String descripcion, float precio,ArrayList<String> foto,int limiteProducto,boolean isFav) {
+    public Producto(String nombre, String descripcion, float precio,ArrayList<String> foto,int limiteProducto) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.fotos=foto;
         this.limiteProducto=limiteProducto;
-        this.isFav=isFav;
     }
     public Producto(String nombre, String descripcion, float precio,int limiteProducto) {
         this.nombre = nombre;
@@ -72,14 +70,6 @@ public class Producto implements Serializable {
 
     public void setLimiteProducto(int limiteProducto) {
         this.limiteProducto = limiteProducto;
-    }
-
-    public boolean isFav() {
-        return isFav;
-    }
-
-    public void setFav(boolean fav) {
-        isFav = fav;
     }
 
     public String getId() {

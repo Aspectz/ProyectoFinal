@@ -14,14 +14,8 @@ public class Pedido implements Serializable {
     private static final AtomicInteger count = new AtomicInteger(0);
     private int id;
     private String nombre,metodoFacturacion,direccionEnvio;
-
-   // private float precio;
-   // private ArrayList<Producto> productos=new ArrayList<Producto>();
-   // private int cantidadPedido;
     private String idUser;
     private Estados estado;
-
-
     private String fecha;
 
     public Pedido(){
@@ -32,9 +26,7 @@ public class Pedido implements Serializable {
         this.metodoFacturacion = metodoFacturacion;
         this.direccionEnvio = direccionEnvio;
         this.fecha = fecha;
-        //this.precio = precio;
         this.setId(count.incrementAndGet());
-        //this.productos = productos;
     }
     //PEDIDO SIN ACABAR
     public Pedido(String nombre){
