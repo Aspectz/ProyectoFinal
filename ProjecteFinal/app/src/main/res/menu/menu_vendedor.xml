@@ -2,4 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/inicio" android:title="@string/home" android:icon="@drawable/harvest"></item>
     <item android:id="@+id/anadirProducto" android:title="Add Product" android:icon="@drawable/baseline_add_black_36"></item>
+    <item android:id="@+id/manageOrders" android:title="Manage orders" android:icon="@drawable/clipboard"></item>
 </menu>

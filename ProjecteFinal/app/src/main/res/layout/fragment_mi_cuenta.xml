@@ -62,7 +62,28 @@
         android:layout_gravity="center">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwpordAccount"
+            android:id="@+id/passwordAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:text=""
+            android:background="@color/fui_transparent"
+            android:drawableEnd="@drawable/ic_baseline_lock_24"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingTop="5dp"
+        android:background="@drawable/custom_button_rectangle"
+        android:layout_gravity="center">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newPasswordAcc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"

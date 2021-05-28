@@ -66,21 +66,23 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
                     if (doc.exists()) {
                         Usuario usuarioLogeado = doc.toObject(Usuario.class);
                         headerText.setText(getResources().getString(R.string.hello) + usuarioLogeado.getNombre());
+                        if(savedInstanceState==null){
+                            setFragment("Users");
+                        }
+                    }else{
+                        setFragment("Suppliers");
                     }
                 }
             }
         });
 
-
-
-
-        if(savedInstanceState==null){
+       /* if(savedInstanceState==null){
             getSupportActionBar().setTitle(R.string.account);
             fragmentManager=getSupportFragmentManager();
             fragmentTransaction=fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment,new FragmentMiCuenta());
             fragmentTransaction.commit();
-        }
+        }*/
 
     }
 
@@ -117,5 +119,12 @@ public class MiCuentaActivity extends AppCompatActivity implements NavigationVie
         }
         drawerLayout.closeDrawers();
         return false;
+    }
+    private void setFragment(String option){
+            getSupportActionBar().setTitle(R.string.account);
+            fragmentManager=getSupportFragmentManager();
+            fragmentTransaction=fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment,new FragmentMiCuenta(option));
+            fragmentTransaction.commit();
     }
 }
