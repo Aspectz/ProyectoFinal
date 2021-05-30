@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/names"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:id="@+id/addressNombre"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+<!-- direccionEnvio,cPostal,poblacion,provincia,pais,idUser; -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/shippingAddres"></TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/shippingAddres"
+        android:id="@+id/addressDireccion"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Codigo postal"
+        android:layout_margin="10dp"
+        android:id="@+id/addressCP"
+        android:padding="10dp"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Poblacion"
+        android:id="@+id/addressPoblacion"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Provincia"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:id="@+id/addressProvincia"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Pais"
+        android:layout_margin="10dp"
+        android:id="@+id/addressPais"
+        android:padding="10dp"
+        android:background="@drawable/custom_button_rectangle"></EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:id="@+id/cancelAddress"
+            android:text="@string/fui_cancel"></TextView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/fui_button_text_save"
+            android:layout_gravity="end|bottom"
+            android:id="@+id/saveAddress"
+            android:background="@drawable/custom_button_orange"/>
+    </LinearLayout>
+
+    </LinearLayout>

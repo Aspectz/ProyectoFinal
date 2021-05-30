@@ -101,35 +101,36 @@
         android:layout_marginLeft="30dp"
         android:background="@color/fui_transparent"
         android:text="DESCRIPCION"
+        android:maxLength="100"
         android:textColor="@android:color/darker_gray"></EditText>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <Button
             android:id="@+id/updateProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            android:background="@drawable/custom_visualize_products"
-            android:src="@drawable/baseline_done_black_48"></ImageButton>
+            android:text="Actualizar Producto"
+            android:textAllCaps="false"
+            android:padding="10dp"
+            android:drawableStart="@drawable/outline_done_black_24"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_button_rectangle"></Button>
 
-        <ImageButton
-            android:id="@+id/cancelUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            android:background="@drawable/custom_visualize_products"
-            android:src="@drawable/baseline_close_black_48"></ImageButton>
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/deleteProduct"
-            android:layout_margin="30dp"
-            android:background="@drawable/custom_visualize_products"
-            android:src="@drawable/baseline_delete_black_48"></ImageButton>
+            android:textAllCaps="false"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:drawableStart="@drawable/round_delete_black_24"
+            android:text="Borrar Producto"
+            android:background="@drawable/custom_button_rectangle"
+            android:src="@drawable/baseline_delete_black_48"></Button>
     </LinearLayout>
-
 </LinearLayout>

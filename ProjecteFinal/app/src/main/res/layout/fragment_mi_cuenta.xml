@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:paddingTop="5dp"
+        app:passwordToggleEnabled="true"
         android:background="@drawable/custom_button_rectangle"
         android:layout_gravity="center">
 
@@ -68,7 +69,6 @@
             android:hint="@string/password"
             android:text=""
             android:background="@color/fui_transparent"
-            android:drawableEnd="@drawable/ic_baseline_lock_24"
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:textColor="@color/black"
@@ -79,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:paddingTop="5dp"
+        app:passwordToggleEnabled="true"
         android:background="@drawable/custom_button_rectangle"
         android:layout_gravity="center">
 

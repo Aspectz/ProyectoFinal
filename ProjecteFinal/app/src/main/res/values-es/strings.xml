@@ -5,7 +5,7 @@
     <string name="welcome">Bienvenido!</string>
     <string name="password">Contraseña</string>
     <string name="repeatPassword">Repite Contraseña</string>
-    <string name="forgotPassword">Contraseña Olvidada?</string>
+    <string name="forgotPassword">Contraseña Olvidada</string>
     <string name="logIn">Iniciar Sesión</string>
     <string name="signUp">Registrarse</string>
     <string name="names">Nombre</string>
@@ -45,4 +45,12 @@
     <string name="descending">Mayor a menor</string>
     <string name="YourProducts">Tus Productos</string>
     <string name="quantity">Cantidad</string>
+    <string name="choose">Elegir</string>
+    <string name="seller">Vendedor</string>
+    <string name="client">Cliente</string>
+    <string name="uploadDesc">Sube tus productos</string>
+    <string name="manageOrdersDesc">Administra pedidos</string>
+    <string name="buyDesc">Compra a nuestros vendedores</string>
+    <string name="orderHistoryDesc">Historial de pedidos</string>
+    <string name="addToCart">Añadir al carrito</string>
 </resources>

@@ -13,7 +13,7 @@
     tools:context=".adapters.AdaptadorPedidos">
 
     <LinearLayout
-        android:layout_width="290dp"
+        android:layout_width="match_parent"
         android:layout_height="105dp"
         android:background="@drawable/custom_shipping_items"
         android:orientation="horizontal">

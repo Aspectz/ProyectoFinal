@@ -47,6 +47,9 @@ dependencies {
     //carousel
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
 
+    //spinner
+    implementation 'com.github.chivorns:smartmaterialspinner:1.5.0'
+
     //paypal
 
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'

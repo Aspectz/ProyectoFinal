@@ -78,6 +78,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/anadirDesc"
             android:layout_width="300dp"
+            android:maxLength="100"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
@@ -127,30 +128,6 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
-    <!--<EditText
-        android:id="@+id/anadirDesc"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:hint="Descripcion"></EditText>
-
-    <EditText
-        android:id="@+id/anadirPrecio"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:hint="Precio"
-        android:inputType="numberDecimal"></EditText>
-
-    <EditText
-        android:id="@+id/anadirLimite"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:hint="LimiteProducto"></EditText>-->
 
     <Button
         android:id="@+id/anadirBoton"

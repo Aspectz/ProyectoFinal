@@ -1,16 +1,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/drawer_toolbar"
-
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/backAddPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:background="@color/fui_transparent"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
     <TextView
         android:id="@+id/orderInformation"
         android:layout_width="match_parent"
@@ -20,36 +34,54 @@
         android:textSize="25dp"></TextView>
 
     <ListView
-        android:layout_width="match_parent"
-        android:background="@color/white"
-        android:divider="@null"
         android:id="@+id/listadoCompra"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:divider="@null" />
 
-    <EditText
-        android:id="@+id/nombreDestinatario"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:hint="@string/recipientName"></EditText>
+        android:layout_weight="0.3"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:id="@+id/direccionEnvio"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:textSize="18dp"
+            app:smsp_underlineColor="@color/fui_transparent"
+            android:background="@drawable/custom_button_rectangle"
+            app:smsp_hint="@string/shippingAddres"
+            android:spinnerMode="dropdown"
+            app:smsp_selectedItemListColor="@color/black"
+            ></com.chivorn.smartmaterialspinner.SmartMaterialSpinner>
+        <Button android:layout_width="300dp"
+            android:id="@+id/addShippingAddress"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="Add new shipping address"
+            android:drawableStart="@drawable/baseline_add_black_36"
+            android:background="@drawable/custom_button_rectangle"/>
+        <EditText
+            android:id="@+id/metodoFacturacion"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="18dp"
+            android:padding="10dp"
+            android:background="@drawable/custom_button_rectangle"
+            android:layout_marginTop="30dp"
+            android:hint="@string/creditCard"></EditText>
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/metodoFacturacion"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:hint="@string/creditCard"></EditText>
-
-    <EditText
-        android:id="@+id/direccionEnvio"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:hint="@string/shippingAddres"></EditText>
 
     <LinearLayout
 
@@ -88,7 +120,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_button_orange"
             android:text="@string/buy"></Button>
     </LinearLayout>
 </LinearLayout>

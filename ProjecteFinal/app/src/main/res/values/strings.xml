@@ -44,5 +44,22 @@
     <string name="descending">High to low</string>
     <string name="YourProducts">Tus Productos</string>
     <string name="quantity">Quantity</string>
+    <string name="choose">Choose</string>
+    <string name="seller">Seller</string>
+    <string name="client">Client</string>
+    <string name="uploadDesc">Upload your products</string>
+    <string name="manageOrdersDesc">Manage orders</string>
+    <string name="buyDesc">Buy to our sellers</string>
+    <string name="orderHistoryDesc">Order history</string>
+    <string name="addToCart">Add to Shopping Cart</string>
+
+    <!--ERRORES -->
+    <string name="samePassword">Your password must be the same.</string>
+    <string name="minimPassword">Your password must have atleast 6 letters.</string>
+    <string name="verEmailSent">Verification email sent.</string>
+
+
+
+
 
 </resources>

@@ -102,7 +102,7 @@
         android:layout_height="50dp"
         android:textColor="@color/white"
         android:layout_marginTop="70dp"
-        android:text="Add to Shopping Cart" />
+        android:text="@string/addToCart" />
     <Button
         android:background="@drawable/custom_button_orange"
         android:layout_gravity="center"

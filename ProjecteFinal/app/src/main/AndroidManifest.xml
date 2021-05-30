@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="jogasa.simarro.proyectenadal">
+    package="jogasa.simarro.projectefinal">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -17,9 +17,14 @@
         android:roundIcon="@drawable/logoiconaranja"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.EditarProducto"></activity>
-        <activity android:name=".activity.SeleccionarRegistro" />
-        <activity android:name=".activity.RegistrarVendedor" />
+        <activity android:name=".activity.OnBoardActivity"></activity>
+        <activity android:name=".OnBoardActivity" />
+        <activity
+            android:name=".activity.EditarProducto"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SeleccionarRegistro"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,17 +38,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".fragments.MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".adapters.AdapterOrderSummary"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".fragments.FragmentNoticias"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".adapters.ApiAdapter"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SettingsActivity"
