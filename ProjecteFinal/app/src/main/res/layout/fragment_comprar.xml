@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
-        android:text="DESCRIPCION"></TextView>
+        android:text="@string/description"></TextView>
 
     <Button
         android:background="@drawable/custom_button_orange"
@@ -112,5 +112,5 @@
         android:layout_height="50dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
-        android:text="Comprar" />
+        android:text="@string/buy" />
 </LinearLayout>

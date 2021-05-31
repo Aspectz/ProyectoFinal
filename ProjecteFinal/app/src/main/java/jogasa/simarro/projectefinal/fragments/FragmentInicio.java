@@ -163,12 +163,6 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
         //Recoge el producto incluso con firestore
         Intent visualizar=new Intent(getActivity(), VisualizarProductoActivity.class);
         visualizar.putExtra("Producto",seleccionado);
-
         startActivity(visualizar);
-    }
-    private class AdapterProducts extends RecyclerView.ViewHolder  {
-        public AdapterProducts(@NonNull View itemView) {
-            super(itemView);
-        }
     }
 }

@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
             android:textColor="@color/black"
-        android:text="Price"></TextView>
+        android:text="@string/price"></TextView>
         <Spinner
             android:id="@+id/orderBySpinner"
             android:layout_width="wrap_content"

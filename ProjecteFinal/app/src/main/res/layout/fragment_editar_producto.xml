@@ -114,7 +114,7 @@
             android:id="@+id/updateProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Actualizar Producto"
+            android:text="@string/updateProduct"
             android:textAllCaps="false"
             android:padding="10dp"
             android:drawableStart="@drawable/outline_done_black_24"
@@ -129,7 +129,7 @@
             android:layout_marginTop="20dp"
             android:padding="10dp"
             android:drawableStart="@drawable/round_delete_black_24"
-            android:text="Borrar Producto"
+            android:text="@string/deleteProduct"
             android:background="@drawable/custom_button_rectangle"
             android:src="@drawable/baseline_delete_black_48"></Button>
     </LinearLayout>

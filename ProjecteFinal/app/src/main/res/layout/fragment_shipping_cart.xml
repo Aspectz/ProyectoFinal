@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/white"
@@ -23,22 +22,14 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"></View>
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emptyCart"
+        android:layout_marginTop="5dp"
         android:visibility="gone"
-        android:id="@+id/relativeCart"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/emptyCart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="@string/emptyCart"
-            android:textSize="30dp"></TextView>
-    </RelativeLayout>
-
+        android:gravity="center"
+        android:text="There are no items in your cart"></TextView>
     <ListView
         android:id="@+id/shippingCartListView"
         android:layout_width="match_parent"
@@ -53,6 +44,7 @@
 
     android:layout_width="match_parent"
     android:gravity="center"
+    android:id="@+id/bottomLayoutCart"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:background="@android:color/transparent"
@@ -88,7 +80,6 @@
         android:id="@+id/botonComprarShipping"
         android:background="@drawable/custom_button_orange"
         android:text="@string/buy"></Button>
-
 
 </LinearLayout>
 

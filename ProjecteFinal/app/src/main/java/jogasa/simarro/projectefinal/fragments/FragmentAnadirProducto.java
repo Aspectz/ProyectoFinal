@@ -178,7 +178,7 @@ public class FragmentAnadirProducto extends Fragment {
                         }
                     });
                 }else{
-                    Toast.makeText(getContext(), "Debes elegir almenos una imagen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getResources().getString(R.string.chooseOneImage), Toast.LENGTH_SHORT).show();
                 }
             }
         });

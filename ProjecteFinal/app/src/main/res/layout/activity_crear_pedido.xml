@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Orders"
+        android:text="@string/orders"
         android:textSize="25dp"></TextView>
 
     <ListView
@@ -67,7 +67,7 @@
             android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="Add new shipping address"
+            android:text="@string/addNewAddress"
             android:drawableStart="@drawable/baseline_add_black_36"
             android:background="@drawable/custom_button_rectangle"/>
         <EditText
@@ -110,7 +110,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="price"
+            android:text="0"
             android:textColor="@color/black"></TextView>
 
         <Button
@@ -121,6 +121,6 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/custom_button_orange"
-            android:text="@string/buy"></Button>
+            android:text="@string/confirmOrder"></Button>
     </LinearLayout>
 </LinearLayout>

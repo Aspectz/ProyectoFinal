@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.Duration;
+
 import jogasa.simarro.projectefinal.R;
+import jogasa.simarro.projectefinal.activity.HomeActivity;
 import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.pojo.Vendedor;
 
@@ -54,6 +58,7 @@ public class FragmentMiCuenta extends Fragment {
         TextView email = (TextView) view.findViewById(R.id.emailAccount);
         TextView passwd = (TextView) view.findViewById(R.id.passwordAccount);
         TextView newPasswd = (TextView) view.findViewById(R.id.newPasswordAcc);
+        TextView repeatPasswd = (TextView) view.findViewById(R.id.repeatPasswordAcc);
         String name = getString(R.string.names);
 
         String emails = getString(R.string.emails);
@@ -87,7 +92,7 @@ public class FragmentMiCuenta extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Email changed successfully", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.emailChanged), Snackbar.LENGTH_LONG).show();
                                         } else {
                                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
@@ -96,8 +101,8 @@ public class FragmentMiCuenta extends Fragment {
                                 fAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Email de verificacion enviado", Snackbar.LENGTH_LONG).show();
+                                        if (task.isSuccessful()) {
+                                            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.verEmailSent), Snackbar.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -107,30 +112,41 @@ public class FragmentMiCuenta extends Fragment {
                         }
                     });
                 }
-                if(!newPasswd.getText().toString().isEmpty() && newPasswd.getText().toString().length()>6 && !passwd.getText().toString().isEmpty()){
+                if (!newPasswd.getText().toString().isEmpty() && newPasswd.getText().toString().length() > 6 && repeatPasswd.getText().toString().equalsIgnoreCase(newPasswd.getText().toString()) && !passwd.getText().toString().isEmpty()) {
 
                     AuthCredential credential = EmailAuthProvider
-                            .getCredential(email.getText().toString(),passwd.getText().toString());
+                            .getCredential(email.getText().toString(), passwd.getText().toString());
 
                     fAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 fAuth.getCurrentUser().updatePassword(newPasswd.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Password changed successfully", Snackbar.LENGTH_LONG).show();
-                                        }else{
+                                        if (task.isSuccessful()) {
+                                            Snackbar.make(getActivity().findViewById(android.R.id.content),getResources().getString(R.string.passwordChanged),Snackbar.LENGTH_INDEFINITE).setDuration(750).addCallback(new Snackbar.Callback(){
+                                                @Override
+                                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                                    if (event == DISMISS_EVENT_TIMEOUT) {
+                                                        // Some work to be done.
+                                                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                                                        startActivity(intent);
+                                                    }
+                                                }
+                                            }).show();
+                                        } else {
                                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+                } else {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Error", Snackbar.LENGTH_LONG).show();
                 }
 
 

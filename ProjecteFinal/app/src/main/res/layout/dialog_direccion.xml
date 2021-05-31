@@ -31,7 +31,7 @@
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Codigo postal"
+        android:hint="@string/postalCode"
         android:layout_margin="10dp"
         android:id="@+id/addressCP"
         android:padding="10dp"
@@ -39,7 +39,7 @@
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Poblacion"
+        android:hint="@string/town"
         android:id="@+id/addressPoblacion"
         android:layout_margin="10dp"
         android:padding="10dp"
@@ -47,7 +47,7 @@
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Provincia"
+        android:hint="@string/province"
         android:layout_margin="10dp"
         android:padding="10dp"
         android:id="@+id/addressProvincia"
@@ -55,7 +55,7 @@
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Pais"
+        android:hint="@string/country"
         android:layout_margin="10dp"
         android:id="@+id/addressPais"
         android:padding="10dp"

@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user=firebaseAuth.getCurrentUser();
                 if(user!=null){
                     if(!user.isEmailVerified()){
-                        Toast.makeText(LoginActivity.this, "Correo no verificado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, getResources().getString(R.string.emailNotVerified), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }else{
-                            Toast.makeText(LoginActivity.this, "Email no verificado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.emailNotVerified), Toast.LENGTH_SHORT).show();
                         }
 
                     }

@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,29 +59,36 @@ public class FragmentShippingCart extends Fragment {
         DecimalFormat df = new DecimalFormat("0.00");
 
 
-
-        firebaseFirestore.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser",fauth.getCurrentUser().getUid()).limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser",fauth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot pedido : task.getResult()){
-                        firebaseFirestore.collection("OrderDetails").whereEqualTo("idOrder",pedido.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()){
-                                    float price=0;
-                                    for(QueryDocumentSnapshot od : task.getResult()){
-                                        OrderDetails orderDetails=od.toObject(OrderDetails.class);
-                                        ordersToShipping.add(orderDetails);
-                                        price+=(Float)orderDetails.getTotalPrice();
+                    if(!task.getResult().isEmpty()){
+                        for(QueryDocumentSnapshot pedido : task.getResult()){
+                            firebaseFirestore.collection("OrderDetails").whereEqualTo("idOrder",pedido.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        float price=0;
+                                        for(QueryDocumentSnapshot od : task.getResult()){
+                                            OrderDetails orderDetails=od.toObject(OrderDetails.class);
+                                            ordersToShipping.add(orderDetails);
+                                            price+=(Float)orderDetails.getTotalPrice();
+                                        }
+                                        totalPrice.setText(String.valueOf(df.format(price)));
+                                        shippingCartList.setAdapter(new AdaptadorListaShipping(getActivity(),ordersToShipping));
+                                        shippingCartList.deferNotifyDataSetChanged();
                                     }
-                                    totalPrice.setText(String.valueOf(df.format(price)));
-                                    shippingCartList.setAdapter(new AdaptadorListaShipping(getActivity(),ordersToShipping));
-                                    shippingCartList.deferNotifyDataSetChanged();
                                 }
-                            }
-                        });
+                            });
+                        }
+                    }else{
+                        LinearLayout ly=(LinearLayout)getView().findViewById(R.id.bottomLayoutCart);
+                        ly.setVisibility(View.GONE);
+                        TextView emptyCartTXT=(TextView)getView().findViewById(R.id.emptyCart);
+                        emptyCartTXT.setVisibility(View.VISIBLE);
                     }
+
                 }
             }
         });

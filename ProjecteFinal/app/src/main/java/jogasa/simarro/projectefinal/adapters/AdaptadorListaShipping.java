@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class AdaptadorListaShipping extends ArrayAdapter {
         Button addButon = (Button) item.findViewById(R.id.addOneToCart);
         Button removeButton = (Button) item.findViewById(R.id.removeOneToCart);
 
+        Log.d("Pepe",pedidos.size()+"");
 
         cantInicial=pedidos.get(position).getQuantity();
         cantidad.setText(String.valueOf(pedidos.get(position).getQuantity()));

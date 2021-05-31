@@ -3,6 +3,8 @@
     <string name="emails">Email</string>
     <string name="welcome">Welcome!</string>
     <string name="password">Password</string>
+    <string name="oldPassword">Old Password</string>
+    <string name="newPassword">New Password</string>
     <string name="repeatPassword">Repeat Password</string>
     <string name="forgotPassword">Forgot Password?</string>
     <string name="logIn">Log In</string>
@@ -19,22 +21,18 @@
     <string name="names">Name</string>
     <string name="textBelowRecover">Introduce your email linked to your account and we will send you an email to restore your password</string>
     <string name="ourProducts">Our products</string>
-    <string name="buy">Confirm Order</string>
+    <string name="buy">Buy</string>
+    <string name="confirmOrder">Confirm Order</string>
     <string name="recipientName">Recipient Name</string>
     <string name="creditCard">Credit Card</string>
     <string name="shippingAddres">Shipping Adress</string>
     <string name="orderDate">Date</string>
     <string name="logOut">Log Out</string>
-    <string name="lastShippingAddress">Last Shipping Address</string>
+    <string name="addNewAddress">Add new shipping address</string>
     <string name="orderInformation">Order Information</string>
     <string name="cantity">Choose a quantity</string>
     <string name="details">Details</string>
     <string name="languages">Languages</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="aboutUs">About Us</string>
-    <string name="ourShops">Our Shops</string>
-    <string name="copyright">© 2021 FruitApp All Rights Reserved</string>
-    <string name="news">News</string>
     <string name="myCart">My Cart</string>
     <string name="orderSummary">Order Summary</string>
     <string name="emptyCart">Your Cart is Empty</string>
@@ -54,12 +52,33 @@
     <string name="addToCart">Add to Shopping Cart</string>
 
     <!--ERRORES -->
+    <string name="fieldsRequired">The fields are required.</string>
     <string name="samePassword">Your password must be the same.</string>
     <string name="minimPassword">Your password must have atleast 6 letters.</string>
     <string name="verEmailSent">Verification email sent.</string>
-
-
-
+    <string name="emailChanged">Email changed successfully.</string>
+    <string name="passwordChanged">Password changed successfully.</string>
+    <string name="productUpdated">Product updated successfully.</string>
+    <string name="productDeleted">Product deleted successfully.</string>
+    <string name="emailSentTo">Email sent to </string>
+    <string name="emailNotValid">Invalid email.</string>
+    <string name="insertEmail">Insert an email.</string>
+    <string name="emailNotVerified">Email not verified</string>
+    <string name="chooseOneImage">You must choose at least one image.</string>
+    <string name="postalCode">Postal Code</string>
+    <string name="town">Town</string>
+    <string name="province">Province</string>
+    <string name="country">Country</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="stock">Stock</string>
+    <string name="addImages">Add one or more images</string>
+    <string name="add">Add</string>
+    <string name="updateProduct">Update product</string>
+    <string name="deleteProduct">Delete product</string>
+    <string name="myAccDetails">My account details</string>
+    <string name="favorites">Favorites</string>
+    <string name="addProduct">Add product</string>
 
 
 </resources>

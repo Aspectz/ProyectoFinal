@@ -44,7 +44,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 FirebaseUser user=firebaseAuth.getCurrentUser();
                 if(user!=null){
                     if(!user.isEmailVerified()){
-                        Toast.makeText(ForgotPasswordActivity.this, "Correo no verificado", Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(ForgotPasswordActivity.this, getResources().getString(R.string.verEmailSent), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -86,14 +87,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         if(!correo.isEmpty()){
             mAuth.sendPasswordResetEmail(correo).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
-                    Toast.makeText(this, "Correo enviado a "+correo, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,  getResources().getString(R.string.emailSentTo)+correo, Toast.LENGTH_SHORT).show();
                     finish();
                 }else{
-                    Toast.makeText(this, "Correo no valido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.emailNotValid), Toast.LENGTH_SHORT).show();
                 }
             });
         }else{
-            Toast.makeText(this, "Introduce un correo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.insertEmail), Toast.LENGTH_SHORT).show();
         }
     }
 }

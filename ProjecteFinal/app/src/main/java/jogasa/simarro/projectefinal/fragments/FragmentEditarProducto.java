@@ -103,7 +103,7 @@ public class FragmentEditarProducto extends Fragment {
                         if (task.isSuccessful()) {
                             Intent intent = new Intent(getActivity(), HomeActivity.class);
                             startActivity(intent);
-                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Product updated successfully", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.productUpdated), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -118,7 +118,7 @@ public class FragmentEditarProducto extends Fragment {
                         if (task.isSuccessful()) {
                             Intent intent = new Intent(getActivity(), HomeActivity.class);
                             startActivity(intent);
-                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Product deleted successfully", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.productDeleted), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });

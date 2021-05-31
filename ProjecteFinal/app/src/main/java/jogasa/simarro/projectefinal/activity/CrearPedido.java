@@ -177,7 +177,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                         startActivity(home);
                     }
                 } else {
-                    Toast.makeText(CrearPedido.this, "Los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CrearPedido.this, getResources().getString(R.string.fieldsRequired), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -189,6 +189,17 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        OrderDetails od=(OrderDetails) getIntent().getSerializableExtra("OrderDetail");
+        if(od!=null){
+            fb.collection("OrderDetails").document(od.getIdOrderDetails()).delete();
+            fb.collection("Orders").document(String.valueOf(od.getIdOrder())).delete();
+        }
+
     }
 
     private void buyFromCart() {

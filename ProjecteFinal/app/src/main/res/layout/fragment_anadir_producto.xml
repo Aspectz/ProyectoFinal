@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Añade una o más imagenes"
+        android:text="@string/addImages"
         android:textColor="@android:color/primary_text_light" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -63,7 +63,7 @@
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Nombre"
+            android:hint="@string/names"
             android:paddingEnd="12dp"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -83,7 +83,7 @@
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Descripcion"
+            android:hint="@string/description"
             android:paddingEnd="12dp"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -102,7 +102,7 @@
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Precio"
+            android:hint="@string/price"
             android:inputType="numberDecimal"
             android:paddingEnd="12dp"
             android:textColor="@color/black"
@@ -122,7 +122,7 @@
             android:layout_marginTop="10dp"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Limite"
+            android:hint="@string/stock"
             android:inputType="number"
             android:paddingEnd="12dp"
             android:textColor="@color/black"
@@ -136,6 +136,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:background="@drawable/custom_button_orange"
-        android:text="Añadir"
+        android:text="@string/add"
         android:textColor="@color/white"></Button>
 </LinearLayout>
