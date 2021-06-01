@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.denzcoskun.imageslider.ImageSlider;
@@ -23,6 +24,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -49,7 +51,6 @@ import jogasa.simarro.projectefinal.pojo.Usuario;
 public class FragmentComprar extends Fragment {
 
     private Producto producto;
-    private Usuario comprador;
     int cantidad=1;
 
     ImageView favFoto;
@@ -135,12 +136,9 @@ public class FragmentComprar extends Fragment {
         botonComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
-                OrderDetails createdOrder=addOrder(Estados.PROCESANDO);
-                crearPedido.putExtra("Option","Buy");
-                crearPedido.putExtra("OrderDetail",createdOrder);
 
-                startActivity(crearPedido);
+                addOrder(Estados.PROCESANDO,"buy");
+
             }
         });
 
@@ -148,10 +146,7 @@ public class FragmentComprar extends Fragment {
         btnAddtoShipping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
                 addToShippingCart();
-                startActivity(addtoshipping);
-
             }
         });
 
@@ -188,8 +183,85 @@ public class FragmentComprar extends Fragment {
     }
 
     private void addToShippingCart(){
+
+
         String randomKey= UUID.randomUUID().toString();
-        fb.collection("Orders").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        fb.collection("Orders").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).whereEqualTo("estado",Estados.CARRITO).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(!task.getResult().isEmpty()){
+                        for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
+                            fb.collection("OrderDetails").whereEqualTo("idProducto",producto.getId()).whereEqualTo("idOrder",queryDocumentSnapshot.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        if(!task.getResult().isEmpty()){
+                                            for (QueryDocumentSnapshot queryDocumentSnapshot1 : task.getResult()){
+                                                OrderDetails od=queryDocumentSnapshot1.toObject(OrderDetails.class);
+                                                od.setQuantity(od.getQuantity() + cantidad);
+                                                od.setTotalPrice(od.getTotalPrice() + cantidad * producto.getPrecio());
+                                                fb.collection("OrderDetails").document(od.getIdOrderDetails()).set(od).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
+                                                        startActivity(addtoshipping);
+                                                    }
+                                                });
+                                            }
+                                        }else{
+                                            //Entrará quan no hi ha ningun producte igual al mateix pedido
+                                            Toast.makeText(getContext(), "a", Toast.LENGTH_SHORT).show();
+                                            OrderDetails newOD=new OrderDetails();
+                                            newOD.setIdOrder(queryDocumentSnapshot.toObject(Pedido.class).getId());
+                                            newOD.setTotalPrice(cantidad*producto.getPrecio());
+                                            newOD.setQuantity(cantidad);
+                                            newOD.setIdOrderDetails(randomKey);
+                                            newOD.setIdProducto(producto.getId());
+                                            fb.collection("OrderDetails").document(newOD.getIdOrderDetails()).set(newOD).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
+                                                    startActivity(addtoshipping);
+                                                }
+                                            });;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        //entra quan no hi ha ningun carrito
+                        Pedido p=new Pedido();
+                        p.setEstado(Estados.CARRITO);
+                        p.setIdUser(firebaseAuth.getCurrentUser().getUid());
+                        OrderDetails od=new OrderDetails();
+                        od.setIdOrder(p.getId());
+                        od.setIdOrderDetails(randomKey);
+                        od.setIdProducto(producto.getId());
+                        od.setQuantity(cantidad);
+                        od.setTotalPrice(cantidad*producto.getPrecio());
+                        fb.collection("Orders").document(String.valueOf(p.getId())).set(p).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                fb.collection("OrderDetails").document(od.getIdOrderDetails()).set(od).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
+                                        startActivity(addtoshipping);
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                }
+            }
+        });
+
+
+      /*fb.collection("Orders").whereEqualTo("idUser",firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -199,6 +271,7 @@ public class FragmentComprar extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if(task.isSuccessful()){
+
                                         for(QueryDocumentSnapshot query : task.getResult()){
                                             OrderDetails od=query.toObject(OrderDetails.class);
                                             od.setQuantity(od.getQuantity() + cantidad);
@@ -220,15 +293,15 @@ public class FragmentComprar extends Fragment {
                             return;
                         }
                     }
-                    addOrder(Estados.CARRITO);
+                    addOrder(Estados.CARRITO,"a");
 
                 }
             }
-        });
+        });*/
 
     }
-    private OrderDetails addOrder(Estados estado){
-        Pedido toCart=new Pedido(randomKey);
+    private void addOrder(Estados estado,String option){
+        Pedido toCart=new Pedido();
         toCart.setIdUser(firebaseAuth.getCurrentUser().getUid());
         toCart.setEstado(estado);
         OrderDetails orderDetails=new OrderDetails();
@@ -238,8 +311,21 @@ public class FragmentComprar extends Fragment {
         orderDetails.setTotalPrice(cantidad*producto.getPrecio());
         orderDetails.setIdOrderDetails(randomKey);
         fb.collection("Orders").document(String.valueOf(toCart.getId())).set(toCart);
-        fb.collection("OrderDetails").document(orderDetails.getIdOrderDetails()).set(orderDetails);
+        fb.collection("OrderDetails").document(orderDetails.getIdOrderDetails()).set(orderDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(option.equalsIgnoreCase("buy")){
+                    Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
+                    crearPedido.putExtra("Option","Buy");
+                    startActivity(crearPedido);
+                }else{
+                    Intent addtoshipping=new Intent(getActivity(), HomeActivity.class);
+                    startActivity(addtoshipping);
+                }
 
-        return orderDetails;
+
+            }
+        });
+
     }
 }

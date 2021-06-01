@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -23,6 +25,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -71,7 +75,6 @@ public class AdaptadorListaShipping extends ArrayAdapter {
         Button addButon = (Button) item.findViewById(R.id.addOneToCart);
         Button removeButton = (Button) item.findViewById(R.id.removeOneToCart);
 
-        Log.d("Pepe",pedidos.size()+"");
 
         cantInicial=pedidos.get(position).getQuantity();
         cantidad.setText(String.valueOf(pedidos.get(position).getQuantity()));
@@ -127,20 +130,44 @@ public class AdaptadorListaShipping extends ArrayAdapter {
                 TextView finalPrice=context.findViewById(R.id.totalPrice);
 
 
-                if(cantInicial<=0){
+                if(cantInicial<=0 ){
                     vwFirstLayout.setVisibility(View.GONE);
-                    fb.collection("OrderDetails").document(pedidos.get(position).getIdOrderDetails()).delete();
+                    fb.collection("OrderDetails").document(pedidos.get(position).getIdOrderDetails()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                fb.collection("OrderDetails").whereEqualTo("idOrder", pedidos.get(position).getIdOrder()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        float fP = 0;
+                                        if (!task.getResult().isEmpty()) {
+                                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                                OrderDetails od = queryDocumentSnapshot.toObject(OrderDetails.class);
+                                                fP += od.getTotalPrice();
+                                            }
+                                            finalPrice.setText(df.format(fP));
+                                        } else {
+                                            finalPrice.setText(df.format(fP));
+                                            Button btnComprar=(Button)context.findViewById(R.id.botonComprarShipping);;
+                                            btnComprar.setAlpha(0.4f);
+                                            btnComprar.setClickable(false);
+                                            fb.collection("Orders").document(String.valueOf(pedidos.get(position).getIdOrder())).delete();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }else{
                     addOrRemoveToCart(pedidos.get(position),cantInicial,unitPriceTxt,finalPrice);
                 }
-
             }
         });
         return item;
     }
 
     public void addOrRemoveToCart(OrderDetails od,int newCant,TextView unitPriceTxt,TextView finalPrice ) {
-        fb.collection("OrderDetails").document(od.getIdOrderDetails()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+       fb.collection("OrderDetails").document(od.getIdOrderDetails()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -152,12 +179,16 @@ public class AdaptadorListaShipping extends ArrayAdapter {
                                 od.setQuantity(newCant);
                                 od.setTotalPrice(p.getPrecio()*newCant);
                                 unitPriceTxt.setText(df.format(od.getTotalPrice())+"€");
-                                fb.collection("OrderDetails").document(od.getIdOrderDetails()).set(od);
-                                float fP=0;
-                                for(OrderDetails od : pedidos){
-                                    fP+=od.getTotalPrice();
-                                }
-                                finalPrice.setText(df.format(fP));
+                                fb.collection("OrderDetails").document(od.getIdOrderDetails()).set(od).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        float fP=0;
+                                        for(OrderDetails od : pedidos){
+                                            fP+=od.getTotalPrice();
+                                        }
+                                        finalPrice.setText(df.format(fP));
+                                    }
+                                });
                             }
                         }
                     });
@@ -165,6 +196,4 @@ public class AdaptadorListaShipping extends ArrayAdapter {
             }
         });
     }
-
-
 }

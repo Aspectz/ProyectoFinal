@@ -29,7 +29,7 @@
         android:layout_marginTop="5dp"
         android:visibility="gone"
         android:gravity="center"
-        android:text="There are no items in your cart"></TextView>
+        android:text="@string/emptyCart"></TextView>
     <ListView
         android:id="@+id/shippingCartListView"
         android:layout_width="match_parent"

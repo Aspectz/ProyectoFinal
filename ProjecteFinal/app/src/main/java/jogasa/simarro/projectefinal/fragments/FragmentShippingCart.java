@@ -54,7 +54,7 @@ public class FragmentShippingCart extends Fragment {
         TextView totalPrice=(TextView)getView().findViewById(R.id.totalPrice);
         ArrayList<OrderDetails> ordersToShipping=new ArrayList<OrderDetails>();
         shippingCartList=(ListView)getActivity().findViewById(R.id.shippingCartListView);
-
+        Button botonComprar=(Button)getActivity().findViewById(R.id.botonComprarShipping);
 
         DecimalFormat df = new DecimalFormat("0.00");
 
@@ -77,7 +77,6 @@ public class FragmentShippingCart extends Fragment {
                                         }
                                         totalPrice.setText(String.valueOf(df.format(price)));
                                         shippingCartList.setAdapter(new AdaptadorListaShipping(getActivity(),ordersToShipping));
-                                        shippingCartList.deferNotifyDataSetChanged();
                                     }
                                 }
                             });
@@ -93,7 +92,7 @@ public class FragmentShippingCart extends Fragment {
             }
         });
 
-        Button botonComprar=(Button)getActivity().findViewById(R.id.botonComprarShipping);
+
 
         botonComprar.setOnClickListener(new View.OnClickListener() {
             @Override

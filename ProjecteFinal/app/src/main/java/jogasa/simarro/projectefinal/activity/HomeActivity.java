@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.StructuredQuery;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +48,7 @@ import jogasa.simarro.projectefinal.fragments.FragmentManageOrders;
 import jogasa.simarro.projectefinal.fragments.FragmentPedidos;
 import jogasa.simarro.projectefinal.fragments.FragmentTusProductos;
 import jogasa.simarro.projectefinal.pojo.Estados;
+import jogasa.simarro.projectefinal.pojo.OrderDetails;
 import jogasa.simarro.projectefinal.pojo.Pedido;
 import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.pojo.Vendedor;
@@ -280,9 +282,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         if (task.isSuccessful()) {
                                             int cont = 0;
                                             for (QueryDocumentSnapshot ordDet : task.getResult()) {
-                                                cont++;
+                                                if(task.isSuccessful()){
+                                                    cont++;
+                                                }
                                             }
                                             cartCount.setText(String.valueOf(cont));
+
                                         }
                                     }
                                 });

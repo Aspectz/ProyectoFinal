@@ -18,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="@string/shippingAddres"></TextView>
 
     <EditText
@@ -71,12 +72,13 @@
             android:clickable="true"
             android:layout_gravity="center"
             android:layout_marginRight="20dp"
+            android:textColor="@color/black"
             android:id="@+id/cancelAddress"
             android:text="@string/fui_cancel"></TextView>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:text="@string/fui_button_text_save"
             android:layout_gravity="end|bottom"
             android:id="@+id/saveAddress"

@@ -134,7 +134,7 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         ArrayList<Producto> productos=new ArrayList<Producto>();
         TextView fav =(TextView) getActivity().findViewById(R.id.textView4);
-        fav.setText("Favorites");
+        fav.setText(getResources().getString(R.string.favorites));
         db.collection("Favorites").whereEqualTo("idUser",fAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

@@ -24,9 +24,6 @@ public class Pedido implements Serializable {
         this.setId(count.incrementAndGet());
     }
     //PEDIDO SIN ACABAR
-    public Pedido(String nombre){
-        this.setId(count.incrementAndGet());
-    }
 
 
     public int getId() {

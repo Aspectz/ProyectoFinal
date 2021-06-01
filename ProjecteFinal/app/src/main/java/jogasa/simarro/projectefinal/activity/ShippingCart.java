@@ -47,7 +47,6 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
 
-
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
         navigationView=(NavigationView)findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);

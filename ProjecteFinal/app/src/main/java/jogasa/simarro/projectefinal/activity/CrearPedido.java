@@ -166,15 +166,20 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             public void onClick(View v) {
                 if (!metodoFacturacion.getText().toString().isEmpty() && direccionSpinner.getSelectedItem()!=null) {
                     if (option.equals("Buy")) {
-                        OrderDetails orderDetails = (OrderDetails) getIntent().getSerializableExtra("OrderDetail");
-                        buy(orderDetails);
-                        Intent home = new Intent(CrearPedido.this, HomeActivity.class);
-                        startActivity(home);
+                        fb.collection("Orders").whereEqualTo("estado",Estados.PROCESANDO).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for(QueryDocumentSnapshot q : task.getResult()){
+                                        buy(q.toObject(OrderDetails.class));
+                                    }
+                                }
+                            }
+                        });
                     }
                     if (option.equals("Cart")) {
                         buyFromCart();
-                        Intent home = new Intent(CrearPedido.this, HomeActivity.class);
-                        startActivity(home);
+
                     }
                 } else {
                     Toast.makeText(CrearPedido.this, getResources().getString(R.string.fieldsRequired), Toast.LENGTH_SHORT).show();
@@ -217,7 +222,15 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                         pd.put("id", pedido1.getId());
                         pd.put("idUser", pedido1.getIdUser());
                         pd.put("direccion", direccion);
-                        fb.collection("Orders").document(String.valueOf(pedido1.getId())).set(pd);
+                        fb.collection("Orders").document(String.valueOf(pedido1.getId())).set(pd).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Intent home = new Intent(CrearPedido.this, HomeActivity.class);
+                                    startActivity(home);
+                                }
+                            }
+                        });
 
                     }
                 }
@@ -245,7 +258,15 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
 
                 //  pd.put("nombre",pedido1.getNombre());
 
-                fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pd);
+                fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pd).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Intent home = new Intent(CrearPedido.this, HomeActivity.class);
+                            startActivity(home);
+                        }
+                    }
+                });
             }
         });
     }
