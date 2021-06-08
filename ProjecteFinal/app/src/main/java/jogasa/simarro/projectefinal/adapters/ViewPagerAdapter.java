@@ -22,21 +22,22 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private Context context;
     private LayoutInflater inflater;
-    private  String[] titles;
+    private String[] titles;
     private String descs[];
+
     public ViewPagerAdapter(Context context) {
         this.context = context;
-        this.titles= new String[]{
+        this.titles = new String[]{
                 context.getResources().getString(R.string.seller),
                 context.getResources().getString(R.string.client),
         };
-        this.descs=new String[]{
-                context.getResources().getString(R.string.uploadDesc)+"\n"+context.getResources().getString(R.string.manageOrdersDesc),
-                context.getResources().getString(R.string.buyDesc)+"\n"+context.getResources().getString(R.string.orderHistoryDesc),
+        this.descs = new String[]{
+                context.getResources().getString(R.string.uploadDesc) + "\n" + context.getResources().getString(R.string.manageOrdersDesc),
+                context.getResources().getString(R.string.buyDesc) + "\n" + context.getResources().getString(R.string.orderHistoryDesc),
         };
     }
 
-    private int[] images ={
+    private int[] images = {
             R.drawable.vendor,
             R.drawable.customer,
     };
@@ -48,15 +49,15 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == (LinearLayout)object;
+        return view == (LinearLayout) object;
     }
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
-        inflater = (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.activity_view_pager_adapter,container,false);
+        inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.activity_view_pager_adapter, container, false);
 
         //init views
         ImageView imageView = v.findViewById(R.id.imgViewPager);
@@ -73,6 +74,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((LinearLayout)object);
+        container.removeView((LinearLayout) object);
     }
 }

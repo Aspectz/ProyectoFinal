@@ -37,54 +37,54 @@ import jogasa.simarro.projectefinal.pojo.Pedido;
 public class FragmentShippingCart extends Fragment {
 
     private ListView shippingCartList;
-    private int cantidad=0;
 
-    private FirebaseFirestore firebaseFirestore=FirebaseFirestore.getInstance();
-    private FirebaseAuth fauth=FirebaseAuth.getInstance();
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseAuth fauth = FirebaseAuth.getInstance();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_shipping_cart, container, false);
         return view;
     }
-    public void increment(View view){}
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        TextView totalPrice=(TextView)getView().findViewById(R.id.totalPrice);
-        ArrayList<OrderDetails> ordersToShipping=new ArrayList<OrderDetails>();
-        shippingCartList=(ListView)getActivity().findViewById(R.id.shippingCartListView);
-        Button botonComprar=(Button)getActivity().findViewById(R.id.botonComprarShipping);
+        TextView totalPrice = (TextView) getView().findViewById(R.id.totalPrice);
+        ArrayList<OrderDetails> ordersToShipping = new ArrayList<OrderDetails>();
+        shippingCartList = (ListView) getActivity().findViewById(R.id.shippingCartListView);
+        Button botonComprar = (Button) getActivity().findViewById(R.id.botonComprarShipping);
 
         DecimalFormat df = new DecimalFormat("0.00");
 
 
-        firebaseFirestore.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser",fauth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Orders").whereEqualTo("estado", Estados.CARRITO).whereEqualTo("idUser", fauth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    if(!task.getResult().isEmpty()){
-                        for(QueryDocumentSnapshot pedido : task.getResult()){
-                            firebaseFirestore.collection("OrderDetails").whereEqualTo("idOrder",pedido.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                if (task.isSuccessful()) {
+                    if (!task.getResult().isEmpty()) {
+                        for (QueryDocumentSnapshot pedido : task.getResult()) {
+                            firebaseFirestore.collection("OrderDetails").whereEqualTo("idOrder", pedido.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        float price=0;
-                                        for(QueryDocumentSnapshot od : task.getResult()){
-                                            OrderDetails orderDetails=od.toObject(OrderDetails.class);
+                                    if (task.isSuccessful()) {
+                                        float price = 0;
+                                        for (QueryDocumentSnapshot od : task.getResult()) {
+                                            OrderDetails orderDetails = od.toObject(OrderDetails.class);
                                             ordersToShipping.add(orderDetails);
-                                            price+=(Float)orderDetails.getTotalPrice();
+                                            price += (Float) orderDetails.getTotalPrice();
                                         }
                                         totalPrice.setText(String.valueOf(df.format(price)));
-                                        shippingCartList.setAdapter(new AdaptadorListaShipping(getActivity(),ordersToShipping));
+                                        shippingCartList.setAdapter(new AdaptadorListaShipping(getActivity(), ordersToShipping));
                                     }
                                 }
                             });
                         }
-                    }else{
-                        LinearLayout ly=(LinearLayout)getView().findViewById(R.id.bottomLayoutCart);
+                    } else {
+                        LinearLayout ly = (LinearLayout) getView().findViewById(R.id.bottomLayoutCart);
                         ly.setVisibility(View.GONE);
-                        TextView emptyCartTXT=(TextView)getView().findViewById(R.id.emptyCart);
+                        TextView emptyCartTXT = (TextView) getView().findViewById(R.id.emptyCart);
                         emptyCartTXT.setVisibility(View.VISIBLE);
                     }
 
@@ -93,14 +93,13 @@ public class FragmentShippingCart extends Fragment {
         });
 
 
-
         botonComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent crearPedido=new Intent(getActivity(), CrearPedido.class);
-               // crearPedido.putExtra("Productos",productos);
+                Intent crearPedido = new Intent(getActivity(), CrearPedido.class);
+                // crearPedido.putExtra("Productos",productos);
 
-                crearPedido.putExtra("Option","Cart");
+                crearPedido.putExtra("Option", "Cart");
                 startActivity(crearPedido);
             }
         });

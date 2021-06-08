@@ -28,7 +28,7 @@ import jogasa.simarro.projectefinal.fragments.FragmentShippingCart;
 import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.R;
 
-public class ShippingCart extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class ShippingCart extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private DrawerLayout drawerLayout;
@@ -43,21 +43,21 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping_cart);
-        toolbar=(Toolbar)findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        drawerLayout=(DrawerLayout)findViewById(R.id.drawer);
-        navigationView=(NavigationView)findViewById(R.id.navigation_view);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
         //Recoger headerLayout
-        View headerLayout=navigationView.getHeaderView(0);
+        View headerLayout = navigationView.getHeaderView(0);
         TextView headerText = (TextView) headerLayout.findViewById(R.id.textHeader);
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -72,41 +72,39 @@ public class ShippingCart extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.myCart));
-            fragmentManager=getSupportFragmentManager();
-            fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new FragmentShippingCart());
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new FragmentShippingCart());
             fragmentTransaction.commit();
         }
     }
 
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.homeItem:
-                Intent home=new Intent(ShippingCart.this, HomeActivity.class);
+                Intent home = new Intent(ShippingCart.this, HomeActivity.class);
                 startActivity(home);
                 break;
 
             case R.id.orderItem:
-                Intent listaPedidos=new Intent(ShippingCart.this, ListaPedidos.class);
+                Intent listaPedidos = new Intent(ShippingCart.this, ListaPedidos.class);
                 startActivity(listaPedidos);
 
                 break;
             case R.id.accountItem:
-                Intent micuenta=new Intent(ShippingCart.this,MiCuentaActivity.class);
+                Intent micuenta = new Intent(ShippingCart.this, MiCuentaActivity.class);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
                 AuthUI.getInstance().signOut(this);
                 FirebaseAuth.getInstance().signOut();
-                Intent cerrarSession=new Intent(ShippingCart.this,LoginActivity.class);
+                Intent cerrarSession = new Intent(ShippingCart.this, LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
             case R.id.anadirProducto:

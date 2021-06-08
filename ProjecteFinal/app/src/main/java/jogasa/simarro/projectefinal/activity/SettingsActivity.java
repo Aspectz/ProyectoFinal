@@ -13,18 +13,19 @@ public class SettingsActivity extends PreferenceActivity {
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
 
             SharedPreferences pref;
-            pref=getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-            SharedPreferences.Editor edt=pref.edit();
+            pref = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edt = pref.edit();
 
-            fragmentManager=getFragmentManager();
-            fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(android.R.id.content,new FragmentSettings());
+            fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(android.R.id.content, new FragmentSettings());
             fragmentTransaction.commit();
         }
 

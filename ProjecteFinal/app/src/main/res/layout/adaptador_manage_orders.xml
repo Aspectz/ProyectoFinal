@@ -35,13 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="Client:"></TextView>
+            android:text="@string/client"></TextView>
             <TextView
                 android:id="@+id/orderClientName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:text="clientName"></TextView>
+                android:text=""></TextView>
         </LinearLayout>
 
         <LinearLayout
@@ -53,14 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="Fecha"></TextView>
+                android:text="@string/fecha"></TextView>
 
             <TextView
                 android:id="@+id/orderDate"
                 android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="orderDate"></TextView>
+                android:text=""></TextView>
         </LinearLayout>
         <TextView
             android:id="@+id/orderState"
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="totalPrice"></TextView>
+            android:text="0"></TextView>
 
     </LinearLayout>
 

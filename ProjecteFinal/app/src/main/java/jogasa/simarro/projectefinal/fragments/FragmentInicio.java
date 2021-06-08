@@ -11,12 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,78 +42,110 @@ import jogasa.simarro.projectefinal.pojo.Producto;
 public class FragmentInicio extends Fragment implements AdapterView.OnItemClickListener {
     public GridView grid;
     private Spinner orderSpinner;
-    private FirebaseAuth fAuth= FirebaseAuth.getInstance();
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private String fav = null;
 
-    private String fav=null;
 
-
-    public FragmentInicio(String fav){
-        this.fav=fav;
+    public FragmentInicio(String fav) {
+        this.fav = fav;
     }
-    public FragmentInicio(){
-        this.fav=null;
+
+    public FragmentInicio() {
+        this.fav = null;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view=  inflater.inflate(R.layout.fragment_inicio,container,false);
+
+        View view = inflater.inflate(R.layout.fragment_inicio, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        grid=(GridView)getView().findViewById(R.id.gridProductos);
-        orderSpinner=(Spinner)getView().findViewById(R.id.orderBySpinner);
+        grid = (GridView) getView().findViewById(R.id.gridProductos);
+        orderSpinner = (Spinner) getView().findViewById(R.id.orderBySpinner);
         grid.setOnItemClickListener(this);
 
-        
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    mostrarProductos();
+                    swipeRefreshLayout.setRefreshing(false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
+
+
     public void mostrarProductos() throws ParseException {
 
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        ArrayList<Producto> productos=new ArrayList<Producto>();
-        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.orderByArray));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<Producto> productos = new ArrayList<Producto>();
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.orderByArray));
         orderSpinner.setAdapter(spinnerAdapter);
         orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(parent.getItemAtPosition(position).toString().equals(getText(R.string.ascending))){
+                if (parent.getItemAtPosition(position).toString().equals(getText(R.string.ascending))) {
                     productos.clear();
                     db.collection("Products").orderBy("precio", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            for(QueryDocumentSnapshot q: task.getResult()){
-                                productos.add(q.toObject(Producto.class));
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot q : task.getResult()) {
+                                    productos.add(q.toObject(Producto.class));
+                                }
+                                //SOLUCION BUG CAMBIAR DE BOTTOMNAVIGATION OPCION RAPIDAMENTE
+                                if (getActivity() != null) {
+                                    grid.setAdapter(new AdapterProductos(getActivity(), productos));
+                                }
                             }
-                            grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+
                         }
                     });
-                }
-                else{
+                } else {
                     productos.clear();
                     db.collection("Products").orderBy("precio", Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            for(QueryDocumentSnapshot q: task.getResult()){
-                                productos.add(q.toObject(Producto.class));
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot q : task.getResult()) {
+                                    productos.add(q.toObject(Producto.class));
+                                }
+                                //SOLUCION BUG CAMBIAR DE BOTTOMNAVIGATION OPCION RAPIDAMENTE
+                                if (getActivity() != null) {
+                                    grid.setAdapter(new AdapterProductos(getActivity(), productos));
+                                }
                             }
-                            grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
                         }
                     });
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 db.collection("Products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for(QueryDocumentSnapshot q: task.getResult()){
-                            productos.add(q.toObject(Producto.class));
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot q : task.getResult()) {
+                                productos.add(q.toObject(Producto.class));
+                            }
+                            //SOLUCION BUG CAMBIAR DE BOTTOMNAVIGATION OPCION RAPIDAMENTE
+                            if (getActivity() != null) {
+                                grid.setAdapter(new AdapterProductos(getActivity(), productos));
+                            }
                         }
-                        grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
                     }
                 });
             }
@@ -123,31 +157,41 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
     public void onStart() {
         super.onStart();
         try {
-            if(fav!=null)mostrarFavoritos();
+            if (fav != null) mostrarFavoritos();
             else mostrarProductos();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
     }
+
     private void mostrarFavoritos() {
 
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        ArrayList<Producto> productos=new ArrayList<Producto>();
-        TextView fav =(TextView) getActivity().findViewById(R.id.textView4);
+        Spinner order =(Spinner) getView().findViewById(R.id.orderBySpinner);
+        order.setVisibility(View.GONE);
+        TextView textPrice=(TextView)getView().findViewById(R.id.priceSpinner);
+        textPrice.setVisibility(View.GONE);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<Producto> productos = new ArrayList<Producto>();
+        TextView fav = (TextView) getActivity().findViewById(R.id.textView4);
         fav.setText(getResources().getString(R.string.favorites));
-        db.collection("Favorites").whereEqualTo("idUser",fAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Favorites").whereEqualTo("idUser", fAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot fv : task.getResult()){
-                        if(fv.exists()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot fv : task.getResult()) {
+                        if (fv.exists()) {
                             db.collection("Products").document(fv.toObject(Favorites.class).getIdProduct()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         productos.add(task.getResult().toObject(Producto.class));
                                     }
-                                    grid.setAdapter(new AdapterProductos(FragmentInicio.this,productos));
+                                    //SOLUCION BUG CAMBIAR DE BOTTOMNAVIGATION OPCION RAPIDAMENTE
+                                    if (getActivity() != null) {
+                                        grid.setAdapter(new AdapterProductos(getActivity(), productos));
+                                    }
                                 }
                             });
                         }
@@ -159,10 +203,10 @@ public class FragmentInicio extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Producto seleccionado=(Producto)grid.getAdapter().getItem(position);
+        Producto seleccionado = (Producto) grid.getAdapter().getItem(position);
         //Recoge el producto incluso con firestore
-        Intent visualizar=new Intent(getActivity(), VisualizarProductoActivity.class);
-        visualizar.putExtra("Producto",seleccionado);
+        Intent visualizar = new Intent(getActivity(), VisualizarProductoActivity.class);
+        visualizar.putExtra("Producto", seleccionado);
         startActivity(visualizar);
     }
 }

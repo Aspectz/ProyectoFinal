@@ -7,11 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,12 +23,13 @@ import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.pojo.Vendedor;
 import jogasa.simarro.projectefinal.R;
 
-public class    SignUpActivity extends AppCompatActivity {
-    private EditText name, email, firstPassword, secondPassword;
+public class SignUpActivity extends AppCompatActivity {
+    private TextInputEditText name, email, firstPassword, secondPassword;
     private Button signUpbutton;
     private String option;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
+    private TextInputLayout emailInput, nameInput, firstPasswordInput, secondPasswordInput;
 
 
     @Override
@@ -39,14 +41,21 @@ public class    SignUpActivity extends AppCompatActivity {
         option = getIntent().getStringExtra("Option");
 
 
-        name = (EditText) findViewById(R.id.nameEditText);
-        email = (EditText) findViewById(R.id.emailEditText);
-        firstPassword = (EditText) findViewById(R.id.firstPasswordEditText);
-        secondPassword = (EditText) findViewById(R.id.secondPasswordEditText);
+        emailInput = (TextInputLayout) findViewById(R.id.emailInput);
+        nameInput = (TextInputLayout) findViewById(R.id.nameInput);
+        firstPasswordInput = (TextInputLayout) findViewById(R.id.firstPasswordInput);
+        secondPasswordInput = (TextInputLayout) findViewById(R.id.secondPasswordInput);
+
+        name = (TextInputEditText) findViewById(R.id.nameEditText);
+        email = (TextInputEditText) findViewById(R.id.emailEditText);
+        firstPassword = (TextInputEditText) findViewById(R.id.firstPasswordEditText);
+        secondPassword = (TextInputEditText) findViewById(R.id.secondPasswordEditText);
         signUpbutton = (Button) findViewById(R.id.signUpEditText);
 
 
-        if (option.equalsIgnoreCase("seller")) name.setHint("Company's name");
+        if (option.equalsIgnoreCase("seller")) {
+            nameInput.setHint(getResources().getString(R.string.companyName));
+        }
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -81,17 +90,11 @@ public class    SignUpActivity extends AppCompatActivity {
         String username = name.getText().toString();
         String correo = email.getText().toString();
         String passwd = firstPassword.getText().toString();
-        String passwd2 = secondPassword.getText().toString();
 
-
-        if (passwd.compareTo(passwd2) != 0) {
-            Toast.makeText(SignUpActivity.this, getResources().getString(R.string.samePassword), Toast.LENGTH_SHORT).show();
+        if (!validName() | !validFirstPassword() | !validSecondPassword()) {
             return;
         }
-        if (passwd.length() < 6) {
-            Toast.makeText(this, getResources().getString(R.string.minimPassword), Toast.LENGTH_SHORT).show();
-            return;
-        }
+
 
         mAuth.createUserWithEmailAndPassword(correo, passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -117,4 +120,35 @@ public class    SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean validName() {
+        if (name.getText().toString().isEmpty()) {
+            nameInput.setError(getResources().getString(R.string.nameField));
+            return false;
+        } else {
+            nameInput.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validSecondPassword() {
+        if (firstPassword.getText().toString().compareTo(secondPassword.getText().toString()) != 0) {
+            secondPasswordInput.setError(getResources().getString(R.string.samePassword));
+            return false;
+        } else {
+            secondPasswordInput.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validFirstPassword() {
+        if (firstPassword.getText().toString().length() < 6) {
+            firstPasswordInput.setError(getResources().getString(R.string.minimPassword));
+            return false;
+        } else {
+            firstPasswordInput.setError(null);
+            return true;
+        }
+    }
+
 }

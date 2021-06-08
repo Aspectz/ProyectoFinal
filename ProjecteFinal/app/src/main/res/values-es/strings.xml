@@ -9,7 +9,7 @@
     <string name="repeatPassword">Repite Contraseña</string>
     <string name="forgotPassword">Contraseña Olvidada</string>
     <string name="logIn">Iniciar Sesión</string>
-    <string name="signUp">Registrarse</string>
+    <string name="signUp">Crear cuenta</string>
     <string name="names">Nombre</string>
     <string name="home">Inicio</string>
     <string name="orders">Mis Pedidos</string>
@@ -54,6 +54,7 @@
     <!--ERRORES -->
     <string name="fieldsRequired">Los campos son obligatorios.</string>
     <string name="samePassword">Las contraseñas deben ser iguales.</string>
+    <string name="nameField">El campo nombre es obligado.</string>
     <string name="minimPassword">Tu contraseña tiene que tener mínimo 6 letras.</string>
     <string name="verEmailSent">Correo de verificación enviado.</string>
     <string name="emailChanged">Email cambiado correctamente</string>
@@ -75,8 +76,10 @@
     <string name="addImages">Añade una o más imagenes</string>
     <string name="add">Añadir</string>
     <string name="updateProduct">Actualizar Producto</string>
-    <string name="deleteProduct">Borrar product</string>
+    <string name="deleteProduct">Borrar producto</string>
     <string name="myAccDetails">Datos de mi cuenta</string>
     <string name="favorites">Favoritos</string>
     <string name="addProduct">Añadir producto</string>
+    <string name="fecha">Fecha</string>
+    <string name="companyName">Nombre de la empresa</string>
 </resources>

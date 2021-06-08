@@ -5,10 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,8 +29,9 @@ import jogasa.simarro.projectefinal.pojo.Pedido;
 
 public class FragmentPedidos extends Fragment {
     public ListView listaPedidos;
-    private FirebaseFirestore fb=FirebaseFirestore.getInstance();
-    private FirebaseAuth fauth=FirebaseAuth.getInstance();
+    private FirebaseFirestore fb = FirebaseFirestore.getInstance();
+    private FirebaseAuth fauth = FirebaseAuth.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,21 +51,26 @@ public class FragmentPedidos extends Fragment {
 
         ArrayList<OrderDetails> pedidos = new ArrayList<OrderDetails>();
 
-        fb.collection("Orders").whereEqualTo("idUser",fauth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        fb.collection("Orders").whereEqualTo("idUser", fauth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot pe : task.getResult()){
-                        if(pe.toObject(Pedido.class).getEstado()!= Estados.CARRITO){
-
-                            fb.collection("OrderDetails").whereEqualTo("idOrder",pe.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot pe : task.getResult()) {
+                        if (pe.toObject(Pedido.class).getEstado() != Estados.CARRITO) {
+                            fb.collection("OrderDetails").whereEqualTo("idOrder", pe.toObject(Pedido.class).getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        for (QueryDocumentSnapshot pd : task.getResult()){
-                                            pedidos.add(pd.toObject(OrderDetails.class));
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot pd : task.getResult()) {
+                                            if(pd.exists()){
+                                                pedidos.add(pd.toObject(OrderDetails.class));
+                                            }
                                         }
-                                        listaPedidos.setAdapter(new AdaptadorPedidos(getActivity(), pedidos));
+                                        if(getActivity()!=null){
+                                            listaPedidos.setAdapter(new AdaptadorPedidos(getActivity(), pedidos));
+                                        }
+
+
                                     }
                                 }
                             });
@@ -71,8 +79,6 @@ public class FragmentPedidos extends Fragment {
                 }
             }
         });
-
-
 
     }
 

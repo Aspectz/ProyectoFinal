@@ -125,7 +125,7 @@ public class FragmentMiCuenta extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Snackbar.make(getActivity().findViewById(android.R.id.content),getResources().getString(R.string.passwordChanged),Snackbar.LENGTH_INDEFINITE).setDuration(750).addCallback(new Snackbar.Callback(){
+                                            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.passwordChanged), Snackbar.LENGTH_INDEFINITE).setDuration(750).addCallback(new Snackbar.Callback() {
                                                 @Override
                                                 public void onDismissed(Snackbar transientBottomBar, int event) {
                                                     if (event == DISMISS_EVENT_TIMEOUT) {

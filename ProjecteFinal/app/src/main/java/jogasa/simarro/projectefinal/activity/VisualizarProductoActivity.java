@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-
 import jogasa.simarro.projectefinal.fragments.FragmentComprar;
 
 import jogasa.simarro.projectefinal.pojo.Producto;
@@ -32,7 +31,7 @@ import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.R;
 
 
-public class  VisualizarProductoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VisualizarProductoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
@@ -40,7 +39,6 @@ public class  VisualizarProductoActivity extends AppCompatActivity implements Na
     private Producto productoSeleccionado;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-
 
 
     @Override
@@ -51,7 +49,7 @@ public class  VisualizarProductoActivity extends AppCompatActivity implements Na
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        productoSeleccionado=(Producto)getIntent().getSerializableExtra("Producto");
+        productoSeleccionado = (Producto) getIntent().getSerializableExtra("Producto");
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -82,9 +80,9 @@ public class  VisualizarProductoActivity extends AppCompatActivity implements Na
         getSupportActionBar().setTitle(productoSeleccionado.getNombre());
 
         if (savedInstanceState == null) {
-            fragmentManager=getSupportFragmentManager();
-            fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new FragmentComprar(productoSeleccionado));
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new FragmentComprar(productoSeleccionado));
             fragmentTransaction.commit();
         }
     }
@@ -99,17 +97,17 @@ public class  VisualizarProductoActivity extends AppCompatActivity implements Na
                 startActivity(home);
                 break;
             case R.id.orderItem:
-                Intent listaPedidos=new Intent(VisualizarProductoActivity.this, ListaPedidos.class);
+                Intent listaPedidos = new Intent(VisualizarProductoActivity.this, ListaPedidos.class);
                 startActivity(listaPedidos);
                 break;
             case R.id.accountItem:
-                Intent micuenta=new Intent(VisualizarProductoActivity.this,MiCuentaActivity.class);
+                Intent micuenta = new Intent(VisualizarProductoActivity.this, MiCuentaActivity.class);
                 startActivity(micuenta);
                 break;
             case R.id.logOut:
                 AuthUI.getInstance().signOut(this);
                 FirebaseAuth.getInstance().signOut();
-                Intent cerrarSession=new Intent(VisualizarProductoActivity.this,LoginActivity.class);
+                Intent cerrarSession = new Intent(VisualizarProductoActivity.this, LoginActivity.class);
                 startActivity(cerrarSession);
                 break;
             default:

@@ -22,19 +22,19 @@ public class LoadActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       delay();
+        delay();
 
     }
 
-    public void delay(){
+    public void delay() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent login=new Intent(LoadActivity.this,LoginActivity.class);
+                Intent login = new Intent(LoadActivity.this, LoginActivity.class);
                 startActivity(login);
                 finish();
             }
-        },1500);
+        }, 1500);
 
 
     }

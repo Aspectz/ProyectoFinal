@@ -25,7 +25,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-
 import jogasa.simarro.projectefinal.fragments.FragmentMiCuenta;
 
 import jogasa.simarro.projectefinal.pojo.Usuario;
@@ -41,11 +40,11 @@ public class MiCuentaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mi_cuenta);
 
-        ImageButton backBtn=findViewById(R.id.backAddPhoto);
+        ImageButton backBtn = findViewById(R.id.backAddPhoto);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MiCuentaActivity.this,HomeActivity.class);
+                Intent intent = new Intent(MiCuentaActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });
@@ -57,20 +56,21 @@ public class MiCuentaActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        if(savedInstanceState==null){
+                        if (savedInstanceState == null) {
                             setFragment("Users");
                         }
-                    }else{
+                    } else {
                         setFragment("Suppliers");
                     }
                 }
             }
         });
     }
-    private void setFragment(String option){
-            fragmentManager=getSupportFragmentManager();
-            fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new FragmentMiCuenta(option));
-            fragmentTransaction.commit();
+
+    private void setFragment(String option) {
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_fragment, new FragmentMiCuenta(option));
+        fragmentTransaction.commit();
     }
 }

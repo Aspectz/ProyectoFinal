@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -267,6 +267,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public void updateCartCount() {
 
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -274,6 +275,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            if(task.getResult().isEmpty()){
+                                cartCount.setText("0");
+                                return;
+                            }
                             for (QueryDocumentSnapshot ord : task.getResult()) {
                                 Pedido p = ord.toObject(Pedido.class);
                                 db.collection("OrderDetails").whereEqualTo("idOrder", p.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -282,7 +287,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         if (task.isSuccessful()) {
                                             int cont = 0;
                                             for (QueryDocumentSnapshot ordDet : task.getResult()) {
-                                                if(task.isSuccessful()){
+                                                if (task.isSuccessful()) {
                                                     cont++;
                                                 }
                                             }

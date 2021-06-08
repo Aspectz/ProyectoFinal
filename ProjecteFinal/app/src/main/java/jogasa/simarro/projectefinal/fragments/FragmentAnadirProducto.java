@@ -177,7 +177,7 @@ public class FragmentAnadirProducto extends Fragment {
                             }
                         }
                     });
-                }else{
+                } else {
                     Toast.makeText(getContext(), getResources().getString(R.string.chooseOneImage), Toast.LENGTH_SHORT).show();
                 }
             }

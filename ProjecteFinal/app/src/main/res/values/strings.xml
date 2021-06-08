@@ -54,6 +54,7 @@
     <!--ERRORES -->
     <string name="fieldsRequired">The fields are required.</string>
     <string name="samePassword">Your password must be the same.</string>
+    <string name="nameField">Name field is required.</string>
     <string name="minimPassword">Your password must have atleast 6 letters.</string>
     <string name="verEmailSent">Verification email sent.</string>
     <string name="emailChanged">Email changed successfully.</string>
@@ -79,6 +80,8 @@
     <string name="myAccDetails">My account details</string>
     <string name="favorites">Favorites</string>
     <string name="addProduct">Add product</string>
+    <string name="fecha">Date</string>
+    <string name="companyName">Company\'s name</string>
 
 
 </resources>

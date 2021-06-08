@@ -27,15 +27,14 @@ public class AdapterProductos extends ArrayAdapter {
     TextView nombre, precio;
     ImageView foto;
     ArrayList<Producto> productos;
-    FirebaseFirestore fb=FirebaseFirestore.getInstance();
-    public AdapterProductos(Fragment context, ArrayList<Producto> productos) {
+    FirebaseFirestore fb = FirebaseFirestore.getInstance();
 
-        super(context.getActivity(), R.layout.adapter_productos, productos);
-        this.context = context.getActivity();
+    public AdapterProductos(Activity context, ArrayList<Producto> productos) {
+
+        super(context, R.layout.adapter_productos, productos);
+        this.context = context;
         this.productos = productos;
     }
-
-
 
 
     @NonNull

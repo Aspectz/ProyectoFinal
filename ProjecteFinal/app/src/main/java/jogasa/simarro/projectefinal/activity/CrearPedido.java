@@ -34,7 +34,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ import jogasa.simarro.projectefinal.pojo.Pedido;
 import jogasa.simarro.projectefinal.R;
 
 
-
 public class CrearPedido extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -68,12 +66,13 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     String randomKey = UUID.randomUUID().toString();
     private Direccion direccion;
     private SmartMaterialSpinner<Direccion> direccionSpinner;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_pedido);
 
-        direccionSpinner=findViewById(R.id.direccionEnvio);
-        List<Direccion> direcciones=new ArrayList<>();
+        direccionSpinner = findViewById(R.id.direccionEnvio);
+        List<Direccion> direcciones = new ArrayList<>();
         //pepe@yopmail.com
 
 
@@ -84,15 +83,15 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot address : task.getResult()) {
-                            Direccion d = address.toObject(Direccion.class);
-                            direcciones.add(d);
-                        }
+                        Direccion d = address.toObject(Direccion.class);
+                        direcciones.add(d);
+                    }
                     direccionSpinner.setItem(direcciones);
 
                     direccionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                direccion=direcciones.get(position);
+                            direccion = direcciones.get(position);
                         }
 
                         @Override
@@ -104,7 +103,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        Button addnew=findViewById(R.id.addShippingAddress);
+        Button addnew = findViewById(R.id.addShippingAddress);
         addnew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +129,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                         fb.collection("Address").document(randomKey).set(direccion).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     recreate();
                                     dg.dismiss();
                                 }
@@ -149,7 +148,6 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         });
 
 
-
         priceTotal = (TextView) findViewById(R.id.totalPrice);
         String option = getIntent().getExtras().getSerializable("Option").toString();
 
@@ -164,13 +162,13 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!metodoFacturacion.getText().toString().isEmpty() && direccionSpinner.getSelectedItem()!=null) {
+                if (!metodoFacturacion.getText().toString().isEmpty() && direccionSpinner.getSelectedItem() != null) {
                     if (option.equals("Buy")) {
-                        fb.collection("Orders").whereEqualTo("estado",Estados.PROCESANDO).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        fb.collection("Orders").whereEqualTo("estado", Estados.PROCESANDO).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()){
-                                    for(QueryDocumentSnapshot q : task.getResult()){
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot q : task.getResult()) {
                                         buy(q.toObject(OrderDetails.class));
                                     }
                                 }
@@ -199,8 +197,8 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        OrderDetails od=(OrderDetails) getIntent().getSerializableExtra("OrderDetail");
-        if(od!=null){
+        OrderDetails od = (OrderDetails) getIntent().getSerializableExtra("OrderDetail");
+        if (od != null) {
             fb.collection("OrderDetails").document(od.getIdOrderDetails()).delete();
             fb.collection("Orders").document(String.valueOf(od.getIdOrder())).delete();
         }
@@ -225,7 +223,7 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
                         fb.collection("Orders").document(String.valueOf(pedido1.getId())).set(pd).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     Intent home = new Intent(CrearPedido.this, HomeActivity.class);
                                     startActivity(home);
                                 }
@@ -243,25 +241,20 @@ public class CrearPedido extends AppCompatActivity implements NavigationView.OnN
         fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Pedido pedido = task.getResult().toObject(Pedido.class);
-
-                Log.d("Pepe", "compraDirecta");
 
                 Map<String, Object> pd = new HashMap<>();
-                Pedido pedido1 = task.getResult().toObject(Pedido.class);
+                Pedido pedido = task.getResult().toObject(Pedido.class);
                 pd.put("metodoFacturacion", metodoFacturacion.getText().toString());
                 pd.put("estado", Estados.ESPERANDO);
                 pd.put("fecha", new Date(System.currentTimeMillis()).toString());
-                pd.put("id", pedido1.getId());
-                pd.put("idUser", pedido1.getIdUser());
+                pd.put("id", pedido.getId());
+                pd.put("idUser", pedido.getIdUser());
                 pd.put("direccion", direccion);
-
-                //  pd.put("nombre",pedido1.getNombre());
 
                 fb.collection("Orders").document(String.valueOf(orderDetails.getIdOrder())).set(pd).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Intent home = new Intent(CrearPedido.this, HomeActivity.class);
                             startActivity(home);
                         }

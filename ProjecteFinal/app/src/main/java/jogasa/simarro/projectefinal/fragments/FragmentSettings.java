@@ -22,38 +22,13 @@ public class FragmentSettings extends PreferenceFragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.options);
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        FirebaseAuth fb=FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth fb = FirebaseAuth.getInstance();
         SharedPreferences pref = getActivity().getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
 
 
         ListPreference idioma = (ListPreference) findPreference("idioma");
-        /*SwitchPreference notification=(SwitchPreference)findPreference("notifications");
-
-        notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Map<String,Object> noti=new HashMap<>();
-                if(newValue.toString().equalsIgnoreCase("true")){
-                    String token= FirebaseInstanceId.getInstance().getToken();
-                    noti.put("token",token);
-                    db.collection("Users").document(fb.getCurrentUser().getUid()).set(noti, SetOptions.merge());
-                }
-                else if(newValue.toString().equalsIgnoreCase("false")){
-                    noti.put("token",null);
-                    db.collection("Users").document(fb.getCurrentUser().getUid()).set(noti, SetOptions.merge());
-                }
-
-
-
-                editor.putString("notifications", newValue.toString());
-                editor.commit();
-                return true;
-            }
-        });*/
-
-
         idioma.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {

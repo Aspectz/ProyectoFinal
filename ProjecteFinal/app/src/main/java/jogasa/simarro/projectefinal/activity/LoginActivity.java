@@ -40,35 +40,35 @@ import jogasa.simarro.projectefinal.R;
 public class LoginActivity extends AppCompatActivity {
 
     private TextView forgotPassword;
-    private EditText email,password;
-    private Button logInButton,signUp;
+    private EditText email, password;
+    private Button logInButton, signUp;
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    private FirebaseFirestore fb=FirebaseFirestore.getInstance();
+    private FirebaseFirestore fb = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        SharedPreferences pref =getSharedPreferences("preferencias", Context.MODE_PRIVATE);
-        String language=pref.getString("idioma","esp");
+        SharedPreferences pref = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
+        String language = pref.getString("idioma", "esp");
 
-        if(language.compareTo("esp")==0)  setAppLocale("es");
-        if(language.compareTo("eng")==0)  setAppLocale("en");
+        if (language.compareTo("esp") == 0) setAppLocale("es");
+        if (language.compareTo("eng") == 0) setAppLocale("en");
 
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
 
-        authStateListener=new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
-                if(user!=null){
-                    if(!user.isEmailVerified()){
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    if (!user.isEmailVerified()) {
                         Toast.makeText(LoginActivity.this, getResources().getString(R.string.emailNotVerified), Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -78,11 +78,11 @@ public class LoginActivity extends AppCompatActivity {
         //GOOGLE
 
         //UsuariosBD.getUsuarios().add(u);
-        forgotPassword=(TextView)findViewById(R.id.forgotPassword);
-        signUp=(Button)findViewById(R.id.registerButton);
-        logInButton=(Button)findViewById(R.id.loginButton);
-        email=(EditText)findViewById(R.id.emailEditText);
-        password=(EditText)findViewById(R.id.passwordEditText);
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
+        signUp = (Button) findViewById(R.id.registerButton);
+        logInButton = (Button) findViewById(R.id.loginButton);
+        email = (EditText) findViewById(R.id.emailEditText);
+        password = (EditText) findViewById(R.id.passwordEditText);
 
 
         logInButton.setOnClickListener(new View.OnClickListener() {
@@ -94,16 +94,16 @@ public class LoginActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUp=new Intent(LoginActivity.this, OnBoardActivity.class);
+                Intent signUp = new Intent(LoginActivity.this, OnBoardActivity.class);
                 startActivity(signUp);
                 finish();
             }
         });
-        forgotPassword.setOnClickListener(new View.OnClickListener(){
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent forgotPassword=new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                Intent forgotPassword = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(forgotPassword);
             }
         });
@@ -118,11 +118,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setAppLocale(String locale) {
-        Resources res=getResources();
-        DisplayMetrics dm=res.getDisplayMetrics();
-        Configuration config=res.getConfiguration();
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration config = res.getConfiguration();
         config.setLocale(new Locale(locale.toLowerCase()));
-        res.updateConfiguration(config,dm);
+        res.updateConfiguration(config, dm);
     }
 
     @Override
@@ -134,27 +134,28 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(authStateListener!=null){
+        if (authStateListener != null) {
             mAuth.removeAuthStateListener(authStateListener);
         }
     }
-    public void login(){
 
-        String username=email.getText().toString();
-        String passwd=password.getText().toString();
-        if(!username.isEmpty() && !passwd.isEmpty()){
-            mAuth.signInWithEmailAndPassword(username,passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+    public void login() {
+
+        String username = email.getText().toString();
+        String passwd = password.getText().toString();
+        if (!username.isEmpty() && !passwd.isEmpty()) {
+            mAuth.signInWithEmailAndPassword(username, passwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }else{
-                        Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
-                        FirebaseUser currentuser=mAuth.getCurrentUser();
-                        if(currentuser.isEmailVerified()){
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        FirebaseUser currentuser = mAuth.getCurrentUser();
+                        if (currentuser.isEmailVerified()) {
                             startActivity(intent);
                             finish();
-                        }else{
+                        } else {
                             Toast.makeText(LoginActivity.this, getResources().getString(R.string.emailNotVerified), Toast.LENGTH_SHORT).show();
                         }
 

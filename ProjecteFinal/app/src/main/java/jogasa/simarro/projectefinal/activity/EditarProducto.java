@@ -28,7 +28,7 @@ import jogasa.simarro.projectefinal.pojo.Producto;
 import jogasa.simarro.projectefinal.pojo.Usuario;
 import jogasa.simarro.projectefinal.R;
 
-public class EditarProducto extends AppCompatActivity{
+public class EditarProducto extends AppCompatActivity {
 
 
     private Producto productoSeleccionado;
@@ -36,24 +36,22 @@ public class EditarProducto extends AppCompatActivity{
     FragmentTransaction fragmentTransaction;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mi_cuenta);
-        ImageButton back=findViewById(R.id.backAddPhoto);
-        productoSeleccionado=(Producto)getIntent().getSerializableExtra("Producto");
-
+        ImageButton back = findViewById(R.id.backAddPhoto);
+        productoSeleccionado = (Producto) getIntent().getSerializableExtra("Producto");
         if (savedInstanceState == null) {
-            fragmentManager=getSupportFragmentManager();
-            fragmentTransaction=fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment,new FragmentEditarProducto(productoSeleccionado));
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new FragmentEditarProducto(productoSeleccionado));
             fragmentTransaction.commit();
         }
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(EditarProducto.this,HomeActivity.class);
+                Intent intent = new Intent(EditarProducto.this, HomeActivity.class);
                 startActivity(intent);
             }
         });

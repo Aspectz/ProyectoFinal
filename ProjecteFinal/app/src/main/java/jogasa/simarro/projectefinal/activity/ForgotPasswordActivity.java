@@ -33,18 +33,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
-        logIn=(ImageButton)findViewById(R.id.backAddPhoto);
-        emailText=(TextInputLayout)findViewById(R.id.emailText);
+        logIn = (ImageButton) findViewById(R.id.backAddPhoto);
+        emailText = (TextInputLayout) findViewById(R.id.emailText);
 
 
         mAuth = FirebaseAuth.getInstance();
-        authStateListener=new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user=firebaseAuth.getCurrentUser();
-                if(user!=null){
-                    if(!user.isEmailVerified()){
-
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    if (!user.isEmailVerified()) {
                         Toast.makeText(ForgotPasswordActivity.this, getResources().getString(R.string.verEmailSent), Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -54,11 +53,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logInActivity=new Intent(ForgotPasswordActivity.this,LoginActivity.class);
+                Intent logInActivity = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(logInActivity);
             }
         });
-        recoverButton=(Button)findViewById(R.id.recoverButton);
+        recoverButton = (Button) findViewById(R.id.recoverButton);
 
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,10 +67,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-        if(authStateListener!=null){
+        if (authStateListener != null) {
             mAuth.removeAuthStateListener(authStateListener);
         }
     }
@@ -81,19 +81,20 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(authStateListener);
     }
-    private void recoverPasswd(){
-        final String correo=emailText.getEditText().getText().toString();
 
-        if(!correo.isEmpty()){
+    private void recoverPasswd() {
+        final String correo = emailText.getEditText().getText().toString();
+
+        if (!correo.isEmpty()) {
             mAuth.sendPasswordResetEmail(correo).addOnCompleteListener(task -> {
-                if(task.isSuccessful()){
-                    Toast.makeText(this,  getResources().getString(R.string.emailSentTo)+correo, Toast.LENGTH_SHORT).show();
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, getResources().getString(R.string.emailSentTo) + correo, Toast.LENGTH_SHORT).show();
                     finish();
-                }else{
+                } else {
                     Toast.makeText(this, getResources().getString(R.string.emailNotValid), Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        } else {
             Toast.makeText(this, getResources().getString(R.string.insertEmail), Toast.LENGTH_SHORT).show();
         }
     }

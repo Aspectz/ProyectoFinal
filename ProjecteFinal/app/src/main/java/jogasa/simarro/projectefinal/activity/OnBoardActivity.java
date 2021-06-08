@@ -18,7 +18,7 @@ import jogasa.simarro.projectefinal.adapters.ViewPagerAdapter;
 public class OnBoardActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
-    private Button btnLeft,btnRight;
+    private Button btnLeft, btnRight;
     private ViewPagerAdapter adapter;
     private LinearLayout dotsLayout;
     private TextView[] dots;
@@ -40,19 +40,19 @@ public class OnBoardActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(listener); // create this listener
         viewPager.setAdapter(adapter);
 
-        btnRight.setOnClickListener(v->{
+        btnRight.setOnClickListener(v -> {
             //if button text is next we will go to next page of viewpager
-            if (btnRight.getText().toString().equals(getResources().getString(R.string.choose))){
-                Intent intent=new Intent(OnBoardActivity.this, SignUpActivity.class);
-                if(viewPager.getCurrentItem()==0) intent.putExtra("Option","seller");
-                if(viewPager.getCurrentItem()==1) intent.putExtra("Option","client");
+            if (btnRight.getText().toString().equals(getResources().getString(R.string.choose))) {
+                Intent intent = new Intent(OnBoardActivity.this, SignUpActivity.class);
+                if (viewPager.getCurrentItem() == 0) intent.putExtra("Option", "seller");
+                if (viewPager.getCurrentItem() == 1) intent.putExtra("Option", "client");
                 startActivity(intent);
             }
         });
 
-        btnLeft.setOnClickListener(v->{
+        btnLeft.setOnClickListener(v -> {
             // if btn skip clicked then we go to page 3
-            Intent intent=new Intent(OnBoardActivity.this, LoginActivity.class);
+            Intent intent = new Intent(OnBoardActivity.this, LoginActivity.class);
             startActivity(intent);
         });
 
@@ -60,7 +60,7 @@ public class OnBoardActivity extends AppCompatActivity {
     }
 
     //method to create dots from html code
-    private void addDots(int position){
+    private void addDots(int position) {
         dotsLayout.removeAllViews();
         dots = new TextView[2];
         for (int i = 0; i < dots.length; i++) {
@@ -73,7 +73,7 @@ public class OnBoardActivity extends AppCompatActivity {
         }
 
         // ok now lets change the selected dot color
-        if(dots.length>0){
+        if (dots.length > 0) {
             dots[position].setTextColor(getResources().getColor(R.color.black));
         }
     }
